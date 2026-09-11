@@ -1,10 +1,5 @@
-import React, { useEffect } from 'react';
-import { View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import { useEffect, useRef } from 'react';
+import { Animated, View } from 'react-native';
 
 import { useTheme } from '../ThemeProvider';
 
@@ -18,15 +13,15 @@ interface ProgressBarProps {
 export function ProgressBar({ progress, height = 10, color, trackColor }: ProgressBarProps) {
   const theme = useTheme();
   const clamped = Math.max(0, Math.min(1, progress));
-  const width = useSharedValue(0);
+  const width = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    width.value = withTiming(clamped, { duration: 500 });
+    Animated.timing(width, {
+      toValue: clamped,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
   }, [clamped, width]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    width: `${width.value * 100}%`,
-  }));
 
   return (
     <View
@@ -38,14 +33,12 @@ export function ProgressBar({ progress, height = 10, color, trackColor }: Progre
       }}
     >
       <Animated.View
-        style={[
-          {
-            height: '100%',
-            borderRadius: theme.radius.pill,
-            backgroundColor: color ?? theme.colors.primary,
-          },
-          animatedStyle,
-        ]}
+        style={{
+          height: '100%',
+          borderRadius: theme.radius.pill,
+          backgroundColor: color ?? theme.colors.primary,
+          width: width.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }),
+        }}
       />
     </View>
   );
