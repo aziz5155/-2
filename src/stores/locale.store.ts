@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { I18nManager } from 'react-native';
+import { I18nManager, Platform } from 'react-native';
 import * as Updates from 'expo-updates';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -29,6 +29,17 @@ export const isRTL = (locale: AppLocale) => locale === 'ar';
 /** Applies the native RTL layout direction and reloads the app if it changed. */
 export function syncNativeDirection(locale: AppLocale) {
   const shouldBeRTL = isRTL(locale);
+
+  // react-native-web doesn't persist I18nManager.isRTL across reloads, so the
+  // native force-RTL-then-restart dance would reload forever. The web build
+  // instead sets the document direction directly, no restart needed.
+  if (Platform.OS === 'web') {
+    if (typeof document !== 'undefined') {
+      document.documentElement.dir = shouldBeRTL ? 'rtl' : 'ltr';
+    }
+    return false;
+  }
+
   if (I18nManager.isRTL === shouldBeRTL) return false;
 
   I18nManager.allowRTL(shouldBeRTL);
