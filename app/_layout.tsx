@@ -49,6 +49,7 @@ function RootNavigator() {
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(parent)" />
         <Stack.Screen name="(child)" />
+        <Stack.Screen name="(owner)" />
       </Stack>
     </>
   );

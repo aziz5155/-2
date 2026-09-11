@@ -17,6 +17,10 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,
+    // PKCE gives password-reset/magic-link emails a `?code=` deep link we can
+    // exchange manually (exchangeCodeForSession) — more reliable on native
+    // than parsing tokens out of a URL fragment.
+    flowType: 'pkce',
   },
 });
 

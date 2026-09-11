@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { AppText, Badge, Card, Screen } from '@/design-system/components';
 import { useTheme } from '@/design-system/ThemeProvider';
+import { getMyAdminRole } from '@/services/admin.service';
 import { getMyFamily } from '@/services/family.service';
 import { signOut } from '@/services/auth.service';
 import { getSubscription, isPremium } from '@/services/subscriptions.service';
@@ -49,6 +50,7 @@ export default function MoreScreen() {
   const setLocale = useLocaleStore((s) => s.setLocale);
 
   const premium = isPremium(subscriptionQuery.data ?? null);
+  const adminRoleQuery = useQuery({ queryKey: ['my-admin-role'], queryFn: getMyAdminRole });
 
   const cycleTheme = () => {
     const order: ThemePreference[] = ['system', 'light', 'dark'];
@@ -73,6 +75,16 @@ export default function MoreScreen() {
     <Screen scroll>
       <View style={{ gap: theme.spacing.md }}>
         <AppText variant="display">{t('settings.title')}</AppText>
+
+        {adminRoleQuery.data && (
+          <Card backgroundColor={theme.colors.primary} elevation={0}>
+            <Pressable onPress={() => router.push('/(owner)/dashboard')}>
+              <AppText style={{ color: theme.colors.onPrimary }} variant="bodyBold">
+                🛡️ لوحة المالك
+              </AppText>
+            </Pressable>
+          </Card>
+        )}
 
         <Card>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -102,6 +114,7 @@ export default function MoreScreen() {
           <Row label={t('settings.language')} value={locale === 'ar' ? t('settings.arabic') : t('settings.english')} onPress={toggleLocale} />
           <Row label={t('analytics.title')} onPress={() => router.push('/(parent)/analytics')} />
           <Row label={t('challenges.title')} onPress={() => router.push('/(parent)/challenges')} />
+          <Row label={t('auth.changePassword')} onPress={() => router.push('/(parent)/change-password')} />
         </Card>
 
         <Card>

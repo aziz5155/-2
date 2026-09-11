@@ -66,6 +66,7 @@ export default function ParentLayout() {
       <Tabs.Screen name="challenges/new" options={{ href: null }} />
       <Tabs.Screen name="analytics" options={{ href: null }} />
       <Tabs.Screen name="quick-points" options={{ href: null }} />
+      <Tabs.Screen name="change-password" options={{ href: null }} />
     </Tabs>
   );
 }

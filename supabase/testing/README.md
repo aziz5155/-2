@@ -14,10 +14,11 @@
 ```bash
 createdb familytest
 psql -d familytest -f supabase/testing/stub_auth.sql
-for f in supabase/migrations/*.sql supabase/seed.sql; do
+for f in supabase/migrations/*.sql supabase/seed.sql supabase/seed_billing.sql; do
   psql -d familytest -v ON_ERROR_STOP=1 -f "$f"
 done
 psql -d familytest -v ON_ERROR_STOP=1 -f supabase/testing/smoke_test.sql
+psql -d familytest -v ON_ERROR_STOP=1 -f supabase/testing/smoke_test_billing.sql
 ```
 
 `smoke_test.sql` يحاكي دورة كاملة: تسجيل ولي أمر → إنشاء عائلة → إضافة طفل →
@@ -25,3 +26,9 @@ psql -d familytest -v ON_ERROR_STOP=1 -f supabase/testing/smoke_test.sql
 طلب مكافأة → موافقة (خصم مرة واحدة فقط) → **محاولة موافقة ثانية يجب أن تفشل**
 (هذا هو السطر الأخير في الملف، وفشله برسالة `already decided` هو النجاح
 المتوقّع، وليس خطأ).
+
+`smoke_test_billing.sql` يغطي طبقة الصلاحيات والفوترة: منح دور `owner`،
+منع غير المالك من إدارة الفريق، التحقق من كود خصم وتطبيقه على اشتراك فعلي،
+منع إعادة استخدام نفس الكود لنفس العميل، منع حذف كود مستخدم (أرشفة فقط)،
+ومنع تعطيل حساب المالك نفسه. ينتهي بسطر `ALL BILLING/RBAC CHECKS PASSED`
+عند النجاح.

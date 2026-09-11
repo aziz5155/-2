@@ -1,7 +1,9 @@
 # قاعدة البيانات (Database Schema)
 
 جميع الجداول والدوال في `supabase/migrations/*.sql`، تُشغَّل بالترتيب:
-`0001_init` → `0002_security` → `0003_functions` → `0004_grants` → `seed.sql`.
+`0001_init` → `0002_security` → `0003_functions` → `0004_grants` →
+`0005_admin_rbac` → `0006_billing` → `0007_billing_grants` → `seed.sql` →
+`seed_billing.sql`.
 
 ## الجداول
 
@@ -25,6 +27,25 @@
 | `notifications` | صندوق إشعارات لكل مستخدم (بنية جاهزة لـ Push) |
 | `subscriptions` | خطة العائلة (`free`/`premium`) وحالتها |
 | `program_templates` / `program_template_tasks` | كتالوج القوالب الجاهزة (عام) |
+| `admin_users` | حسابات المالك/الفريق الإداري ودورهم (`owner`/`admin`/`support`/`marketing`/`finance`) |
+| `admin_audit_log` | سجل تلقائي لكل تعديل إداري (من، ماذا، متى، القيمة قبل/بعد) |
+| `plans` | كتالوج الباقات: السعر، الدورة (يومي/أسبوعي/شهري/سنوي)، الحدود، يديره المالك بالكامل من الواجهة |
+| `promo_codes` / `promo_code_plans` | أكواد الخصم وقيودها (تاريخ، حد استخدام، الباقات المشمولة) |
+| `promo_code_redemptions` | سجل كل استخدام فعلي لكود خصم |
+| `payments` | سجل كل عملية اشتراك — `pending_provider` حتى تُربط بوابة دفع حقيقية |
+
+## الصلاحيات الإدارية (RBAC)
+
+- `is_admin()` / `is_owner()` / `current_admin_role()`: دوال مساعدة (نفس نمط
+  `is_family_parent`) تُستخدم داخل كل سياسة RLS على جداول الإدارة.
+- **لا مسار في الكود يمنح دور `owner` تلقائيًا** — يُمنح فقط عبر
+  `supabase/owner_bootstrap.sql` الذي يُشغَّل يدويًا مرة واحدة (راجع
+  `docs/OWNER_SETUP.md`).
+- `add_admin_by_email` / `set_admin_active`: دوال `owner`-only فقط لإدارة
+  الفريق، وكل استدعاء لها يُسجَّل في `admin_audit_log`.
+- كل تعديل على `plans` أو `promo_codes` يُسجَّل تلقائيًا عبر Trigger
+  (`audit_table_change`) — لا حاجة لكود إضافي عند إضافة جدول إداري جديد،
+  فقط أضف نفس الـ Trigger عليه.
 
 ## الدوال (RPC) الأساسية
 
@@ -39,6 +60,8 @@
 - `decide_redemption(redemption_id, approve, note?)` — الموافقة تخصم النقاط ذريًا (قفل صف + إعادة التحقق من الرصيد).
 - `create_program_from_template(family_id, template_id)` — ينسخ قالبًا جاهزًا إلى برنامج ومهام حقيقية للعائلة، مع التحقق من قيود Premium.
 - `join_challenge(challenge_id)` — الطفل ينضم لتحدٍ عائلي.
+- `validate_promo_code(code, plan_id)` — يتحقق من صلاحية كود الخصم (التاريخ، الحدود، الباقة) ويُرجع السعر قبل/بعد الخصم، دون أي تعديل على القاعدة.
+- `subscribe_family_to_plan(plan_id, code?)` — العملية الفعلية: تُعيد التحقق من الكود بنفسها (لا تثق بالعميل)، تُسجّل دفعة في `payments`، تُحدّث `subscriptions`، وتزيد عداد استخدام الكود — كل ذلك بمعاملة واحدة.
 
 ## التريغرز التلقائية
 

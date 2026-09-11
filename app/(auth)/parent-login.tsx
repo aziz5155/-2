@@ -22,10 +22,16 @@ export default function ParentLoginScreen() {
       setError(t('common.requiredField'));
       return;
     }
+    const trimmedEmail = email.trim();
     try {
       setLoading(true);
-      await signInParent(email.trim(), password);
-    } catch {
+      await signInParent(trimmedEmail, password);
+    } catch (e) {
+      const message = e instanceof Error ? e.message.toLowerCase() : '';
+      if (message.includes('email not confirmed') || message.includes('email_not_confirmed')) {
+        router.replace(`/(auth)/verify-email?email=${encodeURIComponent(trimmedEmail)}`);
+        return;
+      }
       setError(t('auth.invalidCredentials'));
     } finally {
       setLoading(false);
@@ -59,6 +65,10 @@ export default function ParentLoginScreen() {
         ) : null}
 
         <Button label={t('auth.login')} onPress={handleSubmit} loading={loading} fullWidth size="lg" />
+
+        <AppText color="brand" weight="semibold" align="center" onPress={() => router.push('/(auth)/forgot-password')}>
+          {t('auth.forgotPassword')}
+        </AppText>
 
         <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 6, marginTop: theme.spacing.sm }}>
           <AppText color="secondary">{t('auth.noAccount')}</AppText>

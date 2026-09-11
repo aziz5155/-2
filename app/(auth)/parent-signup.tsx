@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
@@ -24,15 +24,15 @@ export default function ParentSignupScreen() {
       return;
     }
     if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError(t('auth.passwordTooShort'));
       return;
     }
     try {
       setLoading(true);
-      const result = await signUpParent(email.trim(), password, fullName.trim());
+      const trimmedEmail = email.trim();
+      const result = await signUpParent(trimmedEmail, password, fullName.trim());
       if (!result.session) {
-        Alert.alert(t('common.done'), 'Check your email to confirm your account, then sign in.');
-        router.replace('/(auth)/parent-login');
+        router.replace(`/(auth)/verify-email?email=${encodeURIComponent(trimmedEmail)}`);
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : t('common.somethingWentWrong'));

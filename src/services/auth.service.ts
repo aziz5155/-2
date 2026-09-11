@@ -19,6 +19,38 @@ export async function signInParent(email: string, password: string) {
   return data;
 }
 
+/** Confirms the 6-digit code Supabase emailed after signUpParent(). */
+export async function verifySignupCode(email: string, code: string) {
+  const { data, error } = await supabase.auth.verifyOtp({ email, token: code, type: 'signup' });
+  if (error) throw error;
+  return data;
+}
+
+export async function resendSignupCode(email: string) {
+  const { error } = await supabase.auth.resend({ type: 'signup', email });
+  if (error) throw error;
+}
+
+/** Sends a one-time recovery link to the given email (used by "forgot password"). */
+export async function sendPasswordResetEmail(email: string) {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: 'familysuccess://reset-password',
+  });
+  if (error) throw error;
+}
+
+/** Exchanges the PKCE code from the recovery deep link for a real (recovery) session. */
+export async function exchangeRecoveryCode(code: string) {
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+  if (error) throw error;
+  return data;
+}
+
+export async function setNewPassword(newPassword: string) {
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) throw error;
+}
+
 export async function signInWithApple() {
   const credential = await AppleAuthentication.signInAsync({
     requestedScopes: [
