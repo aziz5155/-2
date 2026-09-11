@@ -1,8 +1,5 @@
 {
-  "buildCommand": "npx expo export --platform web",
+  "buildCommand": "npx expo export --platform web && cp dist/index.html dist/404.html",
   "outputDirectory": "dist",
-  "installCommand": "npm install",
-  "rewrites": [
-    { "source": "/((?!_expo/|assets/|favicon\\.ico|metadata\\.json).*)", "destination": "/index.html" }
-  ]
+  "installCommand": "npm install"
 }
