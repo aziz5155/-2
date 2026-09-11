@@ -33,20 +33,37 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (get().initialized) return;
     set({ initialized: true });
 
-    supabase.auth.getSession().then(async ({ data }) => {
-      set({ session: data.session });
-      if (data.session) await get().refreshAppUser();
-      set({ isLoading: false });
-    });
+    // Belt-and-suspenders: never leave the app stuck on the loading screen
+    // if the session check hangs for some unforeseen reason.
+    setTimeout(() => set({ isLoading: false }), 5000);
+
+    supabase.auth
+      .getSession()
+      .then(async ({ data }) => {
+        set({ session: data.session });
+        if (data.session) await get().refreshAppUser();
+      })
+      .catch(() => {
+        // A blocked/unavailable storage adapter (e.g. Safari with cookies
+        // disabled) rejects getSession() — fall back to a signed-out state
+        // instead of leaving the app stuck on the loading screen forever.
+        set({ session: null, appUser: null });
+      })
+      .finally(() => {
+        set({ isLoading: false });
+      });
 
     supabase.auth.onAuthStateChange(async (_event, session) => {
       set({ session });
-      if (session) {
-        await get().refreshAppUser();
-      } else {
-        set({ appUser: null });
+      try {
+        if (session) {
+          await get().refreshAppUser();
+        } else {
+          set({ appUser: null });
+        }
+      } finally {
+        set({ isLoading: false });
       }
-      set({ isLoading: false });
     });
   },
 }));
