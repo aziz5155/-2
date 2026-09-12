@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: claude/family-rewards-app-kimrzz
 
       - uses: supabase/setup-cli@v1
         with:
@@ -19,11 +21,10 @@ jobs:
         run: |
           supabase functions deploy create-child --project-ref bktcmbazucbfimqgziws
           supabase functions deploy child-login --project-ref bktcmbazucbfimqgziws
-          supabase functions deploy reset-child-pin --project-ref bktcmbazucbfimqgziws
 
       - name: Push database migrations (optional — needs SUPABASE_DB_URL secret)
-        if: ${{ vars.SKIP_DB_PUSH != 'true' }}
         env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         continue-on-error: true
         run: |
@@ -31,4 +32,15 @@ jobs:
             echo "SUPABASE_DB_URL secret not set — skipping database migrations. Edge Functions above still deployed."
             exit 0
           fi
-          supabase db push --db-url "$SUPABASE_DB_URL"
+          # The direct db.<ref>.supabase.co host is IPv6-only, which GitHub's
+          # runners can't reach. Link + push instead, which goes through the
+          # IPv4-reachable connection pooler — password only, no URL needed.
+          export SUPABASE_DB_PASSWORD=$(echo "$SUPABASE_DB_URL" | sed -E 's#^postgres(ql)?://[^:]+:([^@]+)@.*#\2#')
+          supabase link --project-ref bktcmbazucbfimqgziws
+
+          # 0001-0007 were already applied by hand via the SQL Editor before
+          # this workflow existed, so Supabase's own migration history has no
+          # record of them — mark them applied (no-op on schema) instead of
+          # re-running them, then push only what's actually new (0008, 0009).
+          supabase migration repair --status applied 0001 0002 0003 0004 0005 0006 0007 || true
+          supabase db push
