@@ -1,4 +1,5 @@
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
+import { Alert } from '@/lib/alert';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 

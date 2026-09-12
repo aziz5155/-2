@@ -1,4 +1,5 @@
-import { Alert, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
+import { Alert } from '@/lib/alert';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Alert, Platform, View } from 'react-native';
+import { Platform, View } from 'react-native';
+import { Alert } from '@/lib/alert';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as Google from 'expo-auth-session/providers/google';
 import { useRouter } from 'expo-router';
