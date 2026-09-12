@@ -1,22 +1,80 @@
-import { View } from 'react-native';
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { Pressable, View } from 'react-native';
+import { Alert } from '@/lib/alert';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 
-import { AppText, Badge, Card, Screen } from '@/design-system/components';
+import { AppText, Badge, Button, Card, Screen } from '@/design-system/components';
 import { LoadingState } from '@/design-system/components/LoadingState';
 import { useTheme } from '@/design-system/ThemeProvider';
-import { getCustomerDetail, listFamilyPayments, listFamilyRedemptions } from '@/services/admin.service';
+import {
+  getCustomerDetail,
+  grantSubscription,
+  listAllPlans,
+  listFamilyPayments,
+  listFamilyRedemptions,
+} from '@/services/admin.service';
+
+const DURATIONS = [
+  { key: 'permanent', label: 'دائم', days: null as number | null },
+  { key: '7d', label: '7 أيام', days: 7 },
+  { key: '30d', label: '30 يوم', days: 30 },
+  { key: '90d', label: '90 يوم', days: 90 },
+  { key: '1y', label: 'سنة', days: 365 },
+];
+
+function Chip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {
+  const theme = useTheme();
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{
+        paddingVertical: 8,
+        paddingHorizontal: 14,
+        borderRadius: theme.radius.pill,
+        backgroundColor: selected ? theme.colors.primary : theme.colors.surfaceMuted,
+      }}
+    >
+      <AppText style={{ color: selected ? '#fff' : theme.colors.textPrimary }} weight="semibold">
+        {label}
+      </AppText>
+    </Pressable>
+  );
+}
 
 export default function CustomerDetailScreen() {
   const { familyId } = useLocalSearchParams<{ familyId: string }>();
   const theme = useTheme();
+  const queryClient = useQueryClient();
 
   const detailQuery = useQuery({ queryKey: ['customer-detail', familyId], queryFn: () => getCustomerDetail(familyId!) });
   const paymentsQuery = useQuery({ queryKey: ['customer-payments', familyId], queryFn: () => listFamilyPayments(familyId!) });
   const redemptionsQuery = useQuery({ queryKey: ['customer-redemptions', familyId], queryFn: () => listFamilyRedemptions(familyId!) });
+  const plansQuery = useQuery({ queryKey: ['all-plans'], queryFn: listAllPlans });
+
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
+  const [selectedDuration, setSelectedDuration] = useState<string>('permanent');
+  const [granting, setGranting] = useState(false);
+
+  const handleGrant = async () => {
+    if (!selectedPlanId || !familyId) return;
+    const duration = DURATIONS.find((d) => d.key === selectedDuration);
+    const expiresAt = duration?.days ? new Date(Date.now() + duration.days * 86400000).toISOString() : null;
+    try {
+      setGranting(true);
+      await grantSubscription(familyId, selectedPlanId, expiresAt);
+      await queryClient.invalidateQueries({ queryKey: ['customer-detail', familyId] });
+      Alert.alert('تم', 'تم تحديث باقة العميل بنجاح');
+    } catch (e) {
+      Alert.alert('حدث خطأ', e instanceof Error ? e.message : undefined);
+    } finally {
+      setGranting(false);
+    }
+  };
 
   if (detailQuery.isLoading || !detailQuery.data) return <LoadingState />;
   const family = detailQuery.data;
+  const activePlans = plansQuery.data?.filter((p) => p.is_active) ?? [];
 
   const statusLabel: Record<string, string> = {
     pending_provider: 'بانتظار بوابة الدفع',
@@ -46,6 +104,44 @@ export default function CustomerDetailScreen() {
             تنتهي الفترة الحالية: {new Date(family.current_period_end).toLocaleDateString('ar-SA')}
           </AppText>
         )}
+
+        <Card style={{ gap: theme.spacing.sm }}>
+          <AppText variant="subtitle">منح باقة يدويًا</AppText>
+          <AppText variant="caption" color="secondary">
+            يغيّر باقة هذا العميل مباشرة بدون مرور بالدفع — للدعم أو العروض الخاصة.
+          </AppText>
+
+          <AppText variant="label" color="secondary">
+            الباقة
+          </AppText>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.xs }}>
+            {activePlans.map((plan) => (
+              <Chip
+                key={plan.id}
+                label={plan.name}
+                selected={selectedPlanId === plan.id}
+                onPress={() => setSelectedPlanId(plan.id)}
+              />
+            ))}
+          </View>
+
+          <AppText variant="label" color="secondary" style={{ marginTop: theme.spacing.xs }}>
+            المدة
+          </AppText>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.xs }}>
+            {DURATIONS.map((d) => (
+              <Chip key={d.key} label={d.label} selected={selectedDuration === d.key} onPress={() => setSelectedDuration(d.key)} />
+            ))}
+          </View>
+
+          <Button
+            label="تطبيق"
+            onPress={handleGrant}
+            loading={granting}
+            disabled={!selectedPlanId}
+            style={{ marginTop: theme.spacing.xs }}
+          />
+        </Card>
 
         <View>
           <AppText variant="subtitle" style={{ marginBottom: theme.spacing.sm }}>

@@ -105,6 +105,7 @@ export async function createChild(input: {
   family_id: string;
   name: string;
   pin: string;
+  avatar_url?: string;
   avatar_emoji?: string;
   birth_year?: number;
 }): Promise<Child> {

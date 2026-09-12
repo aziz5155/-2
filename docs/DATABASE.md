@@ -2,7 +2,8 @@
 
 جميع الجداول والدوال في `supabase/migrations/*.sql`، تُشغَّل بالترتيب:
 `0001_init` → `0002_security` → `0003_functions` → `0004_grants` →
-`0005_admin_rbac` → `0006_billing` → `0007_billing_grants` → `seed.sql` →
+`0005_admin_rbac` → `0006_billing` → `0007_billing_grants` →
+`0008_admin_grant_subscription` → `0009_avatars_storage` → `seed.sql` →
 `seed_billing.sql`.
 
 ## الجداول

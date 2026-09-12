@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
-import { AppText, Button, Input, Screen } from '@/design-system/components';
+import { AppText, Avatar, Button, Input, Screen } from '@/design-system/components';
 import { useTheme } from '@/design-system/ThemeProvider';
 import { createChild } from '@/services/auth.service';
+import { uploadChildAvatar } from '@/services/children.service';
 import { getMyFamily } from '@/services/family.service';
-
-const AVATAR_EMOJIS = ['🦁', '🐼', '🦊', '🐸', '🐧', '🦄', '🐯', '🐨', '🐵', '🐰'];
 
 export default function NewChildScreen() {
   const { t } = useTranslation();
@@ -21,11 +21,28 @@ export default function NewChildScreen() {
 
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
-  const [emoji, setEmoji] = useState(AVATAR_EMOJIS[0]);
+  const [avatarUri, setAvatarUri] = useState<string | null>(null);
+  const [avatarMime, setAvatarMime] = useState('image/jpeg');
   const [pin, setPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const pickImage = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) return;
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+    });
+    if (!result.canceled && result.assets[0]) {
+      setAvatarUri(result.assets[0].uri);
+      setAvatarMime(result.assets[0].mimeType ?? 'image/jpeg');
+    }
+  };
 
   const handleSubmit = async () => {
     setError(null);
@@ -37,11 +54,12 @@ export default function NewChildScreen() {
     try {
       setLoading(true);
       const birthYear = age ? new Date().getFullYear() - Number(age) : undefined;
+      const avatarUrl = avatarUri ? await uploadChildAvatar(familyQuery.data.id, avatarUri, avatarMime) : undefined;
       await createChild({
         family_id: familyQuery.data.id,
         name: name.trim(),
         pin,
-        avatar_emoji: emoji,
+        avatar_url: avatarUrl,
         birth_year: birthYear,
       });
       await queryClient.invalidateQueries({ queryKey: ['children'] });
@@ -58,28 +76,26 @@ export default function NewChildScreen() {
       <View style={{ gap: theme.spacing.md, paddingTop: theme.spacing.lg }}>
         <AppText variant="display">{t('children.addChild')}</AppText>
 
-        <AppText variant="label" color="secondary">
-          {t('children.avatar')}
-        </AppText>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.xs }}>
-          {AVATAR_EMOJIS.map((e) => (
-            <Pressable
-              key={e}
-              onPress={() => setEmoji(e)}
-              style={{
-                width: 48,
-                height: 48,
-                borderRadius: 24,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: emoji === e ? theme.colors.primaryMuted : theme.colors.surfaceMuted,
-                borderWidth: emoji === e ? 2 : 0,
-                borderColor: theme.colors.primary,
-              }}
-            >
-              <AppText style={{ fontSize: 22 }}>{e}</AppText>
+        <View style={{ alignItems: 'center', gap: theme.spacing.xs }}>
+          <Pressable onPress={pickImage}>
+            <Avatar name={name || '?'} uri={avatarUri} size={88} />
+          </Pressable>
+          <Pressable onPress={pickImage}>
+            <AppText color="primary" weight="semibold">
+              {avatarUri ? t('common.edit') : t('children.avatar')}
+            </AppText>
+          </Pressable>
+          {avatarUri ? (
+            <Pressable onPress={() => setAvatarUri(null)}>
+              <AppText variant="caption" color="danger">
+                {t('common.delete')}
+              </AppText>
             </Pressable>
-          ))}
+          ) : (
+            <AppText variant="caption" color="tertiary">
+              {t('common.optional')}
+            </AppText>
+          )}
         </View>
 
         <Input label={t('children.childName')} value={name} onChangeText={setName} />

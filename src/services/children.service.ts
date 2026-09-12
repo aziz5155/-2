@@ -1,6 +1,20 @@
 import { supabase } from '@/lib/supabase';
 import { Child } from '@/types/models';
 
+/** Uploads a picked photo to the public `avatars` bucket and returns its public URL. */
+export async function uploadChildAvatar(familyId: string, uri: string, mimeType = 'image/jpeg'): Promise<string> {
+  const ext = mimeType.split('/')[1] ?? 'jpg';
+  const path = `${familyId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+  const response = await fetch(uri);
+  const blob = await response.blob();
+
+  const { error } = await supabase.storage.from('avatars').upload(path, blob, { contentType: mimeType });
+  if (error) throw error;
+
+  return supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+}
+
 export async function listChildren(familyId: string): Promise<Child[]> {
   const { data, error } = await supabase
     .from('children')

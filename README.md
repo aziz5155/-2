@@ -79,7 +79,7 @@ npm install
 
 1. أنشئ مشروعًا جديدًا على [supabase.com](https://supabase.com) (مجاني).
 2. من **SQL Editor** في لوحة تحكم المشروع، شغّل ملفات `supabase/migrations/`
-   **بالترتيب الرقمي** (0001 إلى 0007)، ثم `supabase/seed.sql`، ثم
+   **بالترتيب الرقمي** (0001 إلى 0009)، ثم `supabase/seed.sql`، ثم
    `supabase/seed_billing.sql`.
 3. اتبع [`docs/OWNER_SETUP.md`](docs/OWNER_SETUP.md) لإنشاء حساب المالك
    (خطوتان: إضافة مستخدم من لوحة Supabase + تشغيل `supabase/owner_bootstrap.sql`).

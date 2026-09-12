@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) return jsonResponse({ error: 'missing authorization' }, 401);
 
-    const { family_id, name, pin, avatar_emoji, birth_year } = await req.json();
+    const { family_id, name, pin, avatar_url, avatar_emoji, birth_year } = await req.json();
 
     if (!family_id || !name || !pin || !/^\d{4}$/.test(pin)) {
       return jsonResponse({ error: 'family_id, name and a 4-digit pin are required' }, 400);
@@ -53,6 +53,7 @@ Deno.serve(async (req) => {
         user_id: created.user.id,
         internal_email: internalEmail,
         name,
+        avatar_url: avatar_url ?? null,
         avatar_emoji: avatar_emoji ?? null,
         birth_year: birth_year ?? null,
       })

@@ -264,6 +264,16 @@ export async function getCustomerDetail(familyId: string): Promise<FamilyDetail>
   };
 }
 
+/** Grants a family a plan directly (owner/admin only). `expiresAt = null` means it never expires on its own. */
+export async function grantSubscription(familyId: string, planId: string, expiresAt: string | null): Promise<void> {
+  const { error } = await supabase.rpc('admin_grant_subscription', {
+    p_family_id: familyId,
+    p_plan_id: planId,
+    p_expires_at: expiresAt,
+  });
+  if (error) throw error;
+}
+
 export async function listFamilyPayments(familyId: string): Promise<(Payment & { plan_name: string })[]> {
   const { data, error } = await supabase
     .from('payments')
