@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { Avatar, AppText, Button, Input, Screen } from '@/design-system/components';
@@ -12,6 +13,7 @@ type Step = 'code' | 'child' | 'pin';
 export default function ChildLoginScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
+  const router = useRouter();
   const [step, setStep] = useState<Step>('code');
   const [familyCode, setFamilyCode] = useState('');
   const [children, setChildren] = useState<Pick<Child, 'id' | 'name' | 'avatar_emoji' | 'avatar_url'>[]>([]);
@@ -44,6 +46,7 @@ export default function ChildLoginScreen() {
       setLoading(true);
       setError(null);
       await childSignIn(familyCode.trim().toUpperCase(), selectedChild, pin);
+      router.replace('/');
     } catch {
       setError(t('auth.invalidCredentials'));
     } finally {

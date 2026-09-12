@@ -26,6 +26,7 @@ export default function ParentLoginScreen() {
     try {
       setLoading(true);
       await signInParent(trimmedEmail, password);
+      router.replace('/');
     } catch (e) {
       const message = e instanceof Error ? e.message.toLowerCase() : '';
       if (message.includes('email not confirmed') || message.includes('email_not_confirmed')) {
