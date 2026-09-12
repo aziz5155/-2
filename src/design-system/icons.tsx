@@ -40,6 +40,18 @@ const ICON_MAP: Record<string, keyof typeof Ionicons.glyphMap> = {
   sparkles: 'sparkles',
   soap: 'water',
   other: 'ellipsis-horizontal',
+
+  // General-purpose (empty states, section headers, etc.)
+  people: 'people-outline',
+  activity: 'pulse-outline',
+  calendar: 'calendar-outline',
+  search: 'search-outline',
+  inbox: 'file-tray-outline',
+  chart: 'bar-chart-outline',
+  checkmark: 'checkmark-circle-outline',
+  list: 'list-outline',
+  ticket: 'pricetag-outline',
+  celebrate: 'sparkles',
 };
 
 export function resolveIcon(key: string): keyof typeof Ionicons.glyphMap {

@@ -4,43 +4,90 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { AppIcon } from '@/design-system/icons';
-import { Avatar, AppText, Badge, Card, EmptyState, Screen } from '@/design-system/components';
+import { AppText, Badge, Card, ChildSummaryCard, EmptyState, Screen } from '@/design-system/components';
 import { LoadingState } from '@/design-system/components/LoadingState';
 import { useTheme } from '@/design-system/ThemeProvider';
-import { getLevelInfo } from '@/constants/levels';
 import { listChildren } from '@/services/children.service';
 import { getMyFamily } from '@/services/family.service';
 import { getFamilyTodayStats, listPendingApprovals } from '@/services/tasks.service';
 import { listPendingRedemptions } from '@/services/rewards.service';
 import { useAuthStore } from '@/stores/auth.store';
 
-function QuickAction({ icon, label, onPress }: { icon: string; label: string; onPress: () => void }) {
+function StatTile({ label, value, tint, iconColor, icon }: { label: string; value: number; tint: string; iconColor: string; icon: string }) {
   const theme = useTheme();
   return (
-    <Pressable
-      onPress={onPress}
-      style={{
-        alignItems: 'center',
-        gap: 6,
-        width: 72,
-      }}
-    >
+    <Card style={{ flex: 1, gap: theme.spacing.xxs }} elevation={0} backgroundColor={tint}>
+      <AppIcon name={icon} size={16} color={iconColor} />
+      <AppText variant="title" style={{ marginTop: 2 }}>
+        {value}
+      </AppText>
+      <AppText variant="label" color="secondary" numberOfLines={1}>
+        {label}
+      </AppText>
+    </Card>
+  );
+}
+
+function ActionRow({ icon, label, count, onPress }: { icon: string; label: string; count: number; onPress: () => void }) {
+  const theme = useTheme();
+  return (
+    <Pressable onPress={onPress} style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm, paddingVertical: theme.spacing.xs }}>
       <View
         style={{
-          width: 52,
-          height: 52,
-          borderRadius: theme.radius.lg,
-          backgroundColor: theme.colors.primaryMuted,
+          width: 32,
+          height: 32,
+          borderRadius: theme.radius.md,
+          backgroundColor: theme.colors.surface,
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
-        <AppIcon name={icon} size={24} color={theme.colors.primary} />
+        <AppIcon name={icon} size={16} color={theme.colors.warning} />
       </View>
-      <AppText variant="caption" align="center" numberOfLines={1}>
-        {label}
-      </AppText>
+      <AppText style={{ flex: 1 }}>{label}</AppText>
+      <Badge label={String(count)} tone="warning" />
     </Pressable>
+  );
+}
+
+function QuickAction({ icon, label, onPress }: { icon: string; label: string; onPress: () => void }) {
+  const theme = useTheme();
+  return (
+    <Pressable onPress={onPress} style={{ alignItems: 'center', gap: 6, width: 72 }}>
+      {({ pressed }) => (
+        <>
+          <View
+            style={{
+              width: 52,
+              height: 52,
+              borderRadius: theme.radius.lg,
+              backgroundColor: theme.colors.primaryMuted,
+              alignItems: 'center',
+              justifyContent: 'center',
+              opacity: pressed ? 0.8 : 1,
+            }}
+          >
+            <AppIcon name={icon} size={22} color={theme.colors.primary} />
+          </View>
+          <AppText variant="label" align="center" numberOfLines={1}>
+            {label}
+          </AppText>
+        </>
+      )}
+    </Pressable>
+  );
+}
+
+function SectionHeader({ title, actionLabel, onAction }: { title: string; actionLabel?: string; onAction?: () => void }) {
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <AppText variant="subtitle">{title}</AppText>
+      {actionLabel && onAction ? (
+        <AppText color="brand" weight="semibold" variant="caption" onPress={onAction}>
+          {actionLabel}
+        </AppText>
+      ) : null}
+    </View>
   );
 }
 
@@ -82,109 +129,93 @@ export default function DashboardScreen() {
   const pendingApprovalsCount = approvalsQuery.data?.length ?? 0;
   const pendingRedemptionsCount = redemptionsQuery.data?.length ?? 0;
   const needsAttention = pendingApprovalsCount + pendingRedemptionsCount > 0;
+  const firstName = appUser?.full_name?.split(' ')[0] || '';
 
   return (
     <Screen scroll onRefresh={() => familyQuery.refetch()} refreshing={familyQuery.isFetching}>
-      <View style={{ gap: theme.spacing.lg }}>
-        <AppText variant="display">{t('dashboard.greeting', { name: appUser?.full_name?.split(' ')[0] || '' })}</AppText>
-
-        {needsAttention && (
-          <Card backgroundColor={theme.colors.warningMuted} elevation={0}>
-            <AppText variant="subtitle" style={{ marginBottom: theme.spacing.xs }}>
-              {t('dashboard.whatNeedsYou')}
-            </AppText>
-            {pendingApprovalsCount > 0 && (
-              <Pressable
-                onPress={() => router.push('/(parent)/approvals')}
-                style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 }}
-              >
-                <AppText>{t('dashboard.pendingApprovals')}</AppText>
-                <Badge label={String(pendingApprovalsCount)} tone="warning" />
-              </Pressable>
-            )}
-            {pendingRedemptionsCount > 0 && (
-              <Pressable
-                onPress={() => router.push('/(parent)/rewards')}
-                style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 }}
-              >
-                <AppText>{t('dashboard.pendingRedemptions')}</AppText>
-                <Badge label={String(pendingRedemptionsCount)} tone="warning" />
-              </Pressable>
-            )}
-          </Card>
-        )}
+      <View style={{ gap: theme.spacing.xl }}>
+        <View style={{ gap: 2 }}>
+          <AppText variant="title">{t('dashboard.greeting', { name: firstName })}</AppText>
+          <AppText variant="caption" color="secondary">
+            {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
+          </AppText>
+        </View>
 
         <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
-          <Card style={{ flex: 1 }} elevation={0} backgroundColor={theme.colors.successMuted}>
-            <AppText variant="caption" color="secondary">
-              {t('dashboard.todayCompleted')}
-            </AppText>
-            <AppText variant="title">{statsQuery.data?.completedToday ?? 0}</AppText>
-          </Card>
-          <Card style={{ flex: 1 }} elevation={0} backgroundColor={theme.colors.infoMuted}>
-            <AppText variant="caption" color="secondary">
-              {t('dashboard.todayRemaining')}
-            </AppText>
-            <AppText variant="title">
-              {Math.max(0, (statsQuery.data?.dueToday ?? 0) - (statsQuery.data?.completedToday ?? 0))}
-            </AppText>
-          </Card>
-          <Card style={{ flex: 1 }} elevation={0} backgroundColor={theme.colors.pointsMuted}>
-            <AppText variant="caption" color="secondary">
-              {t('dashboard.todayPoints')}
-            </AppText>
-            <AppText variant="title">{statsQuery.data?.pointsToday ?? 0}</AppText>
-          </Card>
+          <StatTile
+            label={t('dashboard.todayCompleted')}
+            value={statsQuery.data?.completedToday ?? 0}
+            tint={theme.colors.successMuted}
+            iconColor={theme.colors.success}
+            icon="checkmark"
+          />
+          <StatTile
+            label={t('dashboard.todayRemaining')}
+            value={Math.max(0, (statsQuery.data?.dueToday ?? 0) - (statsQuery.data?.completedToday ?? 0))}
+            tint={theme.colors.infoMuted}
+            iconColor={theme.colors.info}
+            icon="calendar"
+          />
+          <StatTile
+            label={t('dashboard.todayPoints')}
+            value={statsQuery.data?.pointsToday ?? 0}
+            tint={theme.colors.pointsMuted}
+            iconColor={theme.colors.points}
+            icon="star"
+          />
         </View>
 
-        <View>
-          <AppText variant="subtitle" style={{ marginBottom: theme.spacing.sm }}>
-            {t('dashboard.quickActions')}
-          </AppText>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm }}>
-            <QuickAction icon="star" label={t('dashboard.addTask')} onPress={() => router.push('/(parent)/tasks/new')} />
-            <QuickAction icon="sunrise" label={t('dashboard.addProgram')} onPress={() => router.push('/(parent)/programs')} />
-            <QuickAction icon="gift" label={t('dashboard.addReward')} onPress={() => router.push('/(parent)/rewards/new')} />
-            <QuickAction icon="flag" label={t('dashboard.addChallenge')} onPress={() => router.push('/(parent)/challenges')} />
+        {needsAttention && (
+          <View style={{ gap: theme.spacing.sm }}>
+            <SectionHeader title={t('dashboard.whatNeedsYou')} />
+            <Card elevation={0} bordered style={{ paddingVertical: theme.spacing.xs }}>
+              {pendingApprovalsCount > 0 && (
+                <ActionRow
+                  icon="checkmark"
+                  label={t('dashboard.pendingApprovals')}
+                  count={pendingApprovalsCount}
+                  onPress={() => router.push('/(parent)/approvals')}
+                />
+              )}
+              {pendingRedemptionsCount > 0 && (
+                <ActionRow
+                  icon="gift"
+                  label={t('dashboard.pendingRedemptions')}
+                  count={pendingRedemptionsCount}
+                  onPress={() => router.push('/(parent)/rewards')}
+                />
+              )}
+            </Card>
           </View>
-        </View>
+        )}
 
-        <View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.sm }}>
-            <AppText variant="subtitle">{t('children.title')}</AppText>
-            <AppText color="brand" weight="semibold" onPress={() => router.push('/(parent)/children')}>
-              {t('common.seeAll')}
-            </AppText>
-          </View>
+        <View style={{ gap: theme.spacing.sm }}>
+          <SectionHeader title={t('children.title')} actionLabel={t('common.seeAll')} onAction={() => router.push('/(parent)/children')} />
 
-          {childrenQuery.data?.length === 0 && (
+          {childrenQuery.data?.length === 0 ? (
             <EmptyState
-              emoji="👶"
+              icon="people"
               title={t('children.noChildrenYet')}
               subtitle={t('children.noChildrenSubtitle')}
               actionLabel={t('children.addChild')}
               onAction={() => router.push('/(parent)/children/new')}
             />
+          ) : (
+            <View style={{ gap: theme.spacing.sm }}>
+              {childrenQuery.data?.map((child) => (
+                <ChildSummaryCard key={child.id} child={child} onPress={() => router.push(`/(parent)/children/${child.id}`)} />
+              ))}
+            </View>
           )}
+        </View>
 
-          <View style={{ gap: theme.spacing.sm }}>
-            {childrenQuery.data?.map((child) => {
-              const level = getLevelInfo(child.lifetime_points);
-              return (
-                <Pressable key={child.id} onPress={() => router.push(`/(parent)/children/${child.id}`)}>
-                  <Card style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
-                    <Avatar name={child.name} uri={child.avatar_url} emoji={child.avatar_emoji} size={52} />
-                    <View style={{ flex: 1, gap: 4 }}>
-                      <AppText variant="bodyBold">{child.name}</AppText>
-                      <View style={{ flexDirection: 'row', gap: 6 }}>
-                        <Badge label={`⭐ ${child.points_balance}`} tone="points" />
-                        <Badge label={t('children.level') + ' ' + level.level} tone="primary" />
-                      </View>
-                    </View>
-                  </Card>
-                </Pressable>
-              );
-            })}
+        <View style={{ gap: theme.spacing.sm }}>
+          <SectionHeader title={t('dashboard.quickActions')} />
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm }}>
+            <QuickAction icon="star" label={t('dashboard.addTask')} onPress={() => router.push('/(parent)/tasks/new')} />
+            <QuickAction icon="sunrise" label={t('dashboard.addProgram')} onPress={() => router.push('/(parent)/programs')} />
+            <QuickAction icon="gift" label={t('dashboard.addReward')} onPress={() => router.push('/(parent)/rewards/new')} />
+            <QuickAction icon="flag" label={t('dashboard.addChallenge')} onPress={() => router.push('/(parent)/challenges')} />
           </View>
         </View>
       </View>

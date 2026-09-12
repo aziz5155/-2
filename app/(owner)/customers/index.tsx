@@ -25,7 +25,7 @@ export default function CustomersScreen() {
         {customersQuery.isLoading ? (
           <LoadingState />
         ) : customersQuery.data?.length === 0 ? (
-          <EmptyState emoji="👨‍👩‍👧" title="لا يوجد عملاء بعد" />
+          <EmptyState icon="people" title="لا يوجد عملاء بعد" />
         ) : (
           <View style={{ gap: theme.spacing.sm }}>
             {customersQuery.data?.map((c) => (

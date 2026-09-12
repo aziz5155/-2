@@ -44,7 +44,7 @@ export default function ActivityScreen() {
       <View style={{ gap: theme.spacing.md }}>
         <AppText variant="display">{t('activity.title')}</AppText>
 
-        {activityQuery.data?.length === 0 && <EmptyState emoji="📭" title={t('activity.empty')} />}
+        {activityQuery.data?.length === 0 && <EmptyState icon="inbox" title={t('activity.empty')} />}
 
         <View style={{ gap: theme.spacing.xs }}>
           {activityQuery.data?.map((event) => (

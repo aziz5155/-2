@@ -70,7 +70,7 @@ export default function ChildRewardsScreen() {
           </Card>
         )}
 
-        {rewardsQuery.data?.length === 0 && <EmptyState emoji="🎁" title={t('rewards.noRewards')} />}
+        {rewardsQuery.data?.length === 0 && <EmptyState icon="gift" title={t('rewards.noRewards')} />}
 
         <View style={{ gap: theme.spacing.sm }}>
           {rewardsQuery.data?.map((reward) => {

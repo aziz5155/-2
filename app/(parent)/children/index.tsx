@@ -1,12 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
-import { Avatar, AppText, Badge, Button, Card, EmptyState, Screen } from '@/design-system/components';
+import { AppText, Button, ChildSummaryCard, EmptyState, Screen } from '@/design-system/components';
 import { LoadingState } from '@/design-system/components/LoadingState';
 import { useTheme } from '@/design-system/ThemeProvider';
-import { getLevelInfo } from '@/constants/levels';
 import { listChildren } from '@/services/children.service';
 import { getMyFamily } from '@/services/family.service';
 
@@ -28,15 +27,15 @@ export default function ChildrenListScreen() {
 
   return (
     <Screen scroll>
-      <View style={{ gap: theme.spacing.md }}>
+      <View style={{ gap: theme.spacing.lg }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <AppText variant="display">{t('children.title')}</AppText>
+          <AppText variant="title">{t('children.title')}</AppText>
           <Button label={t('children.addChild')} size="sm" onPress={() => router.push('/(parent)/children/new')} />
         </View>
 
         {childrenQuery.data?.length === 0 && (
           <EmptyState
-            emoji="👶"
+            icon="people"
             title={t('children.noChildrenYet')}
             subtitle={t('children.noChildrenSubtitle')}
             actionLabel={t('children.addChild')}
@@ -45,23 +44,9 @@ export default function ChildrenListScreen() {
         )}
 
         <View style={{ gap: theme.spacing.sm }}>
-          {childrenQuery.data?.map((child) => {
-            const level = getLevelInfo(child.lifetime_points);
-            return (
-              <Pressable key={child.id} onPress={() => router.push(`/(parent)/children/${child.id}`)}>
-                <Card style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
-                  <Avatar name={child.name} uri={child.avatar_url} emoji={child.avatar_emoji} size={56} />
-                  <View style={{ flex: 1, gap: 4 }}>
-                    <AppText variant="bodyBold">{child.name}</AppText>
-                    <View style={{ flexDirection: 'row', gap: 6 }}>
-                      <Badge label={`⭐ ${child.points_balance}`} tone="points" />
-                      <Badge label={`${t('children.level')} ${level.level}`} tone="primary" />
-                    </View>
-                  </View>
-                </Card>
-              </Pressable>
-            );
-          })}
+          {childrenQuery.data?.map((child) => (
+            <ChildSummaryCard key={child.id} child={child} onPress={() => router.push(`/(parent)/children/${child.id}`)} />
+          ))}
         </View>
       </View>
     </Screen>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { I18nManager, TextInput, TextInputProps, View } from 'react-native';
+import { TextInput, TextInputProps, View } from 'react-native';
 
 import { AppText } from './AppText';
 import { useTheme } from '../ThemeProvider';
+import { useIsRTL } from '@/stores/locale.store';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -13,6 +14,7 @@ interface InputProps extends TextInputProps {
 
 export function Input({ label, error, hint, rightElement, style, ...rest }: InputProps) {
   const theme = useTheme();
+  const rtl = useIsRTL();
   const [focused, setFocused] = useState(false);
 
   return (
@@ -49,8 +51,8 @@ export function Input({ label, error, hint, rightElement, style, ...rest }: Inpu
               paddingVertical: 13,
               fontSize: theme.fontSize.md,
               color: theme.colors.textPrimary,
-              textAlign: I18nManager.isRTL ? 'right' : 'left',
-              writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr',
+              textAlign: rtl ? 'right' : 'left',
+              writingDirection: rtl ? 'rtl' : 'ltr',
             },
             style,
           ]}

@@ -3,6 +3,7 @@ export * from './Avatar';
 export * from './Badge';
 export * from './Button';
 export * from './Card';
+export * from './ChildSummaryCard';
 export * from './EmptyState';
 export * from './Input';
 export * from './LoadingState';

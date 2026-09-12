@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Animated, View } from 'react-native';
 
 import { useTheme } from '../ThemeProvider';
@@ -13,7 +13,7 @@ interface ProgressBarProps {
 export function ProgressBar({ progress, height = 10, color, trackColor }: ProgressBarProps) {
   const theme = useTheme();
   const clamped = Math.max(0, Math.min(1, progress));
-  const width = useRef(new Animated.Value(0)).current;
+  const [width] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
     Animated.timing(width, {

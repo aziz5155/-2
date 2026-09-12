@@ -26,6 +26,17 @@ export const useLocaleStore = create<LocaleState>()(
 
 export const isRTL = (locale: AppLocale) => locale === 'ar';
 
+/**
+ * Reactive RTL check. On web, syncNativeDirection sets the document's `dir`
+ * directly instead of flipping I18nManager.isRTL (see below), so any code
+ * that read I18nManager.isRTL directly was silently always-LTR on web —
+ * use this everywhere layout/icon direction needs to follow the current
+ * language instead.
+ */
+export function useIsRTL() {
+  return useLocaleStore((s) => isRTL(s.locale));
+}
+
 /** Applies the native RTL layout direction and reloads the app if it changed. */
 export function syncNativeDirection(locale: AppLocale) {
   const shouldBeRTL = isRTL(locale);

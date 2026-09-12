@@ -69,7 +69,7 @@ export default function PromoCodesScreen() {
           <Button label="+ كود جديد" size="sm" onPress={() => router.push('/(owner)/promo-codes/new')} />
         </View>
 
-        {codesQuery.data?.length === 0 && <EmptyState emoji="🎟️" title="لا توجد أكواد بعد" />}
+        {codesQuery.data?.length === 0 && <EmptyState icon="ticket" title="لا توجد أكواد بعد" />}
 
         <View style={{ gap: theme.spacing.sm }}>
           {codesQuery.data?.map((code) => (

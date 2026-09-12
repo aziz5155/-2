@@ -89,7 +89,7 @@ export default function ChildHomeScreen() {
             {t('childHome.todayTasks')}
           </AppText>
 
-          {tasksQuery.data?.length === 0 && <EmptyState emoji="🎉" title={t('childHome.noTasksToday')} />}
+          {tasksQuery.data?.length === 0 && <EmptyState icon="celebrate" title={t('childHome.noTasksToday')} />}
 
           <View style={{ gap: theme.spacing.sm }}>
             {tasksQuery.data?.map((task) => {

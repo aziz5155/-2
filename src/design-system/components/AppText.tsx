@@ -1,7 +1,8 @@
 import React from 'react';
-import { I18nManager, Text, TextProps, TextStyle } from 'react-native';
+import { Text, TextProps, TextStyle } from 'react-native';
 
 import { useTheme } from '../ThemeProvider';
+import { useIsRTL } from '@/stores/locale.store';
 
 type Variant =
   | 'hero'
@@ -31,6 +32,7 @@ export function AppText({
   ...rest
 }: AppTextProps) {
   const theme = useTheme();
+  const rtl = useIsRTL();
 
   const variantStyle: TextStyle = {
     hero: { fontSize: theme.fontSize.hero, lineHeight: theme.lineHeight.hero, fontWeight: theme.fontWeight.extrabold as TextStyle['fontWeight'] },
@@ -59,7 +61,7 @@ export function AppText({
     <Text
       style={[
         variantStyle,
-        { color: colorValue, textAlign: align, writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' },
+        { color: colorValue, textAlign: align, writingDirection: rtl ? 'rtl' : 'ltr' },
         weightOverride,
         style,
       ]}

@@ -20,7 +20,7 @@ export default function AuditLogScreen() {
           كل تعديل على الباقات وأكواد الخصم وفريق الإدارة يُسجَّل هنا تلقائيًا — من غيّر، ماذا، ومتى.
         </AppText>
 
-        {auditQuery.data?.length === 0 && <EmptyState emoji="📋" title="لا يوجد سجل بعد" />}
+        {auditQuery.data?.length === 0 && <EmptyState icon="list" title="لا يوجد سجل بعد" />}
 
         <View style={{ gap: theme.spacing.xs }}>
           {auditQuery.data?.map((entry) => (

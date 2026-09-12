@@ -1,4 +1,14 @@
 {
+  "nav": {
+    "home": "الرئيسية",
+    "children": "الأبناء",
+    "rewards": "المكافآت",
+    "activity": "النشاط",
+    "settings": "الإعدادات",
+    "tasks": "المهام",
+    "achievements": "الإنجازات",
+    "profile": "حسابي"
+  },
   "common": {
     "appName": "العائلة الناجحة",
     "save": "حفظ",
@@ -100,7 +110,7 @@
     "noChildrenSubtitle": "أضف أبناءك لتبدأ بإسناد المهام ومنح النقاط"
   },
   "dashboard": {
-    "greeting": "مرحبًا، {{name}} 👋",
+    "greeting": "مرحبًا، {{name}}",
     "whatNeedsYou": "ماذا يحتاج منك الآن؟",
     "pendingApprovals": "مهام بانتظار موافقتك",
     "pendingRedemptions": "طلبات مكافآت بانتظار الرد",
@@ -119,7 +129,7 @@
     "noPendingRedemptions": "لا توجد طلبات مكافآت"
   },
   "childHome": {
-    "greeting": "مرحبًا {{name}} 👋",
+    "greeting": "مرحبًا {{name}}",
     "yourBalance": "رصيدك",
     "todayTasks": "مهام اليوم",
     "noTasksToday": "لا توجد مهام اليوم، استمتع بيومك! 🎉",

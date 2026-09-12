@@ -1,7 +1,6 @@
 import '@/i18n';
 
 import { useEffect } from 'react';
-import { I18nManager } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
@@ -12,7 +11,7 @@ import { LoadingState } from '@/design-system/components/LoadingState';
 import { ThemeProvider, useTheme } from '@/design-system/ThemeProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { useAuthStore } from '@/stores/auth.store';
-import { syncNativeDirection, useLocaleStore } from '@/stores/locale.store';
+import { syncNativeDirection, useIsRTL, useLocaleStore } from '@/stores/locale.store';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -56,8 +55,9 @@ function RootNavigator() {
 }
 
 export default function RootLayout() {
+  const rtl = useIsRTL();
   return (
-    <GestureHandlerRootView style={{ flex: 1, direction: I18nManager.isRTL ? 'rtl' : 'ltr' }}>
+    <GestureHandlerRootView style={{ flex: 1, direction: rtl ? 'rtl' : 'ltr' }}>
       <SafeAreaProvider>
         <ThemeProvider>
           <QueryProvider>

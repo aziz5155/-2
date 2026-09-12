@@ -42,7 +42,7 @@ export default function ApprovalsScreen() {
       <View style={{ gap: theme.spacing.md }}>
         <AppText variant="display">{t('dashboard.pendingApprovals')}</AppText>
 
-        {approvalsQuery.data?.length === 0 && <EmptyState emoji="✅" title={t('dashboard.noPendingApprovals')} />}
+        {approvalsQuery.data?.length === 0 && <EmptyState icon="checkmark" title={t('dashboard.noPendingApprovals')} />}
 
         <View style={{ gap: theme.spacing.sm }}>
           {approvalsQuery.data?.map((approval) => (

@@ -1,4 +1,14 @@
 {
+  "nav": {
+    "home": "Home",
+    "children": "Children",
+    "rewards": "Rewards",
+    "activity": "Activity",
+    "settings": "Settings",
+    "tasks": "Tasks",
+    "achievements": "Achievements",
+    "profile": "Profile"
+  },
   "common": {
     "appName": "Thriving Family",
     "save": "Save",
@@ -100,7 +110,7 @@
     "noChildrenSubtitle": "Add your kids to start assigning tasks and awarding points"
   },
   "dashboard": {
-    "greeting": "Hi, {{name}} 👋",
+    "greeting": "Hi, {{name}}",
     "whatNeedsYou": "What needs your attention?",
     "pendingApprovals": "Tasks awaiting your approval",
     "pendingRedemptions": "Reward requests awaiting response",
@@ -119,7 +129,7 @@
     "noPendingRedemptions": "No reward requests"
   },
   "childHome": {
-    "greeting": "Hi {{name}} 👋",
+    "greeting": "Hi {{name}}",
     "yourBalance": "Your balance",
     "todayTasks": "Today's tasks",
     "noTasksToday": "No tasks today, enjoy your day! 🎉",

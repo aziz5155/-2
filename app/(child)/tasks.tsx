@@ -51,7 +51,7 @@ export default function ChildTasksScreen() {
       <View style={{ gap: theme.spacing.lg }}>
         <AppText variant="display">{t('tasks.title')}</AppText>
 
-        {!hasAny && <EmptyState emoji="🎉" title={t('childHome.noTasksToday')} />}
+        {!hasAny && <EmptyState icon="celebrate" title={t('childHome.noTasksToday')} />}
 
         {scheduleQuery.data?.map((day) => {
           if (day.tasks.length === 0) return null;

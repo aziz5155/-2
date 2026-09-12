@@ -79,7 +79,7 @@ export default function RewardsScreen() {
 
         {rewardsQuery.data?.length === 0 && (
           <EmptyState
-            emoji="🎁"
+            icon="gift"
             title={t('rewards.noRewards')}
             actionLabel={t('rewards.newReward')}
             onAction={() => router.push('/(parent)/rewards/new')}

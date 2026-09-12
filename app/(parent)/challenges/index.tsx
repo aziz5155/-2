@@ -35,7 +35,7 @@ export default function ChallengesScreen() {
         </View>
 
         {challengesQuery.data?.length === 0 && (
-          <EmptyState emoji="🚩" title={t('challenges.title')} actionLabel={t('challenges.newChallenge')} onAction={() => router.push('/(parent)/challenges/new')} />
+          <EmptyState icon="flag" title={t('challenges.title')} actionLabel={t('challenges.newChallenge')} onAction={() => router.push('/(parent)/challenges/new')} />
         )}
 
         <View style={{ gap: theme.spacing.sm }}>

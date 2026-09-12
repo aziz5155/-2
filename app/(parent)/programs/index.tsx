@@ -51,7 +51,7 @@ export default function ProgramsScreen() {
 
         {programsQuery.data?.length === 0 && (
           <EmptyState
-            emoji="🌅"
+            icon="sunrise"
             title={t('programs.noPrograms')}
             subtitle={t('programs.templates')}
             actionLabel={t('programs.useTemplate')}
