@@ -3,6 +3,7 @@ import { create } from 'zustand';
 
 import { supabase } from '@/lib/supabase';
 import { getCurrentAppUser } from '@/services/auth.service';
+import { logAppOpen } from '@/services/analytics.service';
 import { AppUser } from '@/types/models';
 
 interface AuthState {
@@ -41,7 +42,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       .getSession()
       .then(async ({ data }) => {
         set({ session: data.session });
-        if (data.session) await get().refreshAppUser();
+        if (data.session) {
+          await get().refreshAppUser();
+          logAppOpen();
+        }
       })
       .catch(() => {
         // A blocked/unavailable storage adapter (e.g. Safari with cookies

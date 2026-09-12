@@ -318,3 +318,140 @@ export async function listAuditLog(limit = 50): Promise<AdminAuditLogEntry[]> {
   if (error) throw error;
   return data as AdminAuditLogEntry[];
 }
+
+// ---------------------------------------------------------------------------
+// Owner analytics — platform-wide, aggregated only. Every RPC here is
+// checked server-side against is_admin(); a parent account gets a plain
+// authorization error back, never data, no matter how it's called.
+// ---------------------------------------------------------------------------
+export interface AnalyticsRange {
+  start: string;
+  end: string;
+}
+
+export interface OwnerOverviewStats {
+  total_users: number;
+  total_families: number;
+  total_children: number;
+  new_users: number;
+  new_families: number;
+  new_children: number;
+  avg_children_per_family: number;
+}
+
+export interface OwnerEngagementStats {
+  dau: number;
+  wau: number;
+  mau: number;
+  dormant_accounts: number;
+}
+
+export interface OwnerRetentionStats {
+  previously_active: number;
+  still_active: number;
+  retention_rate: number | null;
+}
+
+export interface OwnerTaskStats {
+  tasks_created: number;
+  programs_created: number;
+  completions_recorded: number;
+  completions_approved: number;
+  completion_rate: number | null;
+}
+
+export interface OwnerPointsStats {
+  points_granted: number;
+  points_spent: number;
+}
+
+export interface OwnerRewardsStats {
+  rewards_created: number;
+  redemptions_requested: number;
+  redemptions_approved: number;
+}
+
+export interface OwnerFeatureUsage {
+  event_type: string;
+  usage_count: number;
+}
+
+export interface OwnerTemplateUsage {
+  template_name: string;
+  usage_count: number;
+}
+
+export interface OwnerFunnelStep {
+  step: string;
+  step_order: number;
+  account_count: number;
+}
+
+export interface OwnerSubscriptionStats {
+  free_count: number;
+  premium_count: number;
+  new_premium_in_period: number;
+  canceled_in_period: number;
+  churn_rate: number | null;
+  revenue_available: boolean;
+}
+
+export async function getOwnerOverviewStats(range: AnalyticsRange): Promise<OwnerOverviewStats> {
+  const { data, error } = await supabase.rpc('owner_overview_stats', { p_start: range.start, p_end: range.end }).single();
+  if (error) throw error;
+  return data as OwnerOverviewStats;
+}
+
+export async function getOwnerEngagementStats(): Promise<OwnerEngagementStats> {
+  const { data, error } = await supabase.rpc('owner_engagement_stats').single();
+  if (error) throw error;
+  return data as OwnerEngagementStats;
+}
+
+export async function getOwnerRetentionStats(): Promise<OwnerRetentionStats> {
+  const { data, error } = await supabase.rpc('owner_retention_stats').single();
+  if (error) throw error;
+  return data as OwnerRetentionStats;
+}
+
+export async function getOwnerTaskStats(range: AnalyticsRange): Promise<OwnerTaskStats> {
+  const { data, error } = await supabase.rpc('owner_task_stats', { p_start: range.start, p_end: range.end }).single();
+  if (error) throw error;
+  return data as OwnerTaskStats;
+}
+
+export async function getOwnerPointsStats(range: AnalyticsRange): Promise<OwnerPointsStats> {
+  const { data, error } = await supabase.rpc('owner_points_stats', { p_start: range.start, p_end: range.end }).single();
+  if (error) throw error;
+  return data as OwnerPointsStats;
+}
+
+export async function getOwnerRewardsStats(range: AnalyticsRange): Promise<OwnerRewardsStats> {
+  const { data, error } = await supabase.rpc('owner_rewards_stats', { p_start: range.start, p_end: range.end }).single();
+  if (error) throw error;
+  return data as OwnerRewardsStats;
+}
+
+export async function getOwnerFeatureUsage(range: AnalyticsRange): Promise<OwnerFeatureUsage[]> {
+  const { data, error } = await supabase.rpc('owner_feature_usage', { p_start: range.start, p_end: range.end });
+  if (error) throw error;
+  return data as OwnerFeatureUsage[];
+}
+
+export async function getOwnerTopTemplates(range: AnalyticsRange): Promise<OwnerTemplateUsage[]> {
+  const { data, error } = await supabase.rpc('owner_top_templates', { p_start: range.start, p_end: range.end, p_limit: 5 });
+  if (error) throw error;
+  return data as OwnerTemplateUsage[];
+}
+
+export async function getOwnerFunnelStats(range: AnalyticsRange): Promise<OwnerFunnelStep[]> {
+  const { data, error } = await supabase.rpc('owner_funnel_stats', { p_start: range.start, p_end: range.end });
+  if (error) throw error;
+  return data as OwnerFunnelStep[];
+}
+
+export async function getOwnerSubscriptionStats(range: AnalyticsRange): Promise<OwnerSubscriptionStats> {
+  const { data, error } = await supabase.rpc('owner_subscription_stats', { p_start: range.start, p_end: range.end }).single();
+  if (error) throw error;
+  return data as OwnerSubscriptionStats;
+}

@@ -7,5 +7,7 @@ export * from './ChildSummaryCard';
 export * from './EmptyState';
 export * from './Input';
 export * from './LoadingState';
+export * from './PeriodFilter';
 export * from './ProgressBar';
 export * from './Screen';
+export * from './StatCard';

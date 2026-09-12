@@ -56,10 +56,10 @@ export default function ParentLayout() {
         }}
       />
       <Tabs.Screen
-        name="activity"
+        name="analytics"
         options={{
-          title: t('nav.activity'),
-          tabBarIcon: ({ color, focused }) => <TabIcon outline="pulse-outline" filled="pulse" color={color} focused={focused} />,
+          title: t('nav.analytics'),
+          tabBarIcon: ({ color, focused }) => <TabIcon outline="bar-chart-outline" filled="bar-chart" color={color} focused={focused} />,
         }}
       />
       <Tabs.Screen
@@ -81,7 +81,7 @@ export default function ParentLayout() {
       <Tabs.Screen name="approvals" options={{ href: null }} />
       <Tabs.Screen name="challenges/index" options={{ href: null }} />
       <Tabs.Screen name="challenges/new" options={{ href: null }} />
-      <Tabs.Screen name="analytics" options={{ href: null }} />
+      <Tabs.Screen name="activity" options={{ href: null }} />
       <Tabs.Screen name="quick-points" options={{ href: null }} />
       <Tabs.Screen name="change-password" options={{ href: null }} />
     </Tabs>

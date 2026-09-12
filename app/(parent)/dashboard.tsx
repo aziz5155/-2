@@ -190,6 +190,10 @@ export default function DashboardScreen() {
         )}
 
         <View style={{ gap: theme.spacing.sm }}>
+          <SectionHeader title={t('activity.title')} actionLabel={t('common.seeAll')} onAction={() => router.push('/(parent)/activity')} />
+        </View>
+
+        <View style={{ gap: theme.spacing.sm }}>
           <SectionHeader title={t('children.title')} actionLabel={t('common.seeAll')} onAction={() => router.push('/(parent)/children')} />
 
           {childrenQuery.data?.length === 0 ? (
