@@ -25,9 +25,15 @@ export default function WelcomeScreen() {
   const googleWebClientId = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
   const googleIosClientId = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID;
 
+  // Google.useAuthRequest throws synchronously (crashing the whole screen,
+  // since it's a hook and can't be called conditionally) if webClientId is
+  // `undefined` rather than an empty string — which is exactly what happens
+  // when EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID was never set in the deployment
+  // environment. Falling back to '' keeps the hook safe to call; the button
+  // below already checks googleWebClientId before actually using it.
   const [, , googlePromptAsync] = Google.useAuthRequest({
-    webClientId: googleWebClientId,
-    iosClientId: googleIosClientId,
+    webClientId: googleWebClientId ?? '',
+    iosClientId: googleIosClientId ?? '',
   });
 
   const handleApple = async () => {
