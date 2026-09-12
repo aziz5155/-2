@@ -151,50 +151,66 @@ export interface CustomerAccount {
   plan_key: string | null;
 }
 
+// Three flat queries instead of one deep nested embed (users -> family_members
+// -> families -> subscriptions -> plans): each step can fail or come back
+// empty on its own, which is far easier to diagnose than one 4-level embed.
 export async function listCustomerAccounts(search?: string): Promise<CustomerAccount[]> {
-  let query = supabase
+  let userQuery = supabase
     .from('users')
-    .select(
-      'id, full_name, email, created_at, family_members(family:families(id, name, family_code, subscription:subscriptions(plan:plans(name, key))))',
-    )
+    .select('id, full_name, email, created_at')
     .eq('kind', 'parent')
     .order('created_at', { ascending: false })
     .limit(200);
 
   if (search && search.trim()) {
-    query = query.or(`full_name.ilike.%${search.trim()}%,email.ilike.%${search.trim()}%`);
+    userQuery = userQuery.or(`full_name.ilike.%${search.trim()}%,email.ilike.%${search.trim()}%`);
   }
 
-  const { data, error } = await query;
-  if (error) throw error;
+  const { data: userRows, error: usersError } = await userQuery;
+  if (usersError) throw usersError;
+  const users = (userRows ?? []) as { id: string; full_name: string; email: string | null; created_at: string }[];
+  if (users.length === 0) return [];
 
-  type Row = {
-    id: string;
-    full_name: string;
-    email: string | null;
-    created_at: string;
-    family_members: {
-      family: {
-        id: string;
-        name: string;
-        family_code: string;
-        subscription: { plan: { name: string; key: string } | null } | null;
-      } | null;
-    }[];
-  };
+  const userIds = users.map((u) => u.id);
+  const { data: membershipRows, error: membershipError } = await supabase
+    .from('family_members')
+    .select('user_id, family:families(id, name, family_code)')
+    .in('user_id', userIds);
+  if (membershipError) throw membershipError;
 
-  return (data as unknown as Row[]).map((row) => {
-    const family = row.family_members?.[0]?.family ?? null;
+  type Membership = { user_id: string; family: { id: string; name: string; family_code: string } | null };
+  const familyByUser = new Map<string, { id: string; name: string; family_code: string }>();
+  for (const m of (membershipRows ?? []) as unknown as Membership[]) {
+    if (m.family) familyByUser.set(m.user_id, m.family);
+  }
+
+  const familyIds = [...new Set([...familyByUser.values()].map((f) => f.id))];
+  const planByFamily = new Map<string, { name: string; key: string }>();
+  if (familyIds.length > 0) {
+    const { data: subRows, error: subsError } = await supabase
+      .from('subscriptions')
+      .select('family_id, plan:plans(name, key)')
+      .in('family_id', familyIds);
+    if (subsError) throw subsError;
+    type SubRow = { family_id: string; plan: { name: string; key: string } | null };
+    for (const s of (subRows ?? []) as unknown as SubRow[]) {
+      if (s.plan) planByFamily.set(s.family_id, s.plan);
+    }
+  }
+
+  return users.map((u) => {
+    const family = familyByUser.get(u.id) ?? null;
+    const plan = family ? (planByFamily.get(family.id) ?? null) : null;
     return {
-      user_id: row.id,
-      full_name: row.full_name || '—',
-      email: row.email,
-      created_at: row.created_at,
+      user_id: u.id,
+      full_name: u.full_name || '—',
+      email: u.email,
+      created_at: u.created_at,
       family_id: family?.id ?? null,
       family_name: family?.name ?? null,
       family_code: family?.family_code ?? null,
-      plan_name: family?.subscription?.plan?.name ?? null,
-      plan_key: family?.subscription?.plan?.key ?? null,
+      plan_name: plan?.name ?? null,
+      plan_key: plan?.key ?? null,
     };
   });
 }

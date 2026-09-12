@@ -24,6 +24,15 @@ export default function CustomersScreen() {
 
         {customersQuery.isLoading ? (
           <LoadingState />
+        ) : customersQuery.isError ? (
+          <Card backgroundColor={theme.colors.dangerMuted} elevation={0}>
+            <AppText color="danger" weight="semibold">
+              تعذر تحميل العملاء
+            </AppText>
+            <AppText variant="caption" color="danger">
+              {customersQuery.error instanceof Error ? customersQuery.error.message : String(customersQuery.error)}
+            </AppText>
+          </Card>
         ) : customersQuery.data?.length === 0 ? (
           <EmptyState icon="people" title="لا يوجد عملاء بعد" />
         ) : (
