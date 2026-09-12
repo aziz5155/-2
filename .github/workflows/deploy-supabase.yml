@@ -21,6 +21,7 @@ jobs:
         run: |
           supabase functions deploy create-child --project-ref bktcmbazucbfimqgziws
           supabase functions deploy child-login --project-ref bktcmbazucbfimqgziws
+          supabase functions deploy reset-child-pin --project-ref bktcmbazucbfimqgziws
 
       - name: Push database migrations (optional — needs SUPABASE_DB_URL secret)
         env:
