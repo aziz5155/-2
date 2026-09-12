@@ -22,7 +22,7 @@ export default function NewPromoCodeScreen() {
   const queryClient = useQueryClient();
 
   const plansQuery = useQuery({ queryKey: ['plans'], queryFn: listAllPlans });
-  const premiumPlans = plansQuery.data?.filter((p) => p.tier === 'premium') ?? [];
+  const premiumPlans = plansQuery.data?.filter((p) => p.tier !== 'free') ?? [];
 
   const [code, setCode] = useState('');
   const [discountPercent, setDiscountPercent] = useState('50');

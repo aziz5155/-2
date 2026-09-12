@@ -13,7 +13,7 @@ export type PointSourceType =
   | 'reward_redemption'
   | 'redemption_refund'
   | 'challenge_reward';
-export type SubscriptionPlan = 'free' | 'premium';
+export type SubscriptionPlan = 'free' | 'plus' | 'pro';
 export type SubscriptionStatus = 'active' | 'canceled' | 'expired' | 'trialing' | 'none';
 export type AchievementCriteria =
   | 'first_task'

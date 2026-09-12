@@ -14,5 +14,10 @@ export async function getSubscription(familyId: string): Promise<Subscription | 
 }
 
 export function isPremium(subscription: Subscription | null): boolean {
-  return subscription?.plan === 'premium' && subscription.status === 'active';
+  return !!subscription && subscription.plan !== 'free' && subscription.status === 'active';
+}
+
+export function planTierLabel(subscription: Subscription | null): 'free' | 'plus' | 'pro' {
+  if (!subscription || subscription.status !== 'active') return 'free';
+  return subscription.plan;
 }

@@ -9,7 +9,7 @@ import { useTheme } from '@/design-system/ThemeProvider';
 import { getMyAdminRole } from '@/services/admin.service';
 import { getMyFamily } from '@/services/family.service';
 import { signOut } from '@/services/auth.service';
-import { getSubscription, isPremium } from '@/services/subscriptions.service';
+import { getSubscription, isPremium, planTierLabel } from '@/services/subscriptions.service';
 import { useLocaleStore, syncNativeDirection } from '@/stores/locale.store';
 import { useThemeStore, ThemePreference } from '@/stores/theme.store';
 
@@ -52,6 +52,7 @@ export default function MoreScreen() {
   const setLocale = useLocaleStore((s) => s.setLocale);
 
   const premium = isPremium(subscriptionQuery.data ?? null);
+  const tier = planTierLabel(subscriptionQuery.data ?? null);
   const adminRoleQuery = useQuery({ queryKey: ['my-admin-role'], queryFn: getMyAdminRole });
 
   const cycleTheme = () => {
@@ -99,7 +100,10 @@ export default function MoreScreen() {
         <Card>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <AppText variant="bodyBold">{t('settings.subscription')}</AppText>
-            <Badge label={premium ? t('settings.premiumPlan') : t('settings.freePlan')} tone={premium ? 'primary' : 'neutral'} />
+            <Badge
+              label={tier === 'plus' ? t('settings.plusPlan') : tier === 'pro' ? t('settings.proPlan') : t('settings.freePlan')}
+              tone={premium ? 'primary' : 'neutral'}
+            />
           </View>
           {!premium && (
             <Pressable onPress={() => Alert.alert(t('settings.upgrade'), 'App Store in-app purchases coming soon.')}>

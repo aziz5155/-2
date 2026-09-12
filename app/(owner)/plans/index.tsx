@@ -51,11 +51,14 @@ function PlanCard({ plan }: { plan: Plan }) {
         <AppText variant="bodyBold">{plan.name}</AppText>
         <View style={{ flexDirection: 'row', gap: 6 }}>
           {plan.billing_period && <Badge label={PERIOD_LABELS[plan.billing_period]} tone="info" />}
-          <Badge label={plan.tier === 'free' ? 'مجانية' : 'مدفوعة'} tone={plan.tier === 'free' ? 'neutral' : 'primary'} />
+          <Badge
+            label={plan.tier === 'free' ? 'مجانية' : plan.tier === 'plus' ? 'Plus' : plan.tier === 'pro' ? 'Pro' : 'قديمة'}
+            tone={plan.tier === 'free' ? 'neutral' : 'primary'}
+          />
         </View>
       </View>
 
-      {plan.tier === 'premium' && (
+      {plan.tier !== 'free' && (
         <View style={{ flexDirection: 'row', gap: theme.spacing.sm, alignItems: 'flex-end' }}>
           <Input style={{ flex: 1 }} label="السعر (ر.س)" keyboardType="decimal-pad" value={price} onChangeText={setPrice} />
           <Button label="حفظ" size="sm" onPress={handleSavePrice} loading={saving} />

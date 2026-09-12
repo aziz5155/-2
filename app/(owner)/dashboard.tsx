@@ -8,7 +8,6 @@ import { AppText, Badge, Card, PeriodFilter, Screen, StatCard } from '@/design-s
 import { LoadingState } from '@/design-system/components/LoadingState';
 import { useTheme } from '@/design-system/ThemeProvider';
 import {
-  getOwnerDashboardStats,
   getOwnerOverviewStats,
   getOwnerEngagementStats,
   getOwnerRetentionStats,
@@ -82,7 +81,6 @@ export default function OwnerDashboardScreen() {
   const [period, setPeriod] = useState<PeriodKey>('30d');
   const { current: range, previous: prevRange } = useMemo(() => resolvePeriod(period), [period]);
 
-  const legacyStatsQuery = useQuery({ queryKey: ['owner-stats'], queryFn: getOwnerDashboardStats });
   const overviewQuery = useQuery({ queryKey: ['owner-overview', range], queryFn: () => getOwnerOverviewStats(range) });
   const prevOverviewQuery = useQuery({ queryKey: ['owner-overview', prevRange], queryFn: () => getOwnerOverviewStats(prevRange) });
   const engagementQuery = useQuery({ queryKey: ['owner-engagement'], queryFn: getOwnerEngagementStats });
@@ -97,8 +95,7 @@ export default function OwnerDashboardScreen() {
   const subsQuery = useQuery({ queryKey: ['owner-subs', range], queryFn: () => getOwnerSubscriptionStats(range) });
   const prevSubsQuery = useQuery({ queryKey: ['owner-subs', prevRange], queryFn: () => getOwnerSubscriptionStats(prevRange) });
 
-  if (legacyStatsQuery.isLoading || overviewQuery.isLoading) return <LoadingState />;
-  const legacy = legacyStatsQuery.data;
+  if (overviewQuery.isLoading) return <LoadingState />;
   const overview = overviewQuery.data;
   const prevOverview = prevOverviewQuery.data;
   const engagement = engagementQuery.data;
@@ -199,8 +196,9 @@ export default function OwnerDashboardScreen() {
           <SectionTitle>الاشتراكات</SectionTitle>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm }}>
             <StatCard icon="people" label="مجاني" value={subs?.free_count ?? 0} />
-            <StatCard icon="star" label="بريميوم" value={subs?.premium_count ?? 0} tint={theme.colors.pointsMuted} />
-            <StatCard icon="checkmark" label="ترقيات جديدة" value={subs?.new_premium_in_period ?? 0} />
+            <StatCard icon="star" label="Plus" value={subs?.plus_count ?? 0} tint={theme.colors.pointsMuted} />
+            <StatCard icon="trophy" label="Pro" value={subs?.pro_count ?? 0} tint={theme.colors.pointsMuted} />
+            <StatCard icon="checkmark" label="اشتراكات مدفوعة جديدة" value={subs?.new_paid_in_period ?? 0} />
             <StatCard icon="trash" label="إلغاءات" value={subs?.canceled_in_period ?? 0} />
             <StatCard icon="chart" label="Churn" value={subs?.churn_rate !== null && subs?.churn_rate !== undefined ? `${subs.churn_rate}%` : '—'} />
           </View>
@@ -258,10 +256,10 @@ export default function OwnerDashboardScreen() {
           </View>
         )}
 
-        {legacy && (
+        {overview && (
           <Card backgroundColor={theme.colors.surfaceMuted} elevation={0} style={{ gap: 4 }}>
             <AppText variant="caption" color="secondary">
-              متوسط الأبناء لكل عائلة: {overview?.avg_children_per_family ?? '—'} · إجمالي الأبناء: {overview?.total_children ?? '—'}
+              متوسط الأبناء لكل عائلة: {overview.avg_children_per_family} · إجمالي الأبناء: {overview.total_children}
             </AppText>
           </Card>
         )}

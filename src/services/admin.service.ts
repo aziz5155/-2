@@ -215,36 +215,6 @@ export async function listCustomerAccounts(search?: string): Promise<CustomerAcc
   });
 }
 
-export interface OwnerDashboardStats {
-  totalFamilies: number;
-  freeFamilies: number;
-  premiumFamilies: number;
-  totalPayments: number;
-  pendingProviderAmount: number;
-}
-
-export async function getOwnerDashboardStats(): Promise<OwnerDashboardStats> {
-  const [{ count: totalFamilies }, { count: freeFamilies }, { count: premiumFamilies }, { data: payments }] =
-    await Promise.all([
-      supabase.from('families').select('id', { count: 'exact', head: true }),
-      supabase.from('subscriptions').select('id', { count: 'exact', head: true }).eq('plan', 'free'),
-      supabase.from('subscriptions').select('id', { count: 'exact', head: true }).eq('plan', 'premium'),
-      supabase.from('payments').select('amount_net, status'),
-    ]);
-
-  const paymentRows = (payments as { amount_net: number; status: string }[]) ?? [];
-
-  return {
-    totalFamilies: totalFamilies ?? 0,
-    freeFamilies: freeFamilies ?? 0,
-    premiumFamilies: premiumFamilies ?? 0,
-    totalPayments: paymentRows.length,
-    pendingProviderAmount: paymentRows
-      .filter((p) => p.status === 'pending_provider')
-      .reduce((sum, p) => sum + Number(p.amount_net), 0),
-  };
-}
-
 export interface FamilyDetail {
   id: string;
   name: string;
@@ -405,8 +375,9 @@ export interface OwnerFunnelStep {
 
 export interface OwnerSubscriptionStats {
   free_count: number;
-  premium_count: number;
-  new_premium_in_period: number;
+  plus_count: number;
+  pro_count: number;
+  new_paid_in_period: number;
   canceled_in_period: number;
   churn_rate: number | null;
   revenue_available: boolean;

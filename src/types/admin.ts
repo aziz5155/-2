@@ -9,7 +9,7 @@ export interface AdminUser {
   updated_at: string;
 }
 
-export type SubscriptionTier = 'free' | 'premium';
+export type SubscriptionTier = 'free' | 'plus' | 'pro';
 export type BillingPeriod = 'daily' | 'weekly' | 'monthly' | 'yearly';
 export type PromoStatus = 'active' | 'paused' | 'archived';
 export type PaymentStatus = 'pending_provider' | 'succeeded' | 'failed' | 'refunded';
