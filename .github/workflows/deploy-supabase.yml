@@ -25,6 +25,7 @@ jobs:
 
       - name: Push database migrations (optional — needs SUPABASE_DB_URL secret)
         env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         continue-on-error: true
         run: |
@@ -32,4 +33,9 @@ jobs:
             echo "SUPABASE_DB_URL secret not set — skipping database migrations. Edge Functions above still deployed."
             exit 0
           fi
-          supabase db push --db-url "$SUPABASE_DB_URL"
+          # The direct db.<ref>.supabase.co host is IPv6-only, which GitHub's
+          # runners can't reach. Link + push instead, which goes through the
+          # IPv4-reachable connection pooler — password only, no URL needed.
+          export SUPABASE_DB_PASSWORD=$(echo "$SUPABASE_DB_URL" | sed -E 's#^postgres(ql)?://[^:]+:([^@]+)@.*#\2#')
+          supabase link --project-ref bktcmbazucbfimqgziws
+          supabase db push
