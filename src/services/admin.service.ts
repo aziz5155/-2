@@ -138,28 +138,31 @@ export async function subscribeToPlan(planId: string, code?: string): Promise<Pa
 // ---------------------------------------------------------------------------
 // Customers (owner dashboard)
 // ---------------------------------------------------------------------------
-export interface CustomerSummary {
-  family_id: string;
-  family_name: string;
-  family_code: string;
-  owner_name: string;
-  owner_email: string | null;
+/** One row per account (kind='parent') — family_id is null until they've created a family. */
+export interface CustomerAccount {
+  user_id: string;
+  full_name: string;
+  email: string | null;
+  created_at: string;
+  family_id: string | null;
+  family_name: string | null;
+  family_code: string | null;
   plan_name: string | null;
   plan_key: string | null;
-  created_at: string;
 }
 
-export async function listCustomers(search?: string): Promise<CustomerSummary[]> {
+export async function listCustomerAccounts(search?: string): Promise<CustomerAccount[]> {
   let query = supabase
-    .from('families')
+    .from('users')
     .select(
-      'id, name, family_code, created_at, created_by_user:users!families_created_by_fkey(full_name, email), subscription:subscriptions(plan:plans(name, key))',
+      'id, full_name, email, created_at, family_members(family:families(id, name, family_code, subscription:subscriptions(plan:plans(name, key))))',
     )
+    .eq('kind', 'parent')
     .order('created_at', { ascending: false })
-    .limit(100);
+    .limit(200);
 
   if (search && search.trim()) {
-    query = query.ilike('name', `%${search.trim()}%`);
+    query = query.or(`full_name.ilike.%${search.trim()}%,email.ilike.%${search.trim()}%`);
   }
 
   const { data, error } = await query;
@@ -167,23 +170,33 @@ export async function listCustomers(search?: string): Promise<CustomerSummary[]>
 
   type Row = {
     id: string;
-    name: string;
-    family_code: string;
+    full_name: string;
+    email: string | null;
     created_at: string;
-    created_by_user: { full_name: string; email: string | null } | null;
-    subscription: { plan: { name: string; key: string } | null } | null;
+    family_members: {
+      family: {
+        id: string;
+        name: string;
+        family_code: string;
+        subscription: { plan: { name: string; key: string } | null } | null;
+      } | null;
+    }[];
   };
 
-  return (data as unknown as Row[]).map((row) => ({
-    family_id: row.id,
-    family_name: row.name,
-    family_code: row.family_code,
-    owner_name: row.created_by_user?.full_name ?? '—',
-    owner_email: row.created_by_user?.email ?? null,
-    plan_name: row.subscription?.plan?.name ?? null,
-    plan_key: row.subscription?.plan?.key ?? null,
-    created_at: row.created_at,
-  }));
+  return (data as unknown as Row[]).map((row) => {
+    const family = row.family_members?.[0]?.family ?? null;
+    return {
+      user_id: row.id,
+      full_name: row.full_name || '—',
+      email: row.email,
+      created_at: row.created_at,
+      family_id: family?.id ?? null,
+      family_name: family?.name ?? null,
+      family_code: family?.family_code ?? null,
+      plan_name: family?.subscription?.plan?.name ?? null,
+      plan_key: family?.subscription?.plan?.key ?? null,
+    };
+  });
 }
 
 export interface OwnerDashboardStats {
