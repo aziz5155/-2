@@ -8,7 +8,7 @@ import { useTheme } from '@/design-system/ThemeProvider';
 import { childSignIn, listFamilyChildrenByCode } from '@/services/auth.service';
 import { Child } from '@/types/models';
 
-type Step = 'code' | 'child';
+type Step = 'code' | 'child' | 'pin';
 
 export default function ChildLoginScreen() {
   const { t } = useTranslation();
@@ -17,7 +17,8 @@ export default function ChildLoginScreen() {
   const [step, setStep] = useState<Step>('code');
   const [familyCode, setFamilyCode] = useState('');
   const [children, setChildren] = useState<Pick<Child, 'id' | 'name' | 'avatar_emoji' | 'avatar_url'>[]>([]);
-  const [signingInId, setSigningInId] = useState<string | null>(null);
+  const [selectedChild, setSelectedChild] = useState<string | null>(null);
+  const [pin, setPin] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,15 +40,17 @@ export default function ChildLoginScreen() {
     }
   };
 
-  const handleSignIn = async (childId: string) => {
+  const handleSignIn = async () => {
+    if (!selectedChild || pin.length !== 4) return;
     try {
-      setSigningInId(childId);
+      setLoading(true);
       setError(null);
-      await childSignIn(familyCode.trim().toUpperCase(), childId);
+      await childSignIn(familyCode.trim().toUpperCase(), selectedChild, pin);
       router.replace('/');
     } catch {
       setError(t('auth.invalidCredentials'));
-      setSigningInId(null);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,13 +77,14 @@ export default function ChildLoginScreen() {
         {step === 'child' && (
           <>
             <AppText variant="subtitle">{t('auth.selectYourName')}</AppText>
-            {error ? <AppText color="danger" variant="caption">{error}</AppText> : null}
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm }}>
               {children.map((c) => (
                 <Pressable
                   key={c.id}
-                  disabled={signingInId !== null}
-                  onPress={() => handleSignIn(c.id)}
+                  onPress={() => {
+                    setSelectedChild(c.id);
+                    setStep('pin');
+                  }}
                   style={{
                     alignItems: 'center',
                     gap: 6,
@@ -88,16 +92,42 @@ export default function ChildLoginScreen() {
                     borderRadius: theme.radius.lg,
                     backgroundColor: theme.colors.surfaceMuted,
                     width: 92,
-                    opacity: signingInId && signingInId !== c.id ? 0.4 : 1,
                   }}
                 >
                   <Avatar name={c.name} uri={c.avatar_url} emoji={c.avatar_emoji} size={56} />
                   <AppText variant="caption" align="center" numberOfLines={1}>
-                    {signingInId === c.id ? t('common.loading') : c.name}
+                    {c.name}
                   </AppText>
                 </Pressable>
               ))}
             </View>
+          </>
+        )}
+
+        {step === 'pin' && (
+          <>
+            <AppText variant="subtitle">{t('auth.enterPin')}</AppText>
+            <AppText color="secondary" variant="caption">
+              {t('auth.pinHint')}
+            </AppText>
+            <Input
+              value={pin}
+              onChangeText={setPin}
+              keyboardType="number-pad"
+              maxLength={4}
+              secureTextEntry
+              placeholder="••••"
+              style={{ textAlign: 'center', fontSize: 24, letterSpacing: 8 }}
+            />
+            {error ? <AppText color="danger" variant="caption">{error}</AppText> : null}
+            <Button
+              label={t('auth.login')}
+              onPress={handleSignIn}
+              loading={loading}
+              disabled={pin.length !== 4}
+              fullWidth
+              size="lg"
+            />
           </>
         )}
       </View>

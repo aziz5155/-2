@@ -104,12 +104,17 @@ export async function createFamily(name: string): Promise<Family> {
 export async function createChild(input: {
   family_id: string;
   name: string;
+  pin: string;
   avatar_url?: string;
   avatar_emoji?: string;
   birth_year?: number;
 }): Promise<Child> {
   const res = await callEdgeFunction<{ child: Child }>('create-child', input);
   return res.child;
+}
+
+export async function resetChildPin(child_id: string, new_pin: string) {
+  await callEdgeFunction('reset-child-pin', { child_id, new_pin });
 }
 
 export async function listFamilyChildrenByCode(family_code: string) {
@@ -119,11 +124,12 @@ export async function listFamilyChildrenByCode(family_code: string) {
   );
 }
 
-export async function childSignIn(family_code: string, child_id: string) {
+export async function childSignIn(family_code: string, child_id: string, pin: string) {
   const res = await callEdgeFunction<{ session: { access_token: string; refresh_token: string } }>('child-login', {
     action: 'signin',
     family_code,
     child_id,
+    pin,
   });
 
   const { error } = await supabase.auth.setSession({

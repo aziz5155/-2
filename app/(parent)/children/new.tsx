@@ -23,6 +23,8 @@ export default function NewChildScreen() {
   const [age, setAge] = useState('');
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
   const [avatarMime, setAvatarMime] = useState('image/jpeg');
+  const [pin, setPin] = useState('');
+  const [confirmPin, setConfirmPin] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,6 +47,8 @@ export default function NewChildScreen() {
   const handleSubmit = async () => {
     setError(null);
     if (!name.trim()) return setError(t('common.requiredField'));
+    if (!/^\d{4}$/.test(pin)) return setError(t('auth.pinHint'));
+    if (pin !== confirmPin) return setError('PINs do not match');
     if (!familyQuery.data) return;
 
     try {
@@ -54,6 +58,7 @@ export default function NewChildScreen() {
       await createChild({
         family_id: familyQuery.data.id,
         name: name.trim(),
+        pin,
         avatar_url: avatarUrl,
         birth_year: birthYear,
       });
@@ -95,6 +100,22 @@ export default function NewChildScreen() {
 
         <Input label={t('children.childName')} value={name} onChangeText={setName} />
         <Input label={t('children.childAge')} value={age} onChangeText={setAge} keyboardType="number-pad" />
+        <Input
+          label={t('children.setPin')}
+          value={pin}
+          onChangeText={setPin}
+          keyboardType="number-pad"
+          maxLength={4}
+          secureTextEntry
+        />
+        <Input
+          label={t('common.confirm')}
+          value={confirmPin}
+          onChangeText={setConfirmPin}
+          keyboardType="number-pad"
+          maxLength={4}
+          secureTextEntry
+        />
 
         {error ? (
           <AppText color="danger" variant="caption">

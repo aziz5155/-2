@@ -1,8 +1,7 @@
 // Creates a child login (a real Supabase Auth user under a synthetic
-// internal email, with a random password the child never sees — sign-in
-// happens passwordlessly via child-login) plus the child's profile row.
-// Must run with the service role — creating other users' auth accounts is
-// a privileged operation that can never happen from the client.
+// internal email, with the PIN as its password) plus the child's profile
+// row. Must run with the service role — creating other users' auth
+// accounts is a privileged operation that can never happen from the client.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders, jsonResponse } from '../_shared/cors.ts';
 
@@ -17,10 +16,10 @@ Deno.serve(async (req) => {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) return jsonResponse({ error: 'missing authorization' }, 401);
 
-    const { family_id, name, avatar_url, avatar_emoji, birth_year } = await req.json();
+    const { family_id, name, pin, avatar_url, avatar_emoji, birth_year } = await req.json();
 
-    if (!family_id || !name) {
-      return jsonResponse({ error: 'family_id and name are required' }, 400);
+    if (!family_id || !name || !pin || !/^\d{4}$/.test(pin)) {
+      return jsonResponse({ error: 'family_id, name and a 4-digit pin are required' }, 400);
     }
 
     // Verify the caller is an authenticated parent of this family (RLS-backed).
@@ -36,13 +35,10 @@ Deno.serve(async (req) => {
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
     const internalEmail = `child.${crypto.randomUUID()}@internal.familysuccess.app`;
-    // Never surfaced anywhere again — child-login signs children in
-    // passwordlessly via a server-generated magic link, not this password.
-    const internalPassword = crypto.randomUUID();
 
     const { data: created, error: createErr } = await admin.auth.admin.createUser({
       email: internalEmail,
-      password: internalPassword,
+      password: pin,
       email_confirm: true,
       user_metadata: { kind: 'child', full_name: name },
     });

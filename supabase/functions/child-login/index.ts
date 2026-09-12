@@ -1,8 +1,7 @@
 // Two-step child sign-in that never exposes the child's internal email to
-// the client, and never asks the child for a password:
-//   { action: 'list', family_code }              -> public child roster
-//   { action: 'signin', family_code, child_id }   -> real auth session,
-//     minted server-side via a magic-link token the child never sees.
+// the client:
+//   { action: 'list', family_code }               -> public child roster
+//   { action: 'signin', family_code, child_id, pin } -> real auth session
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders, jsonResponse } from '../_shared/cors.ts';
 
@@ -37,8 +36,8 @@ Deno.serve(async (req) => {
     }
 
     if (body.action === 'signin') {
-      const { child_id } = body;
-      if (!child_id) return jsonResponse({ error: 'child_id is required' }, 400);
+      const { child_id, pin } = body;
+      if (!child_id || !pin) return jsonResponse({ error: 'child_id and pin are required' }, 400);
 
       const { data: child } = await admin
         .from('children')
@@ -49,26 +48,16 @@ Deno.serve(async (req) => {
 
       if (!child?.internal_email) return jsonResponse({ error: 'child not found' }, 404);
 
-      // Mint a session without a password: generate a magic-link token
-      // server-side (service role) and immediately redeem it ourselves.
-      const { data: linkData, error: linkErr } = await admin.auth.admin.generateLink({
-        type: 'magiclink',
-        email: child.internal_email,
+      const tokenResp = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+        method: 'POST',
+        headers: { apikey: ANON_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: child.internal_email, password: pin }),
       });
-      if (linkErr || !linkData?.properties?.hashed_token) {
-        return jsonResponse({ error: linkErr?.message ?? 'failed to sign in' }, 500);
-      }
 
-      const anon = createClient(SUPABASE_URL, ANON_KEY);
-      const { data: verifyData, error: verifyErr } = await anon.auth.verifyOtp({
-        type: 'magiclink',
-        token_hash: linkData.properties.hashed_token,
-      });
-      if (verifyErr || !verifyData.session) {
-        return jsonResponse({ error: verifyErr?.message ?? 'failed to sign in' }, 500);
-      }
+      if (!tokenResp.ok) return jsonResponse({ error: 'invalid pin' }, 401);
 
-      return jsonResponse({ session: verifyData.session });
+      const session = await tokenResp.json();
+      return jsonResponse({ session });
     }
 
     return jsonResponse({ error: 'unknown action' }, 400);

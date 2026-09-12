@@ -15,6 +15,7 @@ import { listGoals } from '@/services/goals.service';
 import { listChildTransactions } from '@/services/points.service';
 import { getStreak } from '@/services/streaks.service';
 import { parentQuickComplete, listChildTasksForDate } from '@/services/tasks.service';
+import { resetChildPin } from '@/services/auth.service';
 import { todayDateOnly } from '@/utils/recurrence';
 
 export default function ChildDetailScreen() {
@@ -71,6 +72,15 @@ export default function ChildDetailScreen() {
         },
       },
     ]);
+  };
+
+  const handleResetPin = () => {
+    Alert.prompt?.(t('children.setPin'), t('auth.pinHint'), async (pin) => {
+      if (pin && /^\d{4}$/.test(pin)) {
+        await resetChildPin(child.id, pin);
+        Alert.alert(t('common.done'));
+      }
+    });
   };
 
   return (
@@ -189,6 +199,7 @@ export default function ChildDetailScreen() {
         </View>
 
         <View style={{ gap: theme.spacing.xs }}>
+          <Button label={t('children.setPin')} variant="outline" onPress={handleResetPin} />
           <Button label={t('children.removeChild')} variant="ghost" onPress={handleRemove} />
         </View>
       </View>
