@@ -90,10 +90,18 @@ export default function ChildDetailScreen() {
           <Avatar name={child.name} uri={child.avatar_url} emoji={child.avatar_emoji} size={84} />
           <AppText variant="title">{child.name}</AppText>
           <View style={{ flexDirection: 'row', gap: 6 }}>
-            <Badge label={`⭐ ${child.points_balance} ${t('common.pointsShort')}`} tone="points" />
+            <Badge
+              label={`${child.points_balance} ${t('common.pointsShort')}`}
+              tone="points"
+              icon={<AppIcon name="star" size={13} color={theme.colors.points} />}
+            />
             <Badge label={`${t('children.level')} ${level.level}`} tone="primary" />
             {streakQuery.data && streakQuery.data.current_streak > 0 && (
-              <Badge label={`🔥 ${streakQuery.data.current_streak}`} tone="streak" />
+              <Badge
+                label={String(streakQuery.data.current_streak)}
+                tone="streak"
+                icon={<AppIcon name="flame" size={13} color={theme.colors.streak} />}
+              />
             )}
           </View>
         </View>

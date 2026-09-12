@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Alert } from '@/lib/alert';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
@@ -9,7 +9,7 @@ import { AppText, Badge, Button, Card, EmptyState, Screen } from '@/design-syste
 import { LoadingState } from '@/design-system/components/LoadingState';
 import { useTheme } from '@/design-system/ThemeProvider';
 import { getMyFamily } from '@/services/family.service';
-import { decideRedemption, listPendingRedemptions, listRewards } from '@/services/rewards.service';
+import { decideRedemption, deleteReward, listPendingRedemptions, listRewards } from '@/services/rewards.service';
 
 export default function RewardsScreen() {
   const { t } = useTranslation();
@@ -35,6 +35,24 @@ export default function RewardsScreen() {
     } catch (e) {
       Alert.alert(t('common.somethingWentWrong'), e instanceof Error ? e.message : undefined);
     }
+  };
+
+  const handleDelete = (rewardId: string, name: string) => {
+    Alert.alert(t('common.delete'), name, [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('common.delete'),
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await deleteReward(rewardId);
+            queryClient.invalidateQueries({ queryKey: ['rewards'] });
+          } catch (e) {
+            Alert.alert(t('common.somethingWentWrong'), e instanceof Error ? e.message : undefined);
+          }
+        },
+      },
+    ]);
   };
 
   if (rewardsQuery.isLoading) return <LoadingState />;
@@ -98,7 +116,18 @@ export default function RewardsScreen() {
                   </AppText>
                 )}
               </View>
-              <Badge label={`${reward.cost_points} ⭐`} tone="points" />
+              <Badge
+                label={String(reward.cost_points)}
+                tone="points"
+                icon={<AppIcon name="star" size={13} color={theme.colors.points} />}
+              />
+              <Pressable
+                onPress={() => handleDelete(reward.id, reward.name)}
+                hitSlop={8}
+                style={{ padding: 4 }}
+              >
+                <AppIcon name="trash" size={18} color={theme.colors.textTertiary} />
+              </Pressable>
             </Card>
           ))}
         </View>
