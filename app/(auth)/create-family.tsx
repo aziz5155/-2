@@ -53,7 +53,14 @@ export default function CreateFamilyScreen() {
         <Button label={t('onboarding.createFamily')} onPress={handleSubmit} loading={loading} fullWidth size="lg" />
 
         <View style={{ flex: 1 }} />
-        <Button label={t('settings.logout')} variant="ghost" onPress={() => signOut()} />
+        <Button
+          label={t('settings.logout')}
+          variant="ghost"
+          onPress={async () => {
+            await signOut();
+            router.replace('/');
+          }}
+        />
       </View>
     </Screen>
   );

@@ -1,6 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { Alert } from '@/lib/alert';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
@@ -37,6 +37,7 @@ export default function MoreScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const familyQuery = useQuery({ queryKey: ['my-family'], queryFn: getMyFamily });
   const subscriptionQuery = useQuery({
@@ -68,7 +69,15 @@ export default function MoreScreen() {
   const handleLogout = () => {
     Alert.alert(t('settings.logoutConfirm'), '', [
       { text: t('common.cancel'), style: 'cancel' },
-      { text: t('settings.logout'), style: 'destructive', onPress: () => signOut() },
+      {
+        text: t('settings.logout'),
+        style: 'destructive',
+        onPress: async () => {
+          await signOut();
+          queryClient.clear();
+          router.replace('/');
+        },
+      },
     ]);
   };
 

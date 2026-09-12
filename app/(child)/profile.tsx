@@ -1,6 +1,7 @@
 import { Pressable, View } from 'react-native';
 import { Alert } from '@/lib/alert';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { Avatar, AppText, Badge, Card, Screen } from '@/design-system/components';
@@ -36,6 +37,8 @@ function Row({ label, value, onPress }: { label: string; value?: string; onPress
 export default function ChildProfileScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const childQuery = useQuery({ queryKey: ['my-child-profile'], queryFn: getMyChildProfile });
   const streakQuery = useQuery({
@@ -88,7 +91,15 @@ export default function ChildProfileScreen() {
             onPress={() =>
               Alert.alert(t('settings.logoutConfirm'), '', [
                 { text: t('common.cancel'), style: 'cancel' },
-                { text: t('settings.logout'), style: 'destructive', onPress: () => signOut() },
+                {
+                  text: t('settings.logout'),
+                  style: 'destructive',
+                  onPress: async () => {
+                    await signOut();
+                    queryClient.clear();
+                    router.replace('/');
+                  },
+                },
               ])
             }
           >

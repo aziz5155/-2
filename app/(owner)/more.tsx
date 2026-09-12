@@ -1,6 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { Alert } from '@/lib/alert';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 
 import { AppText, Card, Screen } from '@/design-system/components';
@@ -23,6 +23,7 @@ function Row({ label, onPress }: { label: string; onPress: () => void }) {
 export default function OwnerMoreScreen() {
   const theme = useTheme();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const adminRoleQuery = useQuery({ queryKey: ['my-admin-role'], queryFn: getMyAdminRole });
   const isOwner = adminRoleQuery.data === 'owner';
 
@@ -42,7 +43,15 @@ export default function OwnerMoreScreen() {
             onPress={() =>
               Alert.alert('تسجيل الخروج', '', [
                 { text: 'إلغاء', style: 'cancel' },
-                { text: 'خروج', style: 'destructive', onPress: () => signOut() },
+                {
+                  text: 'خروج',
+                  style: 'destructive',
+                  onPress: async () => {
+                    await signOut();
+                    queryClient.clear();
+                    router.replace('/');
+                  },
+                },
               ])
             }
           >
