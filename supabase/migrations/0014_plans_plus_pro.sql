@@ -92,8 +92,12 @@ end;
 $$;
 
 -- Owner subscription stats now break Plus and Pro out separately instead of
--- lumping every paid family into one "premium" bucket.
-create or replace function public.owner_subscription_stats(p_start timestamptz, p_end timestamptz)
+-- lumping every paid family into one "premium" bucket. The return columns
+-- changed shape, and Postgres won't let CREATE OR REPLACE alter a
+-- function's OUT parameters — it has to be dropped first.
+drop function if exists public.owner_subscription_stats(timestamptz, timestamptz);
+
+create function public.owner_subscription_stats(p_start timestamptz, p_end timestamptz)
 returns table (
   free_count bigint,
   plus_count bigint,
