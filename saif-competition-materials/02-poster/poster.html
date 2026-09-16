@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>أثر — الملصق العلمي</title>
+<link href="../assets/fonts/fonts.css" rel="stylesheet">
+<style>
+  @page{ size:594mm 920mm; margin:0; }
+  :root{
+    --navy:#0B1F3A; --navy2:#132F52;
+    --petrol:#12746F; --petrol-l:#22A79A; --petrol-pale:#E9F7F5;
+    --alert:#E8613C; --alert-pale:#FDECE8;
+    --bg:#F4F7FB; --card:#FFFFFF; --line:#E3E9F2;
+    --text:#0B1F3A; --gray:#5A6B87;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:594mm;}
+  body{
+    font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--text);
+  }
+  .kufi{font-family:'Noto Kufi Arabic',sans-serif;}
+  .wrap{ padding:0 16mm 12mm; }
+
+  /* header */
+  header{
+    background:linear-gradient(160deg,var(--navy),var(--navy2));
+    padding:14mm 16mm 10mm; display:flex; flex-direction:column; align-items:center; gap:6mm;
+  }
+  .brand-row{ width:100%; display:flex; align-items:center; justify-content:space-between; }
+  .brand{ display:flex; align-items:center; gap:6mm; }
+  .logo{ width:20mm;height:20mm;border-radius:6mm; background:linear-gradient(135deg,var(--petrol-l),var(--petrol)); display:flex; align-items:center; justify-content:center; }
+  .logo svg{width:11mm;height:11mm;}
+  .brand-name{ font-family:'Noto Kufi Arabic',sans-serif; font-weight:900; font-size:19mm; color:#fff; line-height:1; }
+  .brand-sub{ font-size:6.5mm; color:#B9C6DC; font-weight:500; margin-top:2mm;}
+  .comp-badge{ background:rgba(255,255,255,.1); border:0.4mm solid rgba(255,255,255,.25); color:#DCE6F5; font-size:5.6mm; font-weight:700; padding:3mm 7mm; border-radius:10mm; }
+  .tagline{ font-family:'Noto Kufi Arabic',sans-serif; font-weight:800; font-size:12mm; color:#fff; text-align:center; }
+  .badges{ display:flex; gap:5mm; }
+  .badge{ background:#1A3A63; color:#DCE6F5; font-size:5.2mm; font-weight:700; padding:3mm 7mm; border-radius:10mm; }
+
+  /* section title */
+  .stitle{ font-family:'Noto Kufi Arabic',sans-serif; font-weight:800; font-size:9mm; color:var(--navy); margin:10mm 0 5mm; }
+  .stitle.center{ text-align:center; }
+
+  /* cards */
+  .row2{ display:flex; gap:6mm; }
+  .card{ background:var(--card); border:0.3mm solid var(--line); border-radius:5mm; box-shadow:0 3mm 8mm rgba(11,31,58,.08); padding:7mm 8mm; flex:1; }
+  .card h3{ font-family:'Noto Kufi Arabic',sans-serif; font-weight:800; font-size:7.4mm; color:var(--navy); margin-bottom:3mm; }
+  .card p{ font-size:5.4mm; line-height:1.65; color:var(--text); margin-bottom:4mm; }
+  .card h4{ font-family:'Noto Kufi Arabic',sans-serif; font-weight:700; font-size:5.8mm; color:var(--navy); margin:3mm 0 2mm; }
+  .blist{ list-style:none; }
+  .blist li{ position:relative; padding-right:5mm; font-size:5mm; line-height:1.9; color:var(--text); }
+  .blist li::before{ content:""; position:absolute; right:0; top:2.6mm; width:2mm; height:2mm; border-radius:50%; background:var(--petrol); }
+  .icon-badge{ width:12mm;height:12mm;border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:6mm; font-weight:800; float:right; margin-inline-start:4mm; margin-bottom: 2mm;}
+  .icon-badge.alert{ background:var(--alert-pale); color:var(--alert); }
+  .icon-badge.petrol{ background:var(--petrol-pale); color:var(--petrol); }
+  .note{ font-size:4.4mm; color:var(--gray); font-style:italic; margin-top:4mm; line-height:1.6; }
+
+  /* steps */
+  .steps{ display:flex; gap:3mm; background:var(--card); border:0.3mm solid var(--line); border-radius:5mm; padding:8mm 6mm; box-shadow:0 3mm 8mm rgba(11,31,58,.08); }
+  .step{ flex:1; text-align:center; position:relative; }
+  .step .circ{ width:20mm;height:20mm;border-radius:50%; margin:0 auto 3mm; display:flex; align-items:center; justify-content:center; font-family:'Noto Kufi Arabic',sans-serif; font-weight:800; font-size:9mm; }
+  .step.p .circ{ background:var(--petrol-pale); color:var(--petrol); }
+  .step.a .circ{ background:var(--alert-pale); color:var(--alert); }
+  .step .st{ font-family:'Noto Kufi Arabic',sans-serif; font-weight:700; font-size:5.6mm; color:var(--text); margin-bottom:1.5mm;}
+  .step .sd{ font-size:4.2mm; color:var(--gray); line-height:1.5; }
+  .step:not(:last-child)::before{ content:"‹"; position:absolute; top:6mm; right:-4mm; font-size:9mm; color:#AEBBD1; font-weight:800; }
+
+  /* visual */
+  .visual{ background:var(--card); border:0.3mm solid var(--line); border-radius:5mm; overflow:hidden; box-shadow:0 3mm 8mm rgba(11,31,58,.08); }
+  .visual img{ width:100%; display:block; }
+
+  /* chips */
+  .chip{ background:var(--petrol-pale); color:var(--petrol); border-radius:3mm; padding:4mm 5mm; font-weight:700; font-size:5mm; margin-bottom:3mm; }
+
+  .numstep{ display:flex; align-items:flex-start; gap:3mm; margin-bottom:3mm; }
+  .numstep .n{ width:7mm;height:7mm;border-radius:2mm; background:var(--petrol); color:#fff; font-family:'Noto Kufi Arabic',sans-serif; font-weight:800; font-size:4.2mm; display:flex;align-items:center;justify-content:center; flex:none; }
+  .numstep .t{ font-size:5mm; line-height:1.5; }
+
+  /* sources */
+  .src-grid{ display:grid; grid-template-columns:1fr 1fr; gap:4mm 8mm; }
+  .src-item{ display:flex; align-items:flex-start; gap:3mm; }
+  .src-dot{ width:3mm;height:3mm;border-radius:50%; background:var(--petrol); margin-top:2mm; flex:none; }
+  .src-item .t{ font-size:4.6mm; font-weight:700; color:var(--text); line-height:1.5; }
+  .src-item .u{ font-size:4.2mm; color:var(--petrol); margin-top:1mm; direction:ltr; text-align:right; }
+
+  footer{ text-align:center; padding:8mm 0 4mm; border-top:0.3mm solid var(--line); margin-top:10mm; font-size:4.6mm; color:var(--gray); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-row">
+    <div class="brand">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8z" fill="#fff"/><circle cx="12" cy="10" r="3.2" fill="#12746F"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">أثر</div>
+        <div class="brand-sub">مساعد ذكي للبحث عن المفقودين</div>
+      </div>
+    </div>
+    <div class="comp-badge">مسابقة SAIF · ملصق علمي</div>
+  </div>
+  <div class="tagline">معلومات أوضح، وبداية بحث أكثر تنظيمًا</div>
+  <div class="badges">
+    <div class="badge">المشروع في مرحلة التصميم</div>
+    <div class="badge">بيانات ومحاكاة تجريبية بالكامل</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="row2" style="margin-top:10mm;">
+    <div class="card">
+      <div class="icon-badge alert">!</div>
+      <h3>المشكلة والفئة المستفيدة</h3>
+      <p>عند تأخر مسافر في رحلة برية عن موعده المتوقع، غالبًا لا تتوفر لدى من يتابعه معلومات كافية ومنظّمة عن وجهته ومساره وموعد اطمئنانه، مما يؤخر بدء أي تحرك ويُبعثر الجهد في البحث دون أولويات واضحة.</p>
+      <h4>الفئة المستفيدة</h4>
+      <ul class="blist">
+        <li>المسافرون وهواة البر والرحلات البرية الطويلة</li>
+        <li>الأشخاص الموثوقون المكلَّفون بمتابعة الرحلة</li>
+        <li>فرق ومنسقو البحث عند الحاجة الفعلية</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="icon-badge petrol">◎</div>
+      <h3>هدف المشروع</h3>
+      <p>تجهيز معلومات المسافر وخطة رحلته بشكل منظّم وقابل للمشاركة قبل حدوث أي طارئ، ثم استخدام الذكاء الاصطناعي عند الحاجة لاقتراح مناطق بحث محتملة وترتيبها حسب الأولوية، لتقليل الوقت الضائع في بداية الاستجابة.</p>
+      <h4>القيمة التي نريد اختبارها</h4>
+      <ul class="blist">
+        <li>تقليل الوقت اللازم لتجهيز معلومات المسافر</li>
+        <li>المساعدة في ترتيب أولويات مناطق البحث</li>
+        <li>بطاقة رحلة واضحة وقابلة للمشاركة فورًا</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="stitle center">طريقة العمل: من تسجيل الرحلة إلى اقتراح مناطق البحث</div>
+  <div class="steps">
+    <div class="step p"><div class="circ">١</div><div class="st">تسجيل الرحلة</div><div class="sd">الوجهة، الموعد، المركبة والركاب، والشخص الموثوق</div></div>
+    <div class="step p"><div class="circ">٢</div><div class="st">حفظ المواقع</div><div class="sd">إرسال آخر المواقع تلقائيًا أثناء توفر الاتصال</div></div>
+    <div class="step p"><div class="circ">٣</div><div class="st">تجاوز الموعد</div><div class="sd">مراقبة موعد الاطمئنان والمهلة المحددة</div></div>
+    <div class="step a"><div class="circ">٤</div><div class="st">تنبيه فوري</div><div class="sd">إشعار الشخص المسؤول ببطاقة رحلة جاهزة</div></div>
+    <div class="step p"><div class="circ">٥</div><div class="st">اقتراح مناطق البحث</div><div class="sd">ترتيب مناطق محتملة وتحديثها بالمعلومات الجديدة</div></div>
+  </div>
+
+  <div class="stitle center">تصور واجهات المشروع وخريطة توضيحية (بيانات تجريبية)</div>
+  <div class="visual">
+    <img src="../01-project-image/project-image.png">
+  </div>
+
+  <div class="row2" style="margin-top:10mm;">
+    <div class="card">
+      <h3>القيمة المقترحة</h3>
+      <p>استخدام خطة المسافر ومعلوماته المسجَّلة مسبقًا (الوجهة، المسار، آخر موقع، الوقت المنقضي، الطرق والتضاريس) لتجهيز بطاقة بحث جاهزة فورًا، وترتيب الاحتمالات بدل البدء من الصفر عند كل بلاغ.</p>
+      <div class="chip">أسرع في تجهيز المعلومات</div>
+      <div class="chip">ترتيب أولويات لا تخمين عشوائي</div>
+      <div class="chip">يتحدّث مع كل معلومة جديدة</div>
+      <div class="note">ملاحظة: المواقع المقترحة تقديرات استرشادية وليست تتبعًا مباشرًا بعد انقطاع الاتصال.</div>
+    </div>
+    <div class="card">
+      <h3>خطة التحقق والنتائج المستهدفة</h3>
+      <p style="font-weight:700;color:var(--navy);margin-bottom:3mm;">لم تُجرَ اختبارات فعلية بعد. خطة التحقق المقترحة:</p>
+      <div class="numstep"><div class="n">١</div><div class="t">استخدام رحلات تجريبية معروفة المسار مسبقًا</div></div>
+      <div class="numstep"><div class="n">٢</div><div class="t">إخفاء المواقع بعد نقطة انقطاع افتراضية محدَّدة</div></div>
+      <div class="numstep"><div class="n">٣</div><div class="t">مقارنة مناطق البحث المقترحة بالموقع الحقيقي</div></div>
+      <h4>مقاييس النجاح المستهدفة</h4>
+      <ul class="blist">
+        <li>احتواء المنطقة المقترحة للموقع الحقيقي</li>
+        <li>مساحة منطقة البحث المقترحة</li>
+        <li>الوقت اللازم لتجهيز بطاقة المعلومات</li>
+      </ul>
+      <div class="note">لا توجد شراكة قائمة مع جهة إنقاذ أو جامعة حتى الآن.</div>
+    </div>
+  </div>
+
+  <div class="stitle center">مصادر موثوقة</div>
+  <div class="card">
+    <div class="src-grid">
+      <div class="src-item"><div class="src-dot"></div><div><div class="t">Koester, R. — Lost Person Behavior، دراسة سلوك المفقودين المرجعية</div><div class="u">dbs-sar.com/LostPersonBehavior.htm</div></div></div>
+      <div class="src-item"><div class="src-dot"></div><div><div class="t">dbS Productions — قاعدة بيانات ISRID الدولية لحوادث البحث والإنقاذ</div><div class="u">dbs-sar.com/SAR_Research/ISRID.htm</div></div></div>
+      <div class="src-item"><div class="src-dot"></div><div><div class="t">IMO/ICAO — دليل IAMSAR الدولي للبحث والإنقاذ الجوي والبحري</div><div class="u">imo.org/en/ourwork/safety/pages/iamsarmanual.aspx</div></div></div>
+      <div class="src-item"><div class="src-dot"></div><div><div class="t">SARBayes — نماذج بايزية لاحتمالية مناطق البحث (WiSAR)</div><div class="u">sarbayes.org</div></div></div>
+      <div class="src-item"><div class="src-dot"></div><div><div class="t">National Park Service — دليل إعداد خطة الرحلة (Trip Plan) قبل السفر</div><div class="u">nps.gov/articles/gtgtripplan.htm</div></div></div>
+      <div class="src-item"><div class="src-dot"></div><div><div class="t">الهيئة العامة للهلال الأحمر السعودي — خدمات الطوارئ والإنقاذ</div><div class="u">srca.org.sa</div></div></div>
+    </div>
+  </div>
+
+  <footer>أثر — مساعد ذكي للبحث عن المفقودين · مسابقة SAIF · تصميم تجريبي، لا يمثل نتائج فعلية</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>أثر — صورة المشروع</title>
+<link href="../assets/fonts/fonts.css" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B1F3A;
+    --navy-2:#0F2A4A;
+    --navy-3:#132F52;
+    --petrol:#12746F;
+    --petrol-light:#22A79A;
+    --alert:#E8613C;
+    --bg-light:#F4F7FB;
+    --text-dark:#0B1F3A;
+    --text-gray:#5A6B87;
+    --white:#FFFFFF;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:1920px;height:1080px;overflow:hidden;}
+  body{
+    font-family:'Tajawal',sans-serif;
+    background:linear-gradient(160deg,var(--navy) 0%, var(--navy-2) 55%, var(--navy-3) 100%);
+    position:relative;
+  }
+  .kufi{font-family:'Noto Kufi Arabic',sans-serif;}
+
+  /* subtle texture dots */
+  .texture{
+    position:absolute; inset:0;
+    background-image:radial-gradient(rgba(255,255,255,0.05) 1.5px, transparent 1.5px);
+    background-size:26px 26px;
+    opacity:.5;
+  }
+
+  /* header */
+  .header{
+    position:absolute; top:56px; right:80px; left:80px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{ display:flex; align-items:center; gap:18px; }
+  .logo-mark{
+    width:64px;height:64px;border-radius:18px;
+    background:linear-gradient(135deg,var(--petrol-light),var(--petrol));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 24px rgba(18,116,111,.45);
+  }
+  .logo-mark svg{width:34px;height:34px;}
+  .brand-text .name{
+    font-family:'Noto Kufi Arabic',sans-serif;
+    font-weight:900; font-size:42px; color:var(--white); line-height:1;
+  }
+  .brand-text .sub{
+    margin-top:6px; font-size:17px; color:#B9C6DC; font-weight:500;
+  }
+  .badge{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);
+    color:#DCE6F5;
+    font-size:15px; font-weight:700;
+    padding:10px 20px; border-radius:999px;
+    backdrop-filter:blur(4px);
+  }
+
+  /* tagline */
+  .tagline{
+    position:absolute; top:168px; right:80px; left:80px; text-align:center;
+    font-family:'Noto Kufi Arabic',sans-serif;
+    font-weight:800; font-size:34px; color:var(--white);
+    letter-spacing:.2px;
+  }
+  .tagline span{ color:var(--petrol-light); }
+
+  /* map layer — confined to the center corridor between the two cards */
+  .map-wrap{
+    position:absolute; top:0; left:556px; width:808px; height:1080px;
+  }
+
+  /* floating cards */
+  .card{
+    position:absolute; top:300px;
+    width:460px; border-radius:28px;
+    background:var(--white);
+    box-shadow:0 30px 60px rgba(3,10,25,.45);
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.6);
+  }
+  .card.right{ right:96px; }
+  .card.left{ left:96px; top:340px; }
+
+  .card-head{
+    padding:22px 26px 16px;
+    display:flex; align-items:center; justify-content:space-between;
+    border-bottom:1px solid #EDF1F7;
+  }
+  .card-head .title{
+    font-family:'Noto Kufi Arabic',sans-serif;
+    font-weight:800; font-size:20px; color:var(--navy);
+    display:flex; align-items:center; gap:10px;
+  }
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--petrol);}
+  .dot.alert{background:var(--alert);}
+  .status-chip{
+    font-size:13px; font-weight:700; padding:6px 14px; border-radius:999px;
+    background:#E9F7F5; color:var(--petrol);
+  }
+  .status-chip.alert{ background:#FDECE8; color:var(--alert); }
+
+  .card-body{ padding:20px 26px 26px; }
+  .row{
+    display:flex; align-items:flex-start; gap:14px;
+    padding:12px 0; border-bottom:1px dashed #EEF2F8;
+  }
+  .row:last-child{border-bottom:none;}
+  .row .icon{
+    width:38px;height:38px;border-radius:12px;flex:none;
+    background:#F1F6F5; color:var(--petrol);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .row .icon.navy{background:#EEF2FA; color:var(--navy);}
+  .row .icon.alert{background:#FDEEE8; color:var(--alert);}
+  .row .txt .label{ font-size:13px; color:var(--text-gray); font-weight:500; }
+  .row .txt .value{ font-size:17px; color:var(--text-dark); font-weight:700; margin-top:2px; }
+
+  .zones-list{ margin-top:6px; }
+  .zone-item{
+    display:flex; align-items:center; justify-content:space-between;
+    background:#F7FAFC; border-radius:14px; padding:10px 14px; margin-bottom:8px;
+  }
+  .zone-item .rank{
+    display:flex; align-items:center; gap:10px;
+    font-size:15px; font-weight:700; color:var(--navy);
+  }
+  .zone-badge{
+    width:26px;height:26px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px; font-weight:800; color:#fff;
+    font-family:'Noto Kufi Arabic',sans-serif;
+  }
+  .zb1{background:var(--petrol);}
+  .zb2{background:var(--petrol-light);}
+  .zb3{background:#8FB8B4;}
+  .zone-item .meta{ font-size:12.5px; color:var(--text-gray); font-weight:600; }
+
+  /* connecting line hint */
+  .conn{
+    position:absolute; top:600px; height:2px; background:rgba(255,255,255,.18);
+  }
+
+  /* footer badges */
+  .footer{
+    position:absolute; bottom:46px; right:80px; left:80px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .foot-note{
+    font-size:16px; color:#B9C6DC; font-weight:600;
+    display:flex; align-items:center; gap:10px;
+  }
+  .foot-note .sq{width:8px;height:8px;border-radius:2px;background:var(--alert);}
+  .concept-badge{
+    font-family:'Noto Kufi Arabic',sans-serif;
+    font-weight:800; font-size:18px; color:var(--navy);
+    background:var(--white); padding:12px 26px; border-radius:14px;
+    box-shadow:0 10px 24px rgba(0,0,0,.25);
+  }
+</style>
+</head>
+<body>
+  <div class="texture"></div>
+
+  <!-- header -->
+  <div class="header">
+    <div class="brand">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8z" fill="#fff" fill-opacity="0.95"/>
+          <circle cx="12" cy="10" r="3.2" fill="#12746F"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="name kufi">أثر</div>
+        <div class="sub">مساعد ذكي للبحث عن المفقودين</div>
+      </div>
+    </div>
+    <div class="badge">مسابقة SAIF · تصور واجهات المشروع</div>
+  </div>
+
+  <!-- tagline -->
+  <div class="tagline">معلومات أوضح، <span>وبداية بحث أكثر تنظيمًا</span></div>
+
+  <!-- map layer (SVG illustration) -->
+  <div class="map-wrap">
+    <svg width="808" height="1080" viewBox="0 0 808 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- terrain texture -->
+      <g opacity="0.5">
+        <path d="M0 470 Q 200 430 404 470 T 808 455" stroke="rgba(255,255,255,.08)" stroke-width="2"/>
+        <path d="M0 900 Q 200 870 404 900 T 808 885" stroke="rgba(255,255,255,.06)" stroke-width="2"/>
+      </g>
+
+      <!-- planned route (dashed) -->
+      <path d="M404 268 C 440 330, 320 380, 360 450 C 400 520, 460 540, 430 610"
+            stroke="#CBD8EC" stroke-width="4" stroke-dasharray="2 14" stroke-linecap="round" fill="none"/>
+
+      <!-- start point -->
+      <circle cx="404" cy="268" r="9" fill="#CBD8EC"/>
+      <text x="404" y="240" text-anchor="middle" fill="#DCE6F5" font-size="18" font-family="Noto Kufi Arabic" font-weight="700">نقطة الانطلاق</text>
+
+      <!-- last known location -->
+      <g transform="translate(430,620)">
+        <circle r="46" fill="#22A79A" fill-opacity="0.18"/>
+        <circle r="26" fill="#22A79A" fill-opacity="0.30"/>
+        <circle r="11" fill="#22A79A" stroke="#fff" stroke-width="3"/>
+        <text x="0" y="-66" text-anchor="middle" fill="#EAF6F4" font-size="19" font-family="Noto Kufi Arabic" font-weight="800">آخر موقع معروف</text>
+        <text x="0" y="-40" text-anchor="middle" fill="#B9C6DC" font-size="15" font-family="Tajawal" font-weight="600">قبل ٣ س و٤٠ د — بيانات تجريبية</text>
+      </g>
+
+      <!-- estimated search zones (blobs) -->
+      <g>
+        <path d="M470 700 C 530 680, 590 700, 600 750 C 610 800, 560 830, 500 820 C 440 810, 410 740, 470 700 Z"
+              fill="#12746F" fill-opacity="0.20" stroke="#22A79A" stroke-width="2" stroke-dasharray="4 6"/>
+        <path d="M330 730 C 380 715, 425 730, 432 770 C 440 810, 400 835, 355 826 C 310 818, 290 760, 330 730 Z"
+              fill="#22A79A" fill-opacity="0.28" stroke="#7FD6C9" stroke-width="2" stroke-dasharray="4 6"/>
+        <path d="M400 820 C 445 806, 485 818, 492 852 C 500 886, 462 908, 424 900 C 386 893, 368 842, 400 820 Z"
+              fill="#7FD6C9" fill-opacity="0.30" stroke="#C7ECE5" stroke-width="2" stroke-dasharray="4 6"/>
+
+        <circle cx="540" cy="758" r="17" fill="#12746F"/>
+        <text x="540" y="764" text-anchor="middle" fill="#fff" font-size="16" font-family="Noto Kufi Arabic" font-weight="800">١</text>
+
+        <circle cx="368" cy="778" r="17" fill="#22A79A"/>
+        <text x="368" y="784" text-anchor="middle" fill="#fff" font-size="16" font-family="Noto Kufi Arabic" font-weight="800">٢</text>
+
+        <circle cx="440" cy="864" r="17" fill="#7FD6C9"/>
+        <text x="440" y="870" text-anchor="middle" fill="#0B1F3A" font-size="16" font-family="Noto Kufi Arabic" font-weight="800">٣</text>
+      </g>
+      <text x="404" y="960" text-anchor="middle" fill="#DCE6F5" font-size="17" font-family="Noto Kufi Arabic" font-weight="700">مناطق بحث تقديرية · مرتّبة حسب الأولوية</text>
+    </svg>
+  </div>
+
+  <!-- traveler card (right) -->
+  <div class="card right">
+    <div class="card-head">
+      <div class="title kufi"><span class="dot"></span> واجهة المسافر</div>
+      <div class="status-chip">الرحلة جارية</div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.6" stroke="currentColor" stroke-width="1.8"/></svg>
+        </div>
+        <div class="txt"><div class="label">الوجهة</div><div class="value">واحة الشعيب — طريق ٤١٢ البري</div></div>
+      </div>
+      <div class="row">
+        <div class="icon navy">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <div class="txt"><div class="label">موعد الاطمئنان القادم</div><div class="value">اليوم — الساعة ٨:٠٠ مساءً</div></div>
+      </div>
+      <div class="row">
+        <div class="icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c1.2-4 4-6 7-6s5.8 2 7 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <div class="txt"><div class="label">الشخص الموثوق للمتابعة</div><div class="value">سالم العتيبي — أخ المسافر</div></div>
+      </div>
+      <div class="row">
+        <div class="icon navy">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.8"/></svg>
+        </div>
+        <div class="txt"><div class="label">المركبة والركاب</div><div class="value">دفع رباعي أبيض — ٣ ركاب</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- monitoring card (left) -->
+  <div class="card left">
+    <div class="card-head">
+      <div class="title kufi"><span class="dot alert"></span> واجهة المتابعة</div>
+      <div class="status-chip alert">تجاوز موعد الاطمئنان</div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="icon alert">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.6" stroke="currentColor" stroke-width="1.8"/></svg>
+        </div>
+        <div class="txt"><div class="label">آخر موقع مستلم</div><div class="value">على بعد ٣٨ كم من الوجهة — ٥:٢٠ مساءً</div></div>
+      </div>
+      <div class="row">
+        <div class="icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 9.5h17" stroke="currentColor" stroke-width="1.8"/></svg>
+        </div>
+        <div class="txt"><div class="label">بطاقة الرحلة</div><div class="value">الوجهة، الطريق، المركبة، الركاب — جاهزة للمشاركة</div></div>
+      </div>
+      <div class="row" style="border-bottom:none;">
+        <div class="icon navy">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M4 8l8-5 8 5M4 16l8 5 8-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="txt" style="width:100%;">
+          <div class="label">مناطق البحث المقترحة (تُحدَّث تلقائيًا)</div>
+          <div class="zones-list">
+            <div class="zone-item">
+              <div class="rank"><span class="zone-badge zb1 kufi">١</span> المنطقة الأعلى احتمالًا</div>
+              <div class="meta">قرب آخر موقع · وصول ≈ ٢٥ د</div>
+            </div>
+            <div class="zone-item">
+              <div class="rank"><span class="zone-badge zb2 kufi">٢</span> امتداد الطريق الرئيسي</div>
+              <div class="meta">تضاريس مسطحة · وصول ≈ ٤٠ د</div>
+            </div>
+            <div class="zone-item">
+              <div class="rank"><span class="zone-badge zb3 kufi">٣</span> مسار جانبي محتمل</div>
+              <div class="meta">تضاريس وعرة · وصول ≈ ٦٥ د</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div class="footer">
+    <div class="foot-note"><span class="sq"></span> المواقع المقترحة تقديرات استرشادية وليست تتبعًا مباشرًا بعد انقطاع الاتصال — بيانات تجريبية بالكامل</div>
+    <div class="concept-badge kufi">تصور واجهات المشروع</div>
+  </div>
+</body>
+</html>
