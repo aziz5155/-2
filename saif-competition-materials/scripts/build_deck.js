@@ -119,19 +119,19 @@ function conceptTag(slide, x, y, text) {
   const totalW = steps.length * stepW + (steps.length - 1) * stepGap;
   let x0 = (W - totalW) / 2;
   const topY = 2.9;
-  card(s, x0 - 0.3, topY - 0.3, totalW + 0.6, 3.15, CARD);
+  card(s, x0 - 0.3, topY - 0.3, totalW + 0.6, 3.5, CARD);
   steps.forEach((st, i) => {
     const x = x0 + totalW - stepW - i * (stepW + stepGap); // RTL order
     const ccx = x + stepW / 2;
     iconCircle(s, ccx, topY + 0.75, 0.95, st.bg);
     s.addText(st.n, { x: ccx - 0.475, y: topY + 0.75 - 0.475, w: 0.95, h: 0.95, align: "center", valign: "middle", fontFace: F_HEAD, bold: true, fontSize: 26, color: st.c, isTextBox: true, margin: 0 });
-    s.addText(st.t, { x: x + 0.05, y: topY + 1.4, w: stepW - 0.1, h: 0.5, align: "center", fontFace: F_HEAD, bold: true, fontSize: 14, color: TEXT_DARK, isTextBox: true, rtlMode: true, margin: 0 });
+    s.addText(st.t, { x: x + 0.02, y: topY + 1.35, w: stepW - 0.04, h: 0.9, align: "center", valign: "top", fontFace: F_HEAD, bold: true, fontSize: 12.5, lineSpacingMultiple: 1.15, color: TEXT_DARK, isTextBox: true, rtlMode: true, margin: 0 });
     if (i < steps.length - 1) {
       s.addText("‹", { x: x - 0.2, y: topY + 0.55, w: 0.2, h: 0.4, align: "center", fontFace: F_HEAD, bold: true, fontSize: 20, color: "9FB0CC", isTextBox: true, margin: 0 });
     }
   });
 
-  rtl(s, "يستخدم الذكاء الاصطناعي عند الحاجة لاقتراح مناطق البحث وترتيب أولوياتها — وليس للتتبع المباشر بعد انقطاع الاتصال", x0 - 0.3, topY + 2.15, totalW + 0.6, 0.6, { align: "center", fontSize: 12.5, italic: true, color: TEXT_GRAY });
+  rtl(s, "يستخدم الذكاء الاصطناعي عند الحاجة لاقتراح مناطق البحث وترتيب أولوياتها — وليس للتتبع المباشر بعد انقطاع الاتصال", x0 - 0.3, topY + 2.65, totalW + 0.6, 0.5, { align: "center", fontSize: 12, italic: true, color: TEXT_GRAY });
 
   pageBadge(s, 2, false);
   s.addNotes(
@@ -147,12 +147,12 @@ function conceptTag(slide, x, y, text) {
   s.background = { color: BG };
   kicker(s, "قبل الرحلة");
   s.addText("تسجيل بسيط وسريع لخطة الرحلة", {
-    x: 0.7, y: 0.95, w: W - 1.4, h: 0.8, align: "right", fontFace: F_HEAD, bold: true, fontSize: 30,
+    x: 0.7, y: 0.95, w: W - 1.4, h: 0.55, align: "right", fontFace: F_HEAD, bold: true, fontSize: 30,
     color: NAVY, isTextBox: true, rtlMode: true, margin: 0
   });
 
   // mockup card (traveler interface)
-  const cx = W / 2, cardW = 6.4, cardH = 4.15, cardX = cx - cardW / 2, cardY = 1.95;
+  const cx = W / 2, cardW = 6.4, cardH = 4.6, cardX = cx - cardW / 2, cardY = 2.05;
   card(s, cardX, cardY, cardW, cardH);
   s.addShape("roundRect", { x: cardX + 0.35, y: cardY + 0.3, w: cardW - 0.7, h: 0.55, rectRadius: 0.08, fill: { color: PETROL_PALE }, line: { type: "none" } });
   rtl(s, "واجهة المسافر — الرحلة جارية", cardX + 0.55, cardY + 0.3, cardW - 1.1, 0.55, { valign: "middle", fontSize: 14, bold: true, color: PETROL });
@@ -163,15 +163,15 @@ function conceptTag(slide, x, y, text) {
     ["الشخص الموثوق للمتابعة", "سالم العتيبي — أخ المسافر"],
     ["المركبة والركاب", "دفع رباعي أبيض — ٣ ركاب"],
   ];
-  let fy = cardY + 1.05;
+  let fy = cardY + 1.1;
   fields.forEach(([label, val]) => {
-    iconCircle(s, cardX + cardW - 0.65, fy + 0.35, 0.55, PETROL_PALE);
-    rtl(s, label, cardX + 0.35, fy, cardW - 1.3, 0.35, { fontSize: 12, color: TEXT_GRAY });
-    rtl(s, val, cardX + 0.35, fy + 0.33, cardW - 1.3, 0.4, { fontSize: 15.5, bold: true, color: TEXT_DARK });
-    fy += 0.77;
+    iconCircle(s, cardX + cardW - 0.65, fy + 0.4, 0.55, PETROL_PALE);
+    rtl(s, label, cardX + 0.35, fy, cardW - 1.3, 0.3, { fontSize: 11.5, color: TEXT_GRAY });
+    rtl(s, val, cardX + 0.35, fy + 0.3, cardW - 1.3, 0.5, { fontSize: 14.5, bold: true, color: TEXT_DARK, valign: "top", lineSpacingMultiple: 1.15 });
+    fy += 0.85;
   });
 
-  conceptTag(s, cardX + cardW - 2.6, cardY - 0.55, "تصور للواجهة · بيانات تجريبية");
+  conceptTag(s, cardX + cardW - 2.6, 1.58, "تصور للواجهة · بيانات تجريبية");
 
   pageBadge(s, 3, false);
   s.addNotes(
@@ -187,25 +187,25 @@ function conceptTag(slide, x, y, text) {
   s.background = { color: BG };
   kicker(s, "أثناء الرحلة");
   s.addText("عند تجاوز موعد الاطمئنان: تنبيه فوري", {
-    x: 0.7, y: 0.95, w: W - 1.4, h: 0.8, align: "right", fontFace: F_HEAD, bold: true, fontSize: 30,
+    x: 0.7, y: 0.95, w: W - 1.4, h: 0.55, align: "right", fontFace: F_HEAD, bold: true, fontSize: 30,
     color: NAVY, isTextBox: true, rtlMode: true, margin: 0
   });
 
-  const cx = W / 2, cardW = 6.6, cardH = 4.15, cardX = cx - cardW / 2, cardY = 1.95;
+  const cx = W / 2, cardW = 6.6, cardH = 4.3, cardX = cx - cardW / 2, cardY = 2.05;
   card(s, cardX, cardY, cardW, cardH);
   s.addShape("roundRect", { x: cardX + 0.35, y: cardY + 0.3, w: cardW - 0.7, h: 0.55, rectRadius: 0.08, fill: { color: ALERT_PALE }, line: { type: "none" } });
   rtl(s, "واجهة المتابعة — تجاوز موعد الاطمئنان", cardX + 0.55, cardY + 0.3, cardW - 1.1, 0.55, { valign: "middle", fontSize: 14, bold: true, color: ALERT });
 
   // notification bubble
-  s.addShape("roundRect", { x: cardX + 0.35, y: cardY + 1.05, w: cardW - 0.7, h: 1.0, rectRadius: 0.1, fill: { color: ALERT_PALE }, line: { color: "F4C4B4", width: 1 } });
-  iconCircle(s, cardX + cardW - 0.75, cardY + 1.55, 0.5, "FFFFFF");
-  s.addText("!", { x: cardX + cardW - 1.0, y: cardY + 1.3, w: 0.5, h: 0.5, align: "center", valign: "middle", fontFace: F_HEAD, bold: true, fontSize: 20, color: ALERT, isTextBox: true, margin: 0 });
-  rtl(s, "تنبيه: سالم لم يؤكد سلامته بعد موعد اطمئنانه", cardX + 0.55, cardY + 1.18, cardW - 1.5, 0.35, { fontSize: 14.5, bold: true, color: TEXT_DARK });
-  rtl(s, "آخر تحديث موقع: قبل ٣ ساعات و٤٠ دقيقة — بيانات تجريبية", cardX + 0.55, cardY + 1.55, cardW - 1.5, 0.35, { fontSize: 12, color: TEXT_GRAY });
+  s.addShape("roundRect", { x: cardX + 0.35, y: cardY + 1.05, w: cardW - 0.7, h: 1.15, rectRadius: 0.1, fill: { color: ALERT_PALE }, line: { color: "F4C4B4", width: 1 } });
+  iconCircle(s, cardX + cardW - 0.75, cardY + 1.625, 0.5, "FFFFFF");
+  s.addText("!", { x: cardX + cardW - 1.0, y: cardY + 1.375, w: 0.5, h: 0.5, align: "center", valign: "middle", fontFace: F_HEAD, bold: true, fontSize: 20, color: ALERT, isTextBox: true, margin: 0 });
+  rtl(s, "تنبيه: سالم لم يؤكد سلامته بعد موعد اطمئنانه", cardX + 0.55, cardY + 1.18, cardW - 1.5, 0.5, { fontSize: 14, bold: true, color: TEXT_DARK, valign: "top", lineSpacingMultiple: 1.1 });
+  rtl(s, "آخر تحديث موقع: قبل ٣ ساعات و٤٠ دقيقة — بيانات تجريبية", cardX + 0.55, cardY + 1.72, cardW - 1.5, 0.4, { fontSize: 11.5, color: TEXT_GRAY });
 
-  rtl(s, "يستمر التطبيق بإرسال آخر المواقع تلقائيًا أثناء توفر الاتصال، وعند تجاوز المهلة المحددة يصل التنبيه للشخص المسؤول فورًا — حتى إن كان هاتف المسافر خارج التغطية في تلك اللحظة.", cardX + 0.35, cardY + 2.3, cardW - 0.7, 1.6, { fontSize: 14.5, lineSpacingMultiple: 1.35 });
+  rtl(s, "يستمر التطبيق بإرسال آخر المواقع تلقائيًا أثناء توفر الاتصال، وعند تجاوز المهلة المحددة يصل التنبيه للشخص المسؤول فورًا — حتى إن كان هاتف المسافر خارج التغطية في تلك اللحظة.", cardX + 0.35, cardY + 2.45, cardW - 0.7, 1.6, { fontSize: 14, lineSpacingMultiple: 1.35 });
 
-  conceptTag(s, cardX + cardW - 2.6, cardY - 0.55, "تصور للواجهة · بيانات تجريبية");
+  conceptTag(s, cardX + cardW - 2.6, 1.58, "تصور للواجهة · بيانات تجريبية");
 
   pageBadge(s, 4, false);
   s.addNotes(
@@ -221,11 +221,11 @@ function conceptTag(slide, x, y, text) {
   s.background = { color: BG };
   kicker(s, "عند الحاجة للمساعدة");
   s.addText("بطاقة رحلة جاهزة للمشاركة فورًا", {
-    x: 0.7, y: 0.95, w: W - 1.4, h: 0.8, align: "right", fontFace: F_HEAD, bold: true, fontSize: 30,
+    x: 0.7, y: 0.95, w: W - 1.4, h: 0.55, align: "right", fontFace: F_HEAD, bold: true, fontSize: 30,
     color: NAVY, isTextBox: true, rtlMode: true, margin: 0
   });
 
-  const cardW = 7.4, cardH = 4.15, cardX = W / 2 - cardW / 2, cardY = 1.95;
+  const cardW = 7.4, cardH = 4.7, cardX = W / 2 - cardW / 2, cardY = 2.05;
   card(s, cardX, cardY, cardW, cardH);
   rtl(s, "بطاقة رحلة — سالم العتيبي", cardX + 0.4, cardY + 0.3, cardW - 0.8, 0.45, { fontSize: 17, bold: true, color: NAVY });
 
@@ -237,14 +237,14 @@ function conceptTag(slide, x, y, text) {
   ];
   let ry = cardY + 0.95;
   rows.forEach(([label, val], i) => {
-    if (i % 2 === 1) s.addShape("rect", { x: cardX + 0.2, y: ry, w: cardW - 0.4, h: 0.62, fill: { color: "F7FAFC" }, line: { type: "none" } });
-    rtl(s, label, cardX + 0.4, ry + 0.1, 2.6, 0.42, { fontSize: 12.5, color: TEXT_GRAY });
-    rtl(s, val, cardX + 3.1, ry + 0.1, cardW - 3.5, 0.42, { fontSize: 14, bold: true, color: TEXT_DARK });
-    ry += 0.62;
+    if (i % 2 === 1) s.addShape("rect", { x: cardX + 0.2, y: ry, w: cardW - 0.4, h: 0.72, fill: { color: "F7FAFC" }, line: { type: "none" } });
+    rtl(s, label, cardX + 0.4, ry + 0.07, 2.3, 0.3, { fontSize: 11.5, color: TEXT_GRAY });
+    rtl(s, val, cardX + 2.7, ry + 0.06, cardW - 3.1, 0.6, { fontSize: 13, bold: true, color: TEXT_DARK, valign: "top", lineSpacingMultiple: 1.1 });
+    ry += 0.72;
   });
 
-  pill(s, cardX + cardW - 2.6, ry + 0.18, 2.2, 0.5, "جاهزة للمشاركة الآن", PETROL, "FFFFFF", 12.5);
-  conceptTag(s, cardX, cardY - 0.55, "تصور للواجهة · بيانات تجريبية");
+  pill(s, cardX + cardW - 2.6, ry + 0.1, 2.2, 0.5, "جاهزة للمشاركة الآن", PETROL, "FFFFFF", 12.5);
+  conceptTag(s, cardX, 1.58, "تصور للواجهة · بيانات تجريبية");
 
   pageBadge(s, 5, false);
   s.addNotes(
