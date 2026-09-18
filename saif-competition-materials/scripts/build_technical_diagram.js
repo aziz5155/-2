@@ -56,9 +56,9 @@ function textBlock(cx, topY, lines, opts = {}) {
 function compBox(x, y, w, h, num, title, sub, desc, opts = {}) {
   rect(x, y, w, h, opts);
   const lines = [];
-  lines.push({ t: `(${num}) ${title}`, size: opts.titleSize || 4.97, weight: 700, color: INK });
-  if (sub) lines.push({ t: sub, size: 3.9, weight: 400, color: ACCENT, mono: true });
-  (desc || []).forEach(d => lines.push({ t: d, size: 3.83, weight: 400, color: GRAY }));
+  lines.push({ t: `(${num}) ${title}`, size: opts.titleSize || 5.5, weight: 700, color: INK });
+  if (sub) lines.push({ t: sub, size: 4.3, weight: 400, color: ACCENT, mono: true });
+  (desc || []).forEach(d => lines.push({ t: d, size: 4.4, weight: 400, color: GRAY }));
   const totalLines = lines.length;
   const lineGap = 1.25;
   const blockH = lines.reduce((s, l) => s + l.size * lineGap, 0);
@@ -125,7 +125,7 @@ rect(MX, legY, CW, legH, { fill: "#FBFCFD", stroke: LINE, sw: 0.5, rx: 0.8 });
 els.push(`<text x="${MX + CW - 3}" y="${legY + 5}" font-size="4.83" font-weight="700" fill="${INK}" text-anchor="start" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">مفتاح الرموز</text>`);
 
 // generic legend chip: draws a small icon then label to its LEFT (RTL), returns slot width consumed
-function legendChip(rightX, cy, iconDraw, label, size = 3.6) {
+function legendChip(rightX, cy, iconDraw, label, size = 3.8) {
   const iconW = 13; // reserved width for the icon/marker itself
   const textW = label.length * size * 0.62 + 4; // per-char estimate + padding (tuned after visual QA)
   iconDraw(rightX - iconW, rightX, cy);
@@ -182,7 +182,7 @@ f1y += clientH + 24;
 
 // backend frame
 const frameTop = f1y;
-const rowH1 = 27, rowH2 = 25, rowH3 = 27, rowH4 = 25, gap = 6, padTop = 16, padBot = 9, padX = 9;
+const rowH1 = 32, rowH2 = 28, rowH3 = 32, rowH4 = 28, gap = 6, padTop = 16, padBot = 9, padX = 9;
 const frameH = padTop + rowH1 + gap + rowH2 + gap + rowH3 + gap + rowH4 + padBot;
 rect(MX, frameTop, CW, frameH, { fill: FRAME_BG, stroke: INK, sw: 0.8, rx: 0.8 });
 els.push(`<text x="${MX + CW / 2}" y="${frameTop + 9.5}" font-size="5.11" font-weight="700" fill="${INK}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">خدمات النظام على استضافة جاهزة (استضافة سحابية اعتيادية)</text>`);
@@ -240,11 +240,13 @@ arrowLabel((B105.x + B105.w + B104.x) / 2, B105.cy - 2, "إعادة حساب", {
 arrow(`M${B104.cx},${B104.y + B104.h} L${B104.cx},${B106.y}`, {});
 arrowLabel(B104.cx - 18, (B104.y + B104.h + B106.y) / 2, "أوزان محدّثة");
 
-// 106 -> 103 : إصدار جديد (feed back up to DB) — route around the right side
+// 106 -> 103 : إصدار جديد (feed back up to DB, save-only bookkeeping write) — routed to
+// join the database's bottom edge (same side as its other read/write links), kept visually
+// light/thin so it doesn't compete with the retrieve -> recompute -> publish causal chain
 {
-  const rx = ix2 + 4;
-  arrow(`M${B106.x + B106.w - 6},${B106.y} L${B106.x + B106.w - 6},${(B106.y + frameTop) / 2 - 2} L${rx},${(B106.y + frameTop) / 2 - 2} L${rx},${B103.cy} L${B103.x + B103.w},${B103.cy}`, {});
-  arrowLabel(rx + 2, (B106.y + B103.cy) / 2, "إصدار جديد", { align: "start" });
+  const rx = ix2 + 4, targetY = B103.y + B103.h;
+  arrow(`M${B106.x + B106.w - 6},${B106.y} L${B106.x + B106.w - 6},${B106.y - 3} L${rx},${B106.y - 3} L${rx},${targetY + 4} L${B103.x + B103.w - 14},${targetY + 4} L${B103.x + B103.w - 14},${targetY}`, { color: GRAY, sw: 0.5 });
+  arrowLabel(rx + 2, (B106.y + targetY) / 2, "إصدار جديد", { align: "start", color: GRAY, size: 3.41 });
 }
 
 // 106 -> 108 : مناطق مرتبة (exits frame to the left client box)
@@ -328,8 +330,11 @@ arrow(`M${F1.cx},${F1.y + F1.h} L${F1.cx},${D1.cy - D1.h / 2}`, {});
   ], { align: "middle", lineGap: 1.3 });
   arrow(`M${D1.cx - D1.w / 2},${D1.cy} L${nx + nw / 2 + 3},${ny}`, {});
   arrowLabel((D1.cx - D1.w / 2 + nx + nw / 2 + 3) / 2, D1.cy - D1.h / 2 - 2, "نعم", { size: 3.27 });
+  // explicit end-of-path marker: this branch terminates here, nothing continues onward
+  els.push(`<line x1="${nx - nw / 2}" y1="${ny - 5}" x2="${nx - nw / 2}" y2="${ny + 5}" stroke="${INK}" stroke-width="1.4"/>`);
+  arrowLabel(nx, ny + nh / 2 + 5, "⟵ نهاية المسار (بدون تحديث أوزان)", { size: 2.7, color: GRAY, bg: false });
 }
-f2y = D1.cy + D1.h / 2 + 5;
+f2y = D1.cy + D1.h / 2 + 13;
 
 // ---- 3. late-evidence decision (also encodes "تحديد موضع الدليل في الزمن") ----
 const D2 = { cx: mainCx, cy: f2y + 14, w: 92, h: 30 };
@@ -344,7 +349,7 @@ arrowLabel(D2.cx + 20, (D1.cy + D1.h / 2 + D2.cy - D2.h / 2) / 2, "لا");
 
 // YES -> compact note, sized + positioned to clear the diamond's left vertex, then rejoins below
 {
-  const nw = 42, nh = 29, nx = (D2.cx - D2.w / 2) - 5 - nw / 2, ny = D2.cy;
+  const nw = 40, nh = 29, nx = (D2.cx - D2.w / 2) - 11 - nw / 2, ny = D2.cy;
   rect(nx - nw / 2, ny - nh / 2, nw, nh, { fill: FRAME_BG, stroke: LINE });
   textBlock(nx, ny - nh / 2 + 1.6, [
     { t: "استرجاع نقطة", size: 3.27, weight: 700, color: TRIGGER },

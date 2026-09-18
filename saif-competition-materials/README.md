@@ -40,7 +40,7 @@
 
 ## ٤. الصورة الهندسية التفسيرية (لطلب الهيئة السعودية للملكية الفكرية) — `04-technical-diagram/`
 
-- **Athar_Technical_Diagram.png** — الصورة الجاهزة للرفع في خانة «إرفاق صورة»، 3508×~9134px (عرض A3 القياسي 300dpi؛ الارتفاع أطول من المقترح 4961px لأن المحتوى الهندسي الكثيف — ثلاثة أشكال مرقمة بمكوناتها وصيغها، بخط كبير وزوايا هندسية حادة — لم يكن ليتسع دون ازدحام ضمن الارتفاع المقترح)، أقل من ٢٦ ميجابايت.
+- **Athar_Technical_Diagram.png** — الصورة الجاهزة للرفع في خانة «إرفاق صورة»، 3508×~9417px (عرض A3 القياسي 300dpi؛ الارتفاع أطول من المقترح 4961px لأن المحتوى الهندسي الكثيف — ثلاثة أشكال مرقمة بمكوناتها وصيغها، بخط كبير وزوايا هندسية حادة — لم يكن ليتسع دون ازدحام ضمن الارتفاع المقترح)، أقل من ٢٦ ميجابايت.
 - **Athar_Technical_Diagram.jpg** — نفس الصورة بصيغة JPG (جودة ٩٢) لمن يفضّلها على PNG.
 - **Athar_Technical_Diagram.svg** — نسخة SVG قابلة للتعديل الكامل (نصوص وأشكال حقيقية، خطوط عربية مضمَّنة داخل الملف).
 - **شرح-الأشكال-الثلاثة.docx** — شرح موجز يربط كل رقم مرجعي (101–108) بوظيفته، لكل شكل من الأشكال الثلاثة.
@@ -65,6 +65,6 @@ node scripts/build_technical_diagram.js    # يعيد بناء 04-technical-diag
 node scripts/build_diagram_explanation.js  # يعيد بناء 04-technical-diagram/شرح-الأشكال-الثلاثة.docx
 ```
 
-لتصدير Athar_Technical_Diagram.png من الـ SVG بعد أي تعديل: `python3 scripts/render.py 04-technical-diagram/diagram.html 04-technical-diagram/Athar_Technical_Diagram.png <العرض بالبكسل> <الارتفاع بالبكسل> 1` (الأبعاد الحالية 3508×9134). يحسب السكربت ارتفاع الصفحة تلقائيًا حسب المحتوى. لتوليد نسخة JPG من الـ PNG الناتج: `python3 -c "from PIL import Image; Image.open('04-technical-diagram/Athar_Technical_Diagram.png').convert('RGB').save('04-technical-diagram/Athar_Technical_Diagram.jpg', quality=92)"`.
+لتصدير Athar_Technical_Diagram.png من الـ SVG بعد أي تعديل: `python3 scripts/render.py 04-technical-diagram/diagram.html 04-technical-diagram/Athar_Technical_Diagram.png <العرض بالبكسل> <الارتفاع بالبكسل> 1` (الأبعاد الحالية 3508×9417). يحسب السكربت ارتفاع الصفحة تلقائيًا حسب المحتوى. لتوليد نسخة JPG من الـ PNG الناتج: `python3 -c "from PIL import Image; Image.open('04-technical-diagram/Athar_Technical_Diagram.png').convert('RGB').save('04-technical-diagram/Athar_Technical_Diagram.jpg', quality=92)"`.
 
 لتوليد ملف athar-poster.pdf من poster.html بعد أي تعديل، استخدم أي متصفح حديث (فتح الملف ← طباعة ← حفظ كـ PDF)، أو Chrome من سطر الأوامر: `chrome --headless --print-to-pdf=out.pdf poster.html`.
