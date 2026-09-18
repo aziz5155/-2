@@ -26,7 +26,7 @@ function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 
 function rect(x, y, w, h, opts = {}) {
   const {
-    fill = BOX_BG, stroke = INK, sw = 0.5, rx = 2.2, dash = null
+    fill = BOX_BG, stroke = INK, sw = 0.6, rx = 0.6, dash = null
   } = opts;
   els.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"${dash ? ` stroke-dasharray="${dash}"` : ""}/>`);
 }
@@ -44,7 +44,7 @@ function textBlock(cx, topY, lines, opts = {}) {
   let y = topY;
   const parts = [];
   lines.forEach((ln) => {
-    const size = ln.size || 3.2;
+    const size = ln.size || 4.54;
     y += size * lineGap;
     parts.push(`<text x="${x}" y="${y.toFixed(2)}" font-size="${size}" font-weight="${ln.weight || 400}" fill="${ln.color || INK}" text-anchor="${align}" font-family="${ln.mono ? "'Courier New',monospace" : "'Noto Kufi Arabic','Arial',sans-serif"}" direction="rtl">${esc(ln.t)}</text>`);
   });
@@ -56,9 +56,9 @@ function textBlock(cx, topY, lines, opts = {}) {
 function compBox(x, y, w, h, num, title, sub, desc, opts = {}) {
   rect(x, y, w, h, opts);
   const lines = [];
-  lines.push({ t: `(${num}) ${title}`, size: opts.titleSize || 3.5, weight: 700, color: INK });
-  if (sub) lines.push({ t: sub, size: 2.75, weight: 400, color: ACCENT, mono: true });
-  (desc || []).forEach(d => lines.push({ t: d, size: 2.7, weight: 400, color: GRAY }));
+  lines.push({ t: `(${num}) ${title}`, size: opts.titleSize || 4.97, weight: 700, color: INK });
+  if (sub) lines.push({ t: sub, size: 3.9, weight: 400, color: ACCENT, mono: true });
+  (desc || []).forEach(d => lines.push({ t: d, size: 3.83, weight: 400, color: GRAY }));
   const totalLines = lines.length;
   const lineGap = 1.25;
   const blockH = lines.reduce((s, l) => s + l.size * lineGap, 0);
@@ -94,7 +94,7 @@ function arrow(pathD, opts = {}) {
 }
 
 function arrowLabel(x, y, text, opts = {}) {
-  const { size = 2.55, color = INK, bg = true, align = "middle" } = opts;
+  const { size = 3.62, color = INK, bg = true, align = "middle" } = opts;
   if (bg) {
     const w = text.length * size * 0.62 + 2.4;
     els.push(`<rect x="${(x - w / 2).toFixed(2)}" y="${(y - size * 1.05).toFixed(2)}" width="${w.toFixed(2)}" height="${(size * 1.5).toFixed(2)}" fill="#FFFFFF" opacity="0.92"/>`);
@@ -103,12 +103,12 @@ function arrowLabel(x, y, text, opts = {}) {
 }
 
 function sectionLabel(x, y, num, title, opts = {}) {
-  els.push(`<text x="${x}" y="${y}" font-size="${opts.size || 6.4}" font-weight="700" fill="${INK}" text-anchor="${opts.align || "start"}" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">الشكل (${num}): ${esc(title)}</text>`);
+  els.push(`<text x="${x}" y="${y}" font-size="${opts.size || 9.09}" font-weight="700" fill="${INK}" text-anchor="${opts.align || "start"}" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">الشكل (${num}): ${esc(title)}</text>`);
 }
 
 function note(x, y, w, h, lines, opts = {}) {
-  rect(x, y, w, h, { fill: opts.fill || "#FDF3EC", stroke: opts.stroke || TRIGGER, sw: 0.5, rx: 1.8, dash: opts.dash });
-  const arr = lines.map(t => ({ t, size: opts.size || 2.6, weight: opts.weight || 400, color: opts.color || INK }));
+  rect(x, y, w, h, { fill: opts.fill || "#FDF3EC", stroke: opts.stroke || TRIGGER, sw: 0.6, rx: 0.8, dash: opts.dash });
+  const arr = lines.map(t => ({ t, size: opts.size || 3.69, weight: opts.weight || 400, color: opts.color || INK }));
   textBlock(x + w / 2, y + 1.5, arr, { align: "middle", lineGap: 1.25 });
 }
 
@@ -116,24 +116,24 @@ function note(x, y, w, h, lines, opts = {}) {
    TITLE + SHARED LEGEND
    ========================================================================================= */
 let y = 16;
-els.push(`<text x="${PAGE_W / 2}" y="${y + 6}" font-size="8.2" font-weight="800" fill="${INK}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">التصميم التقني المقترح لنظام أثر</text>`);
+els.push(`<text x="${PAGE_W / 2}" y="${y + 6}" font-size="11.64" font-weight="800" fill="${INK}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">التصميم التقني المقترح لنظام أثر</text>`);
 y += 16;
 
 // Legend box (two rows, generous computed spacing so labels never collide)
-const legY = y, legH = 26;
-rect(MX, legY, CW, legH, { fill: "#FBFCFD", stroke: LINE, sw: 0.4, rx: 1.6 });
-els.push(`<text x="${MX + CW - 3}" y="${legY + 5}" font-size="3.4" font-weight="700" fill="${INK}" text-anchor="start" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">مفتاح الرموز</text>`);
+const legY = y, legH = 32;
+rect(MX, legY, CW, legH, { fill: "#FBFCFD", stroke: LINE, sw: 0.5, rx: 0.8 });
+els.push(`<text x="${MX + CW - 3}" y="${legY + 5}" font-size="4.83" font-weight="700" fill="${INK}" text-anchor="start" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">مفتاح الرموز</text>`);
 
 // generic legend chip: draws a small icon then label to its LEFT (RTL), returns slot width consumed
-function legendChip(rightX, cy, iconDraw, label, size = 2.7) {
-  const iconW = 15; // reserved width for the icon/marker itself
-  const textW = label.length * size * 0.95 + 4; // per-char estimate + padding (tuned after visual QA)
+function legendChip(rightX, cy, iconDraw, label, size = 3.6) {
+  const iconW = 13; // reserved width for the icon/marker itself
+  const textW = label.length * size * 0.62 + 4; // per-char estimate + padding (tuned after visual QA)
   iconDraw(rightX - iconW, rightX, cy);
   els.push(`<text x="${(rightX - iconW - 3).toFixed(2)}" y="${(cy + 1.1).toFixed(2)}" font-size="${size}" fill="${INK}" text-anchor="start" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">${esc(label)}</text>`);
-  return iconW + textW + 10; // total slot width including trailing gap
+  return iconW + textW + 7; // total slot width including trailing gap
 }
 
-const legRow1Y = legY + 11, legRow2Y = legY + 20.5;
+const legRow1Y = legY + 13, legRow2Y = legY + 25;
 let clx = MX + CW - 4;
 clx -= legendChip(clx, legRow1Y, (x1, x2, cy) => {
   els.push(`<line x1="${x1}" y1="${cy}" x2="${x2}" y2="${cy}" stroke="${INK}" stroke-width="0.7"/>`);
@@ -166,11 +166,11 @@ y = legY + legH + 6;
    FIGURE 1 — بنية النظام وتدفق البيانات
    ========================================================================================= */
 const fig1Top = y;
-sectionLabel(MX + CW, fig1Top + 5, 1, "بنية النظام وتدفق البيانات", { align: "start", size: 5.6 });
+sectionLabel(MX + CW, fig1Top + 5, 1, "بنية النظام وتدفق البيانات", { align: "start", size: 7.95 });
 let f1y = fig1Top + 10;
 
 // client boxes (outside backend frame)
-const clientH = 20;
+const clientH = 25;
 const clientTop = f1y;
 const clientBottom = f1y + clientH;
 const B101 = compBox(MX + CW - 80, f1y, 80, clientH, 101, "تطبيق المسافر", "Flutter",
@@ -178,14 +178,14 @@ const B101 = compBox(MX + CW - 80, f1y, 80, clientH, 101, "تطبيق المسا
 const B108 = compBox(MX, f1y, 80, clientH, 108, "واجهة المتابعة", "TypeScript · MapLibre GL JS",
   ["بطاقة الرحلة والمناطق التقديرية", "وأسباب ترتيبها وآخر تحديث"]);
 
-f1y += clientH + 5;
+f1y += clientH + 24;
 
 // backend frame
 const frameTop = f1y;
-const rowH1 = 22, rowH2 = 20, rowH3 = 22, rowH4 = 20, gap = 5, padTop = 10, padBot = 7, padX = 8;
+const rowH1 = 27, rowH2 = 25, rowH3 = 27, rowH4 = 25, gap = 6, padTop = 16, padBot = 9, padX = 9;
 const frameH = padTop + rowH1 + gap + rowH2 + gap + rowH3 + gap + rowH4 + padBot;
-rect(MX, frameTop, CW, frameH, { fill: FRAME_BG, stroke: INK, sw: 0.6, rx: 2.5 });
-els.push(`<text x="${MX + CW / 2}" y="${frameTop + 6.5}" font-size="3.6" font-weight="700" fill="${INK}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">خدمات النظام على استضافة جاهزة (استضافة سحابية اعتيادية)</text>`);
+rect(MX, frameTop, CW, frameH, { fill: FRAME_BG, stroke: INK, sw: 0.8, rx: 0.8 });
+els.push(`<text x="${MX + CW / 2}" y="${frameTop + 9.5}" font-size="5.11" font-weight="700" fill="${INK}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">خدمات النظام على استضافة جاهزة (استضافة سحابية اعتيادية)</text>`);
 
 const ix1 = MX + padX, ix2 = MX + CW - padX; // interior x bounds
 const halfW = (ix2 - ix1 - gap) / 2;
@@ -213,11 +213,11 @@ const B106 = compBox(ix1, ry, ix2 - ix1, rowH4, 106, "ترتيب مناطق ال
 const frameBottom = frameTop + frameH;
 
 // ---- arrows ----
-// 101 -> 102 : دفعة قياسات
+// 101 -> 102 : دفعة قياسات (jog within the client/frame gap band, upper third)
 {
-  const midY = (B101.y + B101.h + B102.y) / 2;
+  const midY = clientBottom + (frameTop - clientBottom) * 0.3;
   arrow(`M${B101.cx},${B101.y + B101.h} L${B101.cx},${midY} L${B102.cx},${midY} L${B102.cx},${B102.y}`, {});
-  arrowLabel((B101.cx + B102.cx) / 2, midY - 1.2, "دفعة قياسات");
+  arrowLabel((B101.cx + B102.cx) / 2, midY - 1.6, "دفعة قياسات");
 }
 
 // 102 -> 103 : أدلة مقبولة
@@ -251,25 +251,25 @@ arrowLabel(B104.cx - 18, (B104.y + B104.h + B106.y) / 2, "أوزان محدّث�
 {
   const lx2 = ix1 - 4;
   arrow(`M${B106.x + 6},${B106.y} L${B106.x + 6},${frameTop + frameH / 2} L${lx2},${frameTop + frameH / 2} L${lx2},${B108.cy} L${B108.x},${B108.cy}`, {});
-  arrowLabel(lx2 - 2, frameTop + frameH / 2 - 2, "مناطق مرتبة", { align: "start" });
+  arrowLabel((B106.x + 6 + lx2) / 2, frameTop + frameH / 2 - 2, "مناطق مرتبة", { align: "middle" });
 }
 
 // 107 -> 103 : فحص الموعد (read)
 arrow(`M${B107.cx},${B107.y + B107.h} L${B107.cx},${B103.y}`, { sw: 0.45 });
-arrowLabel(B107.cx + 16, (B107.y + B107.h + B103.y) / 2, "فحص دوري", { size: 2.4 });
+arrowLabel(B107.cx + 16, (B107.y + B107.h + B103.y) / 2, "فحص دوري", { size: 3.41 });
 
 // 107 -> 108 : تنبيه تأخر (ALERT) — routed through the gap between the client row and the frame
 {
-  const gapY = (clientBottom + frameTop) / 2;
+  const gapY = clientBottom + (frameTop - clientBottom) * 0.72;
   arrow(`M${B107.cx},${B107.y} L${B107.cx},${gapY} L${B108.cx - 8},${gapY} L${B108.cx - 8},${clientBottom}`, { color: ALERT, marker: "arrowAlert", sw: 0.75 });
-  arrowLabel(B108.cx - 8, gapY - 1.4, "تنبيه تأخر", { color: ALERT });
+  arrowLabel(B108.cx - 8, gapY + 2.6, "تنبيه تأخر", { color: ALERT });
 }
 
 // 108 -> 102 : مشاهدة جديدة / تسجيل تفتيش (feedback loop, through the same gap)
 {
-  const gapY2 = (clientBottom + frameTop) / 2 + 1.6;
+  const gapY2 = clientBottom + (frameTop - clientBottom) * 0.5;
   arrow(`M${B108.cx + 12},${clientBottom} L${B108.cx + 12},${gapY2} L${B102.cx},${gapY2} L${B102.cx},${B102.y}`, { sw: 0.5, dash: "1.4,1.2" });
-  arrowLabel((B108.cx + 12 + B102.cx) / 2, gapY2 + 2.6, "مشاهدة جديدة / تسجيل تفتيش", { size: 2.2 });
+  arrowLabel((B108.cx + 12 + B102.cx) / 2, gapY2 + 2.6, "مشاهدة جديدة / تسجيل تفتيش", { size: 3.12 });
 }
 
 const fig1Bottom = frameBottom;
@@ -279,7 +279,7 @@ y = fig1Bottom + 10;
    FIGURE 2 — آلية المعالجة خطوة بخطوة
    ========================================================================================= */
 const fig2Top = y;
-sectionLabel(MX + CW, fig2Top + 5, 2, "آلية المعالجة خطوة بخطوة", { align: "start", size: 5.6 });
+sectionLabel(MX + CW, fig2Top + 5, 2, "آلية المعالجة خطوة بخطوة", { align: "start", size: 7.95 });
 let f2y = fig2Top + 10;
 
 const mainW = 172, mainX = MX + CW - mainW, mainCx = mainX + mainW / 2;
@@ -289,8 +289,8 @@ function flowBox(cy0, h, title, desc, opts = {}) {
   const x = opts.x !== undefined ? opts.x : mainX;
   const w = opts.w !== undefined ? opts.w : mainW;
   rect(x, cy0, w, h, { fill: opts.fill || BOX_BG });
-  const lines = [{ t: title, size: opts.titleSize || 3.3, weight: 700, color: opts.titleColor || INK }];
-  (desc || []).forEach(d => lines.push({ t: d, size: 2.6, weight: 400, color: GRAY }));
+  const lines = [{ t: title, size: opts.titleSize || 4.69, weight: 700, color: opts.titleColor || INK }];
+  (desc || []).forEach(d => lines.push({ t: d, size: 3.69, weight: 400, color: GRAY }));
   const lineGap = 1.3;
   const blockH = lines.reduce((s, l) => s + l.size * lineGap, 0);
   const topY = cy0 + (h - blockH) / 2 - (lines[0].size * 0.15);
@@ -300,57 +300,62 @@ function flowBox(cy0, h, title, desc, opts = {}) {
 
 function downArrow(fromBox, toY, label, opts = {}) {
   arrow(`M${fromBox.cx},${fromBox.y + fromBox.h} L${fromBox.cx},${toY}`, opts);
-  if (label) arrowLabel(fromBox.cx + (opts.labelDx || 22), (fromBox.y + fromBox.h + toY) / 2, label, { size: 2.4 });
+  if (label) arrowLabel(fromBox.cx + (opts.labelDx || 22), (fromBox.y + fromBox.h + toY) / 2, label, { size: 3.41 });
 }
 
 // ---- 1. input ----
-const F1 = flowBox(f2y, 17, "استقبال قياس", [
+const F1 = flowBox(f2y, 23, "استقبال قياس", [
   "معرّف القياس، الإحداثيات، وقت التسجيل، الدقة، والمصدر",
   "+ وقت الوصول (يضيفه الخادم عند الاستلام)"
 ]);
-f2y += 17 + 5;
+f2y = F1.y + F1.h + 8;
 
 // ---- 2. duplicate? ----
-const D1 = { cx: mainCx, cy: f2y + 8, w: 78, h: 17 };
+const D1 = { cx: mainCx, cy: f2y + 12, w: 84, h: 24 };
 diamond(D1.cx, D1.cy, D1.w, D1.h);
-textBlock(D1.cx, D1.cy - 4.6, [{ t: "معرّف القياس", size: 2.7, weight: 700 }, { t: "مكرر؟", size: 2.7, weight: 700 }], { align: "middle", lineGap: 1.3 });
+textBlock(D1.cx, D1.cy - 5.5, [{ t: "معرّف القياس", size: 3.83, weight: 700 }, { t: "مكرر؟", size: 3.83, weight: 700 }], { align: "middle", lineGap: 1.3 });
 arrow(`M${F1.cx},${F1.y + F1.h} L${F1.cx},${D1.cy - D1.h / 2}`, {});
 
-// YES -> compact dead-end note, kept fully inside the main column (left of the diamond)
+// YES -> compact dead-end note, sized + positioned to clear the diamond's left vertex
 {
-  const nw = 46, nh = 14, nx = mainX + nw / 2 + 1, ny = D1.cy;
+  const nw = 46, nh = 23, nx = (D1.cx - D1.w / 2) - 5 - nw / 2, ny = D1.cy;
   rect(nx - nw / 2, ny - nh / 2, nw, nh, { fill: FRAME_BG, stroke: LINE });
-  textBlock(nx, ny - nh / 2 + 1.3, [
-    { t: "تأكيد الاستلام دون احتساب", size: 2.35, weight: 700 },
-    { t: "(تُربط النسخة بمصدرها الأصلي)", size: 2.15, weight: 400, color: GRAY }
+  textBlock(nx, ny - nh / 2 + 1.6, [
+    { t: "تأكيد الاستلام", size: 3.34, weight: 700 },
+    { t: "دون احتساب", size: 3.34, weight: 700 },
+    { t: "(تُربط النسخة", size: 3.05, weight: 400, color: GRAY },
+    { t: "بمصدرها الأصلي)", size: 3.05, weight: 400, color: GRAY }
   ], { align: "middle", lineGap: 1.3 });
   arrow(`M${D1.cx - D1.w / 2},${D1.cy} L${nx + nw / 2 + 3},${ny}`, {});
-  arrowLabel((D1.cx - D1.w / 2 + nx + nw / 2 + 3) / 2, D1.cy - D1.h / 2 - 2, "نعم", { size: 2.3 });
+  arrowLabel((D1.cx - D1.w / 2 + nx + nw / 2 + 3) / 2, D1.cy - D1.h / 2 - 2, "نعم", { size: 3.27 });
 }
 f2y = D1.cy + D1.h / 2 + 5;
 
 // ---- 3. late-evidence decision (also encodes "تحديد موضع الدليل في الزمن") ----
-const D2 = { cx: mainCx, cy: f2y + 10, w: 84, h: 21 };
+const D2 = { cx: mainCx, cy: f2y + 14, w: 92, h: 30 };
 diamond(D2.cx, D2.cy, D2.w, D2.h);
-textBlock(D2.cx, D2.cy - 6.8, [
-  { t: "تحديد موضع الدليل زمنيًا:", size: 2.6, weight: 700 },
-  { t: "هل هو متأخر عن آخر", size: 2.5, weight: 400 },
-  { t: "حالة محسوبة؟", size: 2.5, weight: 400 }
+textBlock(D2.cx, D2.cy - 8.5, [
+  { t: "تحديد موضع الدليل زمنيًا:", size: 3.69, weight: 700 },
+  { t: "هل هو متأخر عن آخر", size: 3.55, weight: 400 },
+  { t: "حالة محسوبة؟", size: 3.55, weight: 400 }
 ], { align: "middle", lineGap: 1.28 });
 arrow(`M${D1.cx},${D1.cy + D1.h / 2} L${D2.cx},${D2.cy - D2.h / 2}`, {});
 arrowLabel(D2.cx + 20, (D1.cy + D1.h / 2 + D2.cy - D2.h / 2) / 2, "لا");
 
-// YES -> compact note, kept fully inside the main column (left of the diamond), then rejoins below
+// YES -> compact note, sized + positioned to clear the diamond's left vertex, then rejoins below
 {
-  const nw = 50, nh = 19, nx = mainX + nw / 2 + 1, ny = D2.cy;
+  const nw = 42, nh = 29, nx = (D2.cx - D2.w / 2) - 5 - nw / 2, ny = D2.cy;
   rect(nx - nw / 2, ny - nh / 2, nw, nh, { fill: FRAME_BG, stroke: LINE });
-  textBlock(nx, ny - nh / 2 + 1.3, [
-    { t: "استرجاع نقطة استعادة سابقة", size: 2.3, weight: 700, color: TRIGGER },
-    { t: "تسبق وقت حدوث الدليل، ثم", size: 2.1, weight: 400, color: GRAY },
-    { t: "إدراجه ضمن التسلسل الزمني", size: 2.1, weight: 400, color: GRAY }
+  textBlock(nx, ny - nh / 2 + 1.6, [
+    { t: "استرجاع نقطة", size: 3.27, weight: 700, color: TRIGGER },
+    { t: "استعادة سابقة", size: 3.27, weight: 700, color: TRIGGER },
+    { t: "تسبق وقت حدوث", size: 2.98, weight: 400, color: GRAY },
+    { t: "الدليل، ثم", size: 2.98, weight: 400, color: GRAY },
+    { t: "إدراجه ضمن", size: 2.98, weight: 400, color: GRAY },
+    { t: "التسلسل الزمني", size: 2.98, weight: 400, color: GRAY }
   ], { align: "middle", lineGap: 1.25 });
   arrow(`M${D2.cx - D2.w / 2},${D2.cy} L${nx + nw / 2 + 3},${ny}`, { color: TRIGGER, marker: "arrowTrigger" });
-  arrowLabel(D2.cx - D2.w / 2 - 7, D2.cy - D2.h / 2 - 3, "نعم", { color: TRIGGER, size: 2.5, align: "middle" });
+  arrowLabel(D2.cx - D2.w / 2 - 7, D2.cy - D2.h / 2 - 3, "نعم", { color: TRIGGER, size: 3.55, align: "middle" });
   // rejoin arrow from the note down to the merge point
   arrow(`M${nx},${ny + nh / 2} L${nx},${D2.cy + D2.h / 2 + 9} L${D2.cx},${D2.cy + D2.h / 2 + 9}`, { dash: "1.4,1.2", sw: 0.45 });
 }
@@ -358,72 +363,69 @@ arrowLabel(D2.cx + 20, (D1.cy + D1.h / 2 + D2.cy - D2.h / 2) / 2, "لا");
 f2y = D2.cy + D2.h / 2 + 5;
 const mergeY = f2y + 4;
 arrow(`M${D2.cx},${D2.cy + D2.h / 2} L${D2.cx},${mergeY}`, {});
-arrowLabel(D2.cx + 14, D2.cy + D2.h / 2 + 2, "لا — إدراج مباشر", { size: 2.2 });
+arrowLabel(D2.cx + 14, D2.cy + D2.h / 2 + 2, "لا — إدراج مباشر", { size: 3.12 });
 els.push(`<circle cx="${D2.cx}" cy="${mergeY}" r="1.1" fill="${INK}"/>`);
 f2y = mergeY + 5;
 
 // ---- 4. motion estimation ----
-const F2 = flowBox(f2y, 20, "تقدير الحركة", [
+const F2 = flowBox(f2y, 28, "تقدير الحركة", [
   "حساب أزمنة عبور الطرق من الطول والسرعة المفترضة",
   "ومعامل التضاريس؛ ترجيح المسارات وفق خطة الرحلة",
   "مع إبقاء بدائل ممكنة"
 ]);
 arrow(`M${D2.cx},${mergeY} L${F2.cx},${F2.y}`, {});
-f2y += 20 + 5;
+f2y = F2.y + F2.h + 8;
 
-// ---- 5. weight update (+ formula) ---- [manual layout: title, then formula, then note — no auto-centering]
-const F3H = 22;
-rect(mainX, f2y, mainW, F3H);
-const F3 = { x: mainX, y: f2y, w: mainW, h: F3H, cx: mainCx, cy: f2y + F3H / 2 };
-{
-  const fx = F3.cx;
-  els.push(`<text x="${fx}" y="${(F3.y + 5.5).toFixed(2)}" font-size="3.3" font-weight="700" fill="${INK}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">تحديث الأوزان</text>`);
-  els.push(`<text x="${fx}" y="${(F3.y + 11.3).toFixed(2)}" font-size="2.75" font-weight="700" fill="${ACCENT}" text-anchor="middle" font-family="'Courier New',monospace" direction="ltr">الوزن المحدَّث = تطبيع( الوزن المتوقع × معامل توافق الدليل )</text>`);
-  textBlock(fx, F3.y + 13.6, [
-    { t: "معامل التوافق يعتمد على الموقع والدقة والمصدر —", size: 2.3, color: GRAY },
-    { t: "ترجيحات نموذج داخلية، وليست نسب دقة مثبتة", size: 2.3, color: GRAY }
-  ], { align: "middle", lineGap: 1.3 });
+// ---- 5. weight update (+ formula) ---- [auto-height: title, formula, note — via formulaBox()]
+function formulaBox(topY, title, formulaLines, extraLines) {
+  const lines = [{ t: title, size: 4.7, weight: 700, color: INK }];
+  formulaLines.forEach(t => lines.push({ t, size: 3.95, weight: 700, color: ACCENT, mono: true }));
+  lines.push({ t: "", size: 1.8, weight: 400, color: INK }); // spacer
+  (extraLines || []).forEach(ln => lines.push(ln));
+  const lineGap = 1.32;
+  const blockH = lines.reduce((s, l) => s + l.size * lineGap, 0);
+  const pad = 6;
+  const h = blockH + pad * 2;
+  rect(mainX, topY, mainW, h);
+  textBlock(mainCx, topY + pad - (lines[0].size * 0.15), lines, { align: "middle", lineGap });
+  return { x: mainX, y: topY, w: mainW, h, cx: mainCx, cy: topY + h / 2 };
 }
+
+const noteLn = (t) => ({ t, size: 3.3, weight: 400, color: GRAY });
+
+const F3 = formulaBox(f2y, "تحديث الأوزان",
+  ["الوزن المحدَّث = تطبيع( الوزن المتوقع × معامل توافق الدليل )"],
+  [noteLn("معامل التوافق يعتمد على الموقع والدقة والمصدر —"), noteLn("ترجيحات نموذج داخلية، وليست نسب دقة مثبتة")]);
 downArrow(F2, F3.y, null);
-f2y += F3H + 5;
+f2y = F3.y + F3.h + 6;
 
-// ---- 6. zone ranking (+ formula) ---- [manual layout]
-const F4H = 35;
-rect(mainX, f2y, mainW, F4H);
-const F4 = { x: mainX, y: f2y, w: mainW, h: F4H, cx: mainCx, cy: f2y + F4H / 2 };
-{
-  const fx = F4.cx;
-  els.push(`<text x="${fx}" y="${(F4.y + 5.5).toFixed(2)}" font-size="3.3" font-weight="700" fill="${INK}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">ترتيب مناطق البحث</text>`);
-  els.push(`<text x="${fx}" y="${(F4.y + 12.3).toFixed(2)}" font-size="3.6" font-weight="700" fill="${ACCENT}" text-anchor="middle" font-family="'Courier New',monospace" direction="ltr">S = W / (T_access + T_search + τ₀)</text>`);
-  let fy1 = F4.y + 17.2;
-  const symLines = [
-    "W: مجموع أوزان الحالات داخل المنطقة",
-    "T_access: زمن الوصول المقدَّر إليها",
-    "T_search: زمن التفتيش المقدَّر لها",
-    "τ₀: ثابت زمني موجب (بالوحدة نفسها) لتفادي القسمة على صفر",
-  ];
-  symLines.forEach((s, i) => {
-    els.push(`<text x="${fx}" y="${(fy1 + i * 3.5).toFixed(2)}" font-size="2.35" fill="${GRAY}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">${esc(s)}</text>`);
-  });
-  fy1 += symLines.length * 3.5 + 2;
-  els.push(`<text x="${fx}" y="${fy1.toFixed(2)}" font-size="2.75" font-weight="700" fill="${INK}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">الناتج S يُسمَّى «مؤشر أولوية تقديري» — وليس نسبة دقة</text>`);
-}
+// ---- 6. zone ranking (+ formula) ---- [auto-height]
+const F4 = formulaBox(f2y, "ترتيب مناطق البحث",
+  ["S = W / (T_access + T_search + τ₀)"],
+  [
+    noteLn("W: مجموع أوزان الحالات داخل المنطقة"),
+    noteLn("T_access: زمن الوصول المقدَّر إليها"),
+    noteLn("T_search: زمن التفتيش المقدَّر لها"),
+    noteLn("τ₀: ثابت زمني موجب (بالوحدة نفسها) لتفادي القسمة على صفر"),
+    { t: "", size: 1.8, weight: 400, color: INK },
+    { t: "الناتج S يُسمَّى «مؤشر أولوية تقديري» — وليس نسبة دقة", size: 3.95, weight: 700, color: INK }
+  ]);
 downArrow(F3, F4.y, null);
-f2y += F4H + 5;
+f2y = F4.y + F4.h + 6;
 
 // ---- 7. publish ----
-const F5 = flowBox(f2y, 17, "نشر إصدار جديد", [
+const F5 = flowBox(f2y, 23, "نشر إصدار جديد", [
   "حفظ النتيجة مع معرّفات الأدلة وإعدادات النموذج،",
   "وعرض أسباب تغيّر الأولويات للمسؤول عن البحث"
 ]);
 downArrow(F4, F5.y, null);
-f2y += 17 + 6;
+f2y = F5.y + F5.h + 8;
 
 // ref chip to 108
 {
   const rw = 60, rh = 10;
-  rect(F5.cx - rw / 2, f2y, rw, rh, { fill: FRAME_BG, stroke: LINE, rx: 5 });
-  textBlock(F5.cx, f2y + 1.2, [{ t: "→ إلى واجهة المتابعة (108)", size: 2.5, weight: 700, color: ACCENT }], { align: "middle", lineGap: 1.3 });
+  rect(F5.cx - rw / 2, f2y, rw, rh, { fill: FRAME_BG, stroke: LINE, rx: 1.2 });
+  textBlock(F5.cx, f2y + 1.2, [{ t: "→ إلى واجهة المتابعة (108)", size: 3.55, weight: 700, color: ACCENT }], { align: "middle", lineGap: 1.3 });
   arrow(`M${F5.cx},${F5.y + F5.h} L${F5.cx},${f2y}`, {});
   f2y += rh;
 }
@@ -435,19 +437,19 @@ const laneTop = fig2Top + 10;
 const S1 = flowBox(laneTop + 10, 19, "مراقبة موعد الاطمئنان", [
   "مقارنة دورية: الساعة الحالية مقابل موعد", "الاطمئنان + المهلة (محفوظتان بالخادم)"
 ], { x: sideX, w: sideW, titleColor: ALERT });
-els.push(`<text x="${sideCx}" y="${laneTop + 5}" font-size="3.1" font-weight="700" fill="${ALERT}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">مسار مستقل</text>`);
+els.push(`<text x="${sideCx}" y="${laneTop + 5}" font-size="4.4" font-weight="700" fill="${ALERT}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">مسار مستقل</text>`);
 
-const DS1 = { cx: sideCx, cy: S1.y + S1.h + 16, w: 72, h: 20 };
+const DS1 = { cx: sideCx, cy: S1.y + S1.h + 20, w: 80, h: 27 };
 arrow(`M${S1.cx},${S1.y + S1.h} L${DS1.cx},${DS1.cy - DS1.h / 2}`, { color: ALERT });
 diamond(DS1.cx, DS1.cy, DS1.w, DS1.h, { stroke: ALERT });
-textBlock(DS1.cx, DS1.cy - 6, [
-  { t: "تجاوز الموعد", size: 2.6, weight: 700, color: ALERT },
-  { t: "دون تأكيد سلامة؟", size: 2.5, weight: 400 }
+textBlock(DS1.cx, DS1.cy - 7, [
+  { t: "تجاوز الموعد", size: 3.69, weight: 700, color: ALERT },
+  { t: "دون تأكيد سلامة؟", size: 3.55, weight: 400 }
 ], { align: "middle", lineGap: 1.3 });
 
 // NO -> loop back to S1
 arrow(`M${DS1.cx - DS1.w / 2},${DS1.cy} L${sideX - 6},${DS1.cy} L${sideX - 6},${S1.cy} L${S1.x},${S1.cy}`, { color: ALERT, sw: 0.45 });
-arrowLabel(sideX - 8, (DS1.cy + S1.cy) / 2, "لا — استمرار المراقبة", { align: "middle", size: 2.15, color: ALERT });
+arrowLabel(sideX - 8, (DS1.cy + S1.cy) / 2, "لا", { align: "middle", size: 3.41, color: ALERT });
 
 // YES -> create alert -> reference to 108
 const AS1 = flowBox(DS1.cy + DS1.h / 2 + 8, 14, "إنشاء تنبيه تأخر", [], { x: sideX, w: sideW, titleColor: ALERT, fill: "#FDF0EC" });
@@ -456,14 +458,14 @@ arrowLabel(AS1.cx + 16, DS1.cy + DS1.h / 2 + 3, "نعم", { color: ALERT });
 
 {
   const rw = 60, rh = 10, ry2 = AS1.y + AS1.h + 5;
-  rect(AS1.cx - rw / 2, ry2, rw, rh, { fill: "#FDF0EC", stroke: ALERT, rx: 5 });
-  textBlock(AS1.cx, ry2 + 1.2, [{ t: "→ إلى واجهة المتابعة (108)", size: 2.5, weight: 700, color: ALERT }], { align: "middle", lineGap: 1.3 });
+  rect(AS1.cx - rw / 2, ry2, rw, rh, { fill: "#FDF0EC", stroke: ALERT, rx: 1.2 });
+  textBlock(AS1.cx, ry2 + 1.2, [{ t: "→ إلى واجهة المتابعة (108)", size: 3.55, weight: 700, color: ALERT }], { align: "middle", lineGap: 1.3 });
   arrow(`M${AS1.cx},${AS1.y + AS1.h} L${AS1.cx},${ry2}`, { color: ALERT, marker: "arrowAlert" });
 
   // callout note under the lane
   note(sideX, ry2 + rh + 8, sideW, 16, [
     "وصول موقع جديد وحده", "لا يُعد تأكيدًا للسلامة"
-  ], { size: 2.5, weight: 700 });
+  ], { size: 3.55, weight: 700 });
 }
 
 y = Math.max(mainFlowBottom, DS1.cy + DS1.h / 2 + 8 + 14 + 5 + 10 + 8 + 16) + 12;
@@ -472,7 +474,7 @@ y = Math.max(mainFlowBottom, DS1.cy + DS1.h / 2 + 8 + 14 + 5 + 10 + 8 + 16) + 12
    FIGURE 3 — مثال توضيحي: موقع متأخر
    ========================================================================================= */
 const fig3Top = y;
-sectionLabel(MX + CW, fig3Top + 5, 3, "مثال يشرح التعامل مع موقع متأخر", { align: "start", size: 5.6 });
+sectionLabel(MX + CW, fig3Top + 5, 3, "مثال يشرح التعامل مع موقع متأخر", { align: "start", size: 7.95 });
 let f3y = fig3Top + 12;
 
 // ---- timeline strip ----
@@ -483,8 +485,8 @@ const t1600x = tlRight, t1620x = tlRight - (tlRight - tlLeft) * 0.5, t1640x = tl
 
 function tlPoint(x, time, top, bottom, color) {
   els.push(`<circle cx="${x}" cy="${tlY}" r="1.6" fill="${color}" stroke="#fff" stroke-width="0.4"/>`);
-  els.push(`<text x="${x}" y="${tlY - 5}" font-size="3.4" font-weight="700" fill="${color}" text-anchor="middle" font-family="'Courier New',monospace" direction="ltr">${time}</text>`);
-  textBlock(x, tlY + 4, bottom.map(t => ({ t, size: 2.4, color: GRAY })), { align: "middle", lineGap: 1.3 });
+  els.push(`<text x="${x}" y="${tlY - 5}" font-size="4.83" font-weight="700" fill="${color}" text-anchor="middle" font-family="'Courier New',monospace" direction="ltr">${time}</text>`);
+  textBlock(x, tlY + 4, bottom.map(t => ({ t, size: 3.41, color: GRAY })), { align: "middle", lineGap: 1.3 });
 }
 tlPoint(t1600x, "16:00", null, ["آخر قياس مستلم", "(بينما الاتصال متوفر)"], INK);
 tlPoint(t1620x, "16:20", null, ["الهاتف يسجّل قياسًا محليًا", "أثناء غياب الاتصال"], ACCENT);
@@ -494,52 +496,52 @@ tlPoint(t1640x, "16:40", null, ["القياس المسجَّل عند 16:20", "�
 {
   const by = tlY + 15.5, bx1 = t1620x, bx2 = t1640x;
   els.push(`<path d="M${bx1},${by - 2} L${bx1},${by} L${bx2},${by} L${bx2},${by - 2}" fill="none" stroke="${TRIGGER}" stroke-width="0.5"/>`);
-  arrowLabel((bx1 + bx2) / 2, by + 3.6, "إعادة تقدير الحركة خلال هذه الفترة عند وصول القياس", { color: TRIGGER, size: 2.3 });
+  arrowLabel((bx1 + bx2) / 2, by + 3.6, "إعادة تقدير الحركة خلال هذه الفترة عند وصول القياس", { color: TRIGGER, size: 3.27 });
 }
-f3y = tlY + 22;
+f3y = tlY + 24;
 
 // ---- illustrative branching-road map ----
-const mapY = f3y, mapH = 58;
+const mapY = f3y + 9, mapH = 85;
+els.push(`<text x="${MX + CW}" y="${mapY - 5}" font-size="4.55" font-weight="700" fill="${INK}" text-anchor="start" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">خريطة تخطيطية — طريق متفرّع</text>`);
 rect(MX, mapY, CW, mapH, { fill: FRAME_BG, stroke: LINE });
-els.push(`<text x="${MX + CW - 6}" y="${mapY + 6}" font-size="2.9" font-weight="700" fill="${INK}" text-anchor="start" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">خريطة تخطيطية — طريق متفرّع</text>`);
 
-const roadOx = MX + CW - 55, roadOy = mapY + 12; // fork origin (near 16:20 point, right-ish)
+const roadOx = MX + CW - 85, roadOy = mapY + 22; // fork origin (near 16:20 point, right-ish)
 // incoming road (from earlier / east)
-els.push(`<path d="M${MX + CW - 12},${mapY + 10} L${roadOx},${roadOy}" fill="none" stroke="${INK}" stroke-width="0.9"/>`);
+els.push(`<path d="M${MX + CW - 15},${mapY + 12} L${roadOx},${roadOy}" fill="none" stroke="${INK}" stroke-width="0.9"/>`);
 // two branches downstream (solid roads — the road network itself is "known", not the estimate)
-const branchA = { x: MX + 70, y: mapY + 24 };
-const branchB = { x: MX + 40, y: mapY + 48 };
+const branchA = { x: MX + 112, y: mapY + 40 };
+const branchB = { x: MX + 62, y: mapY + 70 };
 els.push(`<path d="M${roadOx},${roadOy} L${branchA.x},${branchA.y}" fill="none" stroke="${INK}" stroke-width="0.9"/>`);
 els.push(`<path d="M${roadOx},${roadOy} L${branchB.x},${branchB.y}" fill="none" stroke="${INK}" stroke-width="0.9"/>`);
 // branch A continues to two candidate ends
-const endA1 = { x: MX + 30, y: mapY + 14 };
-const endA2 = { x: MX + 20, y: mapY + 32 };
+const endA1 = { x: MX + 42, y: mapY + 24 };
+const endA2 = { x: MX + 24, y: mapY + 48 };
 els.push(`<path d="M${branchA.x},${branchA.y} L${endA1.x},${endA1.y}" fill="none" stroke="${INK}" stroke-width="0.9"/>`);
 els.push(`<path d="M${branchA.x},${branchA.y} L${endA2.x},${endA2.y}" fill="none" stroke="${INK}" stroke-width="0.9"/>`);
 
 // recorded location at 16:20 — SOLID marker (per legend: recorded measurement)
-els.push(`<circle cx="${roadOx}" cy="${roadOy}" r="2.2" fill="${ACCENT}" stroke="#fff" stroke-width="0.5"/>`);
-els.push(`<text x="${roadOx + 4}" y="${roadOy - 3}" font-size="2.6" font-weight="700" fill="${ACCENT}" text-anchor="start" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">موقع مسجَّل عند 16:20</text>`);
+els.push(`<circle cx="${roadOx}" cy="${roadOy}" r="2.6" fill="${ACCENT}" stroke="#fff" stroke-width="0.5"/>`);
+els.push(`<text x="${roadOx - 5}" y="${roadOy - 7}" font-size="3.83" font-weight="700" fill="${ACCENT}" text-anchor="start" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">موقع مسجَّل عند 16:20</text>`);
 
 // estimated zones at 16:40 — DASHED blobs (per legend: estimated area/location)
 function estZone(cx, cy, r, n) {
   els.push(`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${TRIGGER}" fill-opacity="0.14" stroke="${TRIGGER}" stroke-width="0.6" stroke-dasharray="1.6,1.2"/>`);
-  els.push(`<circle cx="${cx}" cy="${cy}" r="1.6" fill="${TRIGGER}"/>`);
-  els.push(`<text x="${cx}" y="${cy + 0.9}" font-size="2.1" font-weight="700" fill="#fff" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">${n}</text>`);
+  els.push(`<circle cx="${cx}" cy="${cy}" r="2" fill="${TRIGGER}"/>`);
+  els.push(`<text x="${cx}" y="${cy + 1.1}" font-size="3.55" font-weight="700" fill="#fff" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">${n}</text>`);
 }
-estZone(endA1.x, endA1.y, 6.5, "١");
-estZone(endA2.x, endA2.y, 5.5, "٢");
-estZone(branchB.x, branchB.y, 6.5, "٣");
-els.push(`<text x="${endA1.x}" y="${mapY + 9}" font-size="2.5" font-weight="700" fill="${TRIGGER}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">مناطق تقديرية محسوبة عند 16:40</text>`);
+estZone(endA1.x, endA1.y, 7.5, "١");
+estZone(endA2.x, endA2.y, 6.5, "٢");
+estZone(branchB.x, branchB.y, 7.5, "٣");
+els.push(`<text x="${MX + 30}" y="${mapY + 10}" font-size="3.83" font-weight="700" fill="${TRIGGER}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">مناطق تقديرية محسوبة عند 16:40</text>`);
 
 // explicit caution note
-note(MX + CW - 96, mapY + mapH - 24, 90, 18, [
+note(MX + CW - 100, mapY + mapH - 24, 96, 18, [
   "الموقع 16:20 هو آخر نقطة مسجَّلة فقط —",
   "لا يُعرض كموقع حالي مؤكَّد للشخص"
-], { size: 2.15, weight: 700, fill: "#FDF3EC", stroke: TRIGGER });
+], { size: 3.34, weight: 700, fill: "#FDF3EC", stroke: TRIGGER });
 
 f3y = mapY + mapH + 6;
-els.push(`<text x="${MX + CW / 2}" y="${f3y + 4}" font-size="3.4" font-weight="700" fill="${INK}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">مثال توضيحي لآلية المعالجة</text>`);
+els.push(`<text x="${MX + CW / 2}" y="${f3y + 4}" font-size="4.83" font-weight="700" fill="${INK}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">مثال توضيحي لآلية المعالجة</text>`);
 y = f3y + 8;
 
 /* =========================================================================================
@@ -547,11 +549,11 @@ y = f3y + 8;
    ========================================================================================= */
 {
   const nh = 22;
-  rect(MX, y, CW, nh, { fill: "#FBFCFD", stroke: LINE, sw: 0.4, rx: 1.6 });
-  els.push(`<text x="${MX + CW - 5}" y="${y + 5.5}" font-size="3.2" font-weight="700" fill="${INK}" text-anchor="start" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">ملاحظة تصميم</text>`);
+  rect(MX, y, CW, nh, { fill: "#FBFCFD", stroke: LINE, sw: 0.5, rx: 0.8 });
+  els.push(`<text x="${MX + CW - 5}" y="${y + 5.5}" font-size="4.54" font-weight="700" fill="${INK}" text-anchor="start" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">ملاحظة تصميم</text>`);
   textBlock(MX + CW / 2, y + 8, [
-    { t: "آلية «تأكيد السلامة» من المسافر (لإلغاء تنبيه التأخر) لم تُفصَّل ضمن نطاق المكونات (101–108) المطلوب. افتراضًا،", size: 2.55, color: GRAY },
-    { t: "هي تصل عبر القناة نفسها المستخدمة لبيانات (101)←(102) دون إضافة مكوّن جديد يخفي هذه الفجوة في المواصفة.", size: 2.55, color: GRAY }
+    { t: "آلية «تأكيد السلامة» من المسافر (لإلغاء تنبيه التأخر) لم تُفصَّل ضمن نطاق المكونات (101–108) المطلوب. افتراضًا،", size: 3.62, color: GRAY },
+    { t: "هي تصل عبر القناة نفسها المستخدمة لبيانات (101)←(102) دون إضافة مكوّن جديد يخفي هذه الفجوة في المواصفة.", size: 3.62, color: GRAY }
   ], { align: "middle", lineGap: 1.35 });
   y += nh + 6;
 }
