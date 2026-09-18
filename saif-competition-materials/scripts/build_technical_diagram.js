@@ -117,9 +117,7 @@ function note(x, y, w, h, lines, opts = {}) {
    ========================================================================================= */
 let y = 16;
 els.push(`<text x="${PAGE_W / 2}" y="${y + 6}" font-size="8.2" font-weight="800" fill="${INK}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">التصميم التقني المقترح لنظام أثر</text>`);
-y += 10;
-els.push(`<text x="${PAGE_W / 2}" y="${y + 4}" font-size="3.3" fill="${GRAY}" text-anchor="middle" font-family="'Noto Kufi Arabic','Arial',sans-serif" direction="rtl">تصميم مقترح للتنفيذ — لم تُجرَ عليه اختبارات ميدانية، ولا يمثّل نتائج أداء أو نسب دقة أو ادعاءً بمنح براءة</text>`);
-y += 9;
+y += 16;
 
 // Legend box (two rows, generous computed spacing so labels never collide)
 const legY = y, legH = 26;
