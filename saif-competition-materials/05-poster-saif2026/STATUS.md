@@ -1,53 +1,81 @@
-# Status — ATHAR SAIF 2026 poster rebuild
+# Status — ATHAR SAIF 2026 poster
 
-## Blocked: cannot reach the official template
+## Delivered
 
-This sandbox's network egress is restricted to an allowlist (package registries, GitHub, Anthropic
-APIs, etc.). General web domains are denied by the outbound proxy. Confirmed blocked in this
-session, each with a `403` at the proxy's CONNECT step:
+**`ATHAR_SAIF_Poster.pptx`** — the real official 18+/Deep Evergreen template
+(`SAIF_Poster_Template_18plus.pptx`, as you uploaded it), populated with ATHAR's content. Built by
+editing the template's own slide XML directly — every new paragraph clones the template's own
+placeholder paragraph, so it inherits its exact font (IBM Plex Sans Arabic, embedded in the file),
+size, color and spacing. Nothing was redrawn from a screenshot. Confirmed:
 
-- `s.tuwaiq.edu.sa` (the template guide short link) — **this is the one that actually blocks
-  progress on the template itself.**
-- `doi.org`, `arxiv.org`, `h3geo.org` — reference-verification links (not blocking; see below).
+- Slide size is exactly 36in × 48in (verified from the template's own `<p:sldSz>`, unchanged).
+- The guidance slide (slide 2, which itself says "delete before exporting your poster") is removed.
+- All six required sections present, in the template's own order and headings: Introduction,
+  Methodology, Results, Innovation, Conclusion, Future Work & References.
+- Fixed elements untouched: all logos (they live in the slide layout, never touched), the QR code
+  and Booth Number placeholders (still blank — no fake QR/number invented), Country Flag
+  placeholder (see below), the identity field positions and the Deep Evergreen `#0E3F3C` category
+  color.
+- Content is English-only, split cleanly into: proposed design vs. worked example vs. what's
+  actually built (Design-Stage Outputs) — no invented metrics, no "validated"/"field-tested"
+  language.
+- Both equations shown compactly (weight update in full; region-ranking described in words per
+  your own instruction to keep the poster readable and put the full formula in the appendix).
+- Three new figures (system architecture; observation-time late-evidence processing; two-map
+  design-stage search-update illustration) placed under Methodology/Results with numbered English
+  captions.
+- Two compact tables (Innovation scope comparison; Future Work evaluation plan) as real native
+  PowerPoint tables, not images.
+- Structural validation passed (`validate.py --original`, baselined against your uploaded
+  template) and a text sweep found no leftover "Text here" / Lorem / TODO placeholders.
 
-This is not specific to that one link — it is every external website in this environment. There is
-no retry or workaround on my end that gets around it; a different link would fail the same way.
+## Could not do in this sandbox — needs your action
 
-### What I need from you (pick whichever is easiest)
+**I cannot render or export a PDF here.** LibreOffice is broken at a bootstrap level in this
+environment — confirmed with strace: it fails to load *any* file, including a blank test PPTX and
+a plain `.txt` file, with a fresh profile, so it's not specific to this poster. There is no
+PowerPoint installed either. This means:
 
-1. **Best:** Download the "18+ / Deep Evergreen" editable template yourself from
-   `https://s.tuwaiq.edu.sa/hzv3L` → "Access and download your own copy here", and upload the
-   resulting file to me directly (PPTX, or whatever format it opens as — Canva/Google Slides links
-   usually offer a "Make a copy" / "Download as PowerPoint" option).
-2. If it's a Canva or Google Slides link rather than a direct file, pasting that direct link to me
-   also works — I can't follow the Tuwaiq short link, but a `canva.com` or `docs.google.com` link
-   may resolve differently depending on what's allowlisted; I'll try it and tell you immediately if
-   it's also blocked, rather than guessing.
-3. If neither is convenient right now, say so and I will keep working from the content package
-   below — but I will not fabricate a look-alike "official template" from a screenshot, per your
-   explicit instruction.
+1. **I could not generate `ATHAR_SAIF_Poster.pdf` myself.** Please open `ATHAR_SAIF_Poster.pptx`
+   in real PowerPoint or Google Slides and export to PDF yourself (File → Export/Download → PDF).
+   Because the slide is already the true 36×48in size, exporting at 100%/default scale gives you
+   the exact print-ready PDF with real vector text — do not print-to-image.
+2. **I could not visually proof the layout.** All text placement was computed from the template's
+   own XML geometry plus a deliberately conservative (wide-character) text-wrap estimate, not a
+   real rendering. Every section's estimated content height was checked against its available box
+   height before I shipped this (all passed, with the tightest margin ~0.3in in Methodology) — but
+   please open the file yourself and check for text slightly overflowing a box, since that's the
+   one failure mode I could not rule out with certainty. If Methodology text overflows slightly,
+   the fix is small: nudge Figure 1 down a little, or trim a few words from the bridge paragraph.
+3. **Country Flag placeholder left untouched** (still says "Country Flag Here"). I have no network
+   access in this sandbox to fetch a real Saudi flag asset, and did not want to hand-draw a
+   national flag (risk of getting the calligraphy wrong). Please drop in an official flag image
+   yourself, or tell me to just replace the placeholder with the text "Saudi Arabia" instead.
+4. **QR code and Booth Number**: still the template's own blank placeholders, per your instruction
+   not to fabricate them. Fill these in once the Project ID/Booth Number are issued and you have a
+   public reference URL (`references.md` in this folder is the standalone appendix ready to
+   publish and link).
+5. **ID field** currently reads "ID: pending" — replace once issued.
 
-## Not blocking, but noted: reference re-verification
+## Compliance checklist (from your acceptance tests)
 
-I also could not re-fetch `doi.org`, `arxiv.org`, or the three tool-documentation URls to confirm
-the bibliographic details you supplied for references [1]–[5] are exactly correct (title, authors,
-year, working link). I formatted them exactly as you gave them in `content.md`. If it matters for
-judging, have a human click each link once before the file goes to print.
-
-## Done and ready now (does not depend on the template file)
-
-- `content.md` — full English section-by-section text, within your word budgets, plus the two
-  equations, the three small tables, the reference list, and all figure captions. This is the
-  editorial source to pour into the template once we have it.
-- Figures 1–3 (English, poster-legible) — see `figures/` in this folder once built (in progress —
-  tracked as a separate step in this same working session).
-
-## Not started / cannot start without the template
-
-- The actual `ATHAR_SAIF_Poster.pdf` (36×48in, one page, real vector text) and the editable
-  source file — these have to be built *inside* the real template's canvas, fixed elements, logos
-  and identity fields, not recreated from a description. I will not ship a from-scratch redesign
-  and call it the official template.
-- Final QR code — waiting on a public, no-login reference/appendix link per your instruction; I
-  have not fabricated one.
-- Project ID and Booth Number — not yet issued, left blank in `content.md` as instructed.
+- [x] English-only added content
+- [x] 36×48in, portrait, unchanged from template
+- [x] Deep Evergreen category color (18+), matches your registration basis
+- [x] Six sections present, template's own headings, no renamed/added top-level sections
+- [x] Fixed elements/logos untouched (they're in the layout, not the slide)
+- [x] Full approved project name in Innovation Title
+- [x] No fabricated identity data (ID/Booth/QR left open, flagged above)
+- [ ] **PDF is the print file** — blocked, needs you to export it (see above)
+- [x] Funnel-structured Introduction with explicit Objective + research question
+- [x] Methodology tied to figures, each technique's role stated, no decorative tech names
+- [x] observed_at vs. received_at vs. evaluation-time (16:40) kept distinct throughout
+- [x] Every output labeled by type (proposed / worked example / Design-Stage Output)
+- [x] Results carries no invented numbers; explicit "Quantitative performance has not yet been
+      evaluated" and "Schematic illustration; regions are not computed experimental output"
+- [x] Innovation states contribution without unsupported priority claims
+- [x] Conclusion does not outrun Results
+- [x] Future Work tied to current readiness, three verifiable stages
+- [x] References [1]-[5] present; **not** re-verified live (this sandbox also blocks doi.org/
+      arxiv.org/h3geo.org) — have a human click each once before print
+- [ ] **Visual proof pass** — blocked, needs you to open the file (see above)
