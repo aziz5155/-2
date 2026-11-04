@@ -1,6 +1,5 @@
 """
 Student Grades Management System
-نظام إدارة درجات الطلاب
 
 Topic 3: Programming (Python)
 
@@ -13,7 +12,7 @@ The program:
 """
 
 # ----------------------------------------------------------------------
-# Constants (ثوابت البرنامج)
+# Constants
 # ----------------------------------------------------------------------
 SUBJECTS = ("Math", "Science", "English")   # the three subjects
 MIN_GRADE = 0                                # lowest allowed grade
@@ -22,7 +21,7 @@ PASS_MARK = 50                               # minimum average to pass
 
 
 # ----------------------------------------------------------------------
-# Input functions with validation (دوال الإدخال والتحقق)
+# Input functions with validation
 # ----------------------------------------------------------------------
 def is_valid_name(name):
     """A valid name is not empty and contains only letters and spaces."""
@@ -79,7 +78,7 @@ def ask_continue():
 
 
 # ----------------------------------------------------------------------
-# Processing functions (دوال المعالجة)
+# Processing functions
 # ----------------------------------------------------------------------
 def calculate_total(grades):
     """Return the sum of the grades."""
@@ -116,7 +115,7 @@ def build_student_record(name, grades):
 
 
 # ----------------------------------------------------------------------
-# Output function (دالة عرض النتائج)
+# Output function
 # ----------------------------------------------------------------------
 def display_results(students):
     """Print all students in a table, followed by a class summary."""
@@ -154,7 +153,7 @@ def display_results(students):
 
 
 # ----------------------------------------------------------------------
-# Main program (البرنامج الرئيسي)
+# Main program
 # ----------------------------------------------------------------------
 def main():
     print("=" * 78)
