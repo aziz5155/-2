@@ -1,0 +1,228 @@
+##############################################################################
+# Test 1 - Passing student
+##############################################################################
+==============================================================================
+                       STUDENT GRADES MANAGEMENT SYSTEM                       
+         Subjects: Math, Science, English  |  Pass mark (average): 50         
+==============================================================================
+
+--- Student #1 ---
+Enter student name: Ahmed Ali
+  Enter Math grade (0-100): 85
+  Enter Science grade (0-100): 90
+  Enter English grade (0-100): 78
+  -> Total = 253.0, Average = 84.33, Status = PASS
+Add another student? (y/n): n
+
+==============================================================================
+                               STUDENT RESULTS                                
+==============================================================================
+No. Name                   Math  Science  English    Total  Average  Status
+------------------------------------------------------------------------------
+1   Ahmed Ali              85.0     90.0     78.0    253.0    84.33    PASS
+------------------------------------------------------------------------------
+Number of students : 1
+Passed             : 1
+Failed             : 0
+Class average      : 84.33
+==============================================================================
+Program finished. Goodbye!
+
+##############################################################################
+# Test 2 - Failing student
+##############################################################################
+==============================================================================
+                       STUDENT GRADES MANAGEMENT SYSTEM                       
+         Subjects: Math, Science, English  |  Pass mark (average): 50         
+==============================================================================
+
+--- Student #1 ---
+Enter student name: Sara Hassan
+  Enter Math grade (0-100): 40
+  Enter Science grade (0-100): 35
+  Enter English grade (0-100): 50
+  -> Total = 125.0, Average = 41.67, Status = FAIL
+Add another student? (y/n): n
+
+==============================================================================
+                               STUDENT RESULTS                                
+==============================================================================
+No. Name                   Math  Science  English    Total  Average  Status
+------------------------------------------------------------------------------
+1   Sara Hassan            40.0     35.0     50.0    125.0    41.67    FAIL
+------------------------------------------------------------------------------
+Number of students : 1
+Passed             : 0
+Failed             : 1
+Class average      : 41.67
+==============================================================================
+Program finished. Goodbye!
+
+##############################################################################
+# Test 3 - Boundary case (average exactly 50 -> PASS)
+##############################################################################
+==============================================================================
+                       STUDENT GRADES MANAGEMENT SYSTEM                       
+         Subjects: Math, Science, English  |  Pass mark (average): 50         
+==============================================================================
+
+--- Student #1 ---
+Enter student name: Khalid
+  Enter Math grade (0-100): 50
+  Enter Science grade (0-100): 50
+  Enter English grade (0-100): 50
+  -> Total = 150.0, Average = 50.00, Status = PASS
+Add another student? (y/n): n
+
+==============================================================================
+                               STUDENT RESULTS                                
+==============================================================================
+No. Name                   Math  Science  English    Total  Average  Status
+------------------------------------------------------------------------------
+1   Khalid                 50.0     50.0     50.0    150.0    50.00    PASS
+------------------------------------------------------------------------------
+Number of students : 1
+Passed             : 1
+Failed             : 0
+Class average      : 50.00
+==============================================================================
+Program finished. Goodbye!
+
+##############################################################################
+# Test 4 - Boundary case (average 49.67 -> FAIL)
+##############################################################################
+==============================================================================
+                       STUDENT GRADES MANAGEMENT SYSTEM                       
+         Subjects: Math, Science, English  |  Pass mark (average): 50         
+==============================================================================
+
+--- Student #1 ---
+Enter student name: Mona
+  Enter Math grade (0-100): 49
+  Enter Science grade (0-100): 50
+  Enter English grade (0-100): 50
+  -> Total = 149.0, Average = 49.67, Status = FAIL
+Add another student? (y/n): n
+
+==============================================================================
+                               STUDENT RESULTS                                
+==============================================================================
+No. Name                   Math  Science  English    Total  Average  Status
+------------------------------------------------------------------------------
+1   Mona                   49.0     50.0     50.0    149.0    49.67    FAIL
+------------------------------------------------------------------------------
+Number of students : 1
+Passed             : 0
+Failed             : 1
+Class average      : 49.67
+==============================================================================
+Program finished. Goodbye!
+
+##############################################################################
+# Test 5 - Invalid inputs (validation)
+##############################################################################
+==============================================================================
+                       STUDENT GRADES MANAGEMENT SYSTEM                       
+         Subjects: Math, Science, English  |  Pass mark (average): 50         
+==============================================================================
+
+--- Student #1 ---
+Enter student name: 
+  [Error] Name must not be empty and must contain letters only.
+Enter student name: Omar99
+  [Error] Name must not be empty and must contain letters only.
+Enter student name: Omar Saleh
+  Enter Math grade (0-100): abc
+  [Error] Grade must be a number between 0 and 100.
+  Enter Math grade (0-100): 120
+  [Error] Grade must be a number between 0 and 100.
+  Enter Math grade (0-100): -5
+  [Error] Grade must be a number between 0 and 100.
+  Enter Math grade (0-100): 60
+  Enter Science grade (0-100): 70.5
+  Enter English grade (0-100): 80
+  -> Total = 210.5, Average = 70.17, Status = PASS
+Add another student? (y/n): maybe
+  [Error] Please enter 'y' or 'n'.
+Add another student? (y/n): n
+
+==============================================================================
+                               STUDENT RESULTS                                
+==============================================================================
+No. Name                   Math  Science  English    Total  Average  Status
+------------------------------------------------------------------------------
+1   Omar Saleh             60.0     70.5     80.0    210.5    70.17    PASS
+------------------------------------------------------------------------------
+Number of students : 1
+Passed             : 1
+Failed             : 0
+Class average      : 70.17
+==============================================================================
+Program finished. Goodbye!
+
+##############################################################################
+# Test 6 - Several students (full class)
+##############################################################################
+==============================================================================
+                       STUDENT GRADES MANAGEMENT SYSTEM                       
+         Subjects: Math, Science, English  |  Pass mark (average): 50         
+==============================================================================
+
+--- Student #1 ---
+Enter student name: Ahmed Ali
+  Enter Math grade (0-100): 85
+  Enter Science grade (0-100): 90
+  Enter English grade (0-100): 78
+  -> Total = 253.0, Average = 84.33, Status = PASS
+Add another student? (y/n): y
+
+--- Student #2 ---
+Enter student name: Sara Hassan
+  Enter Math grade (0-100): 40
+  Enter Science grade (0-100): 35
+  Enter English grade (0-100): 50
+  -> Total = 125.0, Average = 41.67, Status = FAIL
+Add another student? (y/n): y
+
+--- Student #3 ---
+Enter student name: Khalid
+  Enter Math grade (0-100): 100
+  Enter Science grade (0-100): 100
+  Enter English grade (0-100): 100
+  -> Total = 300.0, Average = 100.00, Status = PASS
+Add another student? (y/n): Y
+
+--- Student #4 ---
+Enter student name: Mona
+  Enter Math grade (0-100): 0
+  Enter Science grade (0-100): 20
+  Enter English grade (0-100): 30
+  -> Total = 50.0, Average = 16.67, Status = FAIL
+Add another student? (y/n): y
+
+--- Student #5 ---
+Enter student name: Fatimah
+  Enter Math grade (0-100): 55
+  Enter Science grade (0-100): 45
+  Enter English grade (0-100): 60
+  -> Total = 160.0, Average = 53.33, Status = PASS
+Add another student? (y/n): no
+
+==============================================================================
+                               STUDENT RESULTS                                
+==============================================================================
+No. Name                   Math  Science  English    Total  Average  Status
+------------------------------------------------------------------------------
+1   Ahmed Ali              85.0     90.0     78.0    253.0    84.33    PASS
+2   Sara Hassan            40.0     35.0     50.0    125.0    41.67    FAIL
+3   Khalid                100.0    100.0    100.0    300.0   100.00    PASS
+4   Mona                    0.0     20.0     30.0     50.0    16.67    FAIL
+5   Fatimah                55.0     45.0     60.0    160.0    53.33    PASS
+------------------------------------------------------------------------------
+Number of students : 5
+Passed             : 3
+Failed             : 2
+Class average      : 59.20
+==============================================================================
+Program finished. Goodbye!
+

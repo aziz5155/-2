@@ -1,0 +1,16 @@
+test_invalid_inputs_are_rejected_then_accepted (test_grades_system.TestFullProgram.test_invalid_inputs_are_rejected_then_accepted) ... ok
+test_pass_and_fail_students (test_grades_system.TestFullProgram.test_pass_and_fail_students) ... ok
+test_record (test_grades_system.TestProcessing.test_record) ... ok
+test_status_boundary (test_grades_system.TestProcessing.test_status_boundary) ... ok
+test_status_fail (test_grades_system.TestProcessing.test_status_fail) ... ok
+test_status_pass (test_grades_system.TestProcessing.test_status_pass) ... ok
+test_total_and_average (test_grades_system.TestProcessing.test_total_and_average) ... ok
+test_invalid_grades (test_grades_system.TestValidation.test_invalid_grades) ... ok
+test_invalid_names (test_grades_system.TestValidation.test_invalid_names) ... ok
+test_valid_grades (test_grades_system.TestValidation.test_valid_grades) ... ok
+test_valid_names (test_grades_system.TestValidation.test_valid_names) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.002s
+
+OK
