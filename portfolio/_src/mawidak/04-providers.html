@@ -1,0 +1,86 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="mawidak.css">
+<script src="../_shared/lucide.min.js"></script><script src="layout.js"></script>
+<style>
+.bar{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.tabs{display:flex;background:#fff;border:1px solid var(--line);border-radius:14px;padding:5px}
+.tabs span{padding:9px 18px;border-radius:10px;font-size:14px;color:var(--muted);display:flex;gap:7px;align-items:center}.tabs span svg{width:17px;height:17px}
+.tabs span.on{background:var(--ink);color:#fff}
+.tabs em{font-style:normal;font-family:Inter;font-size:11.5px;opacity:.7}
+.pv{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:20px}
+.pc .ms{margin-top:18px!important}
+.pc{padding:18px;position:relative}
+.pc .t{display:flex;gap:12px;align-items:center}
+.pc .t b{display:block;font-weight:600;font-size:15px}.pc .t span{font-size:12px;color:var(--muted)}
+.pc .st{position:absolute;top:16px;left:16px;display:flex;align-items:center;gap:5px;font-size:11.5px;color:#047857;background:#ECFDF5;padding:3px 9px;border-radius:20px}
+.pc .st i{width:6px;height:6px;border-radius:50%;background:#10B981}
+.pc .st.off{color:#B45309;background:#FFFBEB}.pc .st.off i{background:#F59E0B}
+.pc .wd{display:flex;gap:4px;margin-top:14px}
+.pc .wd span{flex:1;text-align:center;font-size:11px;padding:5px 0;border-radius:7px;background:var(--bg);color:#B7C2C0}
+.pc .wd span.on{background:var(--brand-50);color:var(--brand-700);font-weight:500}
+.pc .oc{margin-top:14px;font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between}.pc .oc b{font-family:Inter;color:var(--ink)}
+.pc .prog{margin-top:6px;height:7px}
+.pc .ms{display:flex;margin-top:14px;padding-top:12px;border-top:1px solid var(--line-2)}
+.pc .ms div{flex:1}.pc .ms div+div{border-right:1px solid var(--line-2);padding-right:12px}
+.pc .ms b{font-family:Inter;font-size:16px;display:block}.pc .ms span{font-size:11.5px;color:var(--muted)}
+.lay{display:grid;grid-template-columns:1fr 440px;gap:20px}
+.svc td{padding:15px 14px}
+.svc .nm{display:flex;align-items:center;gap:12px}.svc .nm .ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center}.svc .nm .ic svg{width:18px;height:18px}
+.svc .nm b{font-weight:500;display:block}.svc .nm span{font-size:12px;color:var(--muted)}
+.avs{display:flex}.avs .av{margin-inline-start:-8px;border:2px solid #fff}.avs .av:first-child{margin-inline-start:0}
+.sw{width:38px;height:22px;border-radius:20px;background:#D5DEDC;position:relative;display:inline-block}.sw::after{content:'';position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.sw.on{background:var(--brand)}.sw.on::after{right:auto;left:3px}
+.cu .hd{display:flex;align-items:center;gap:14px}
+.cu .hd b{font-size:17px;font-weight:600;display:block}.cu .hd span{font-size:12.5px;color:var(--muted)}
+.cu .vip{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#FEF3C7,#FDE68A);color:#92400E;font-size:11.5px;padding:3px 10px;border-radius:20px;font-weight:500;margin-top:4px}
+.cu .vip svg{width:13px;height:13px}
+.cu .ks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.cu .ks div{background:var(--bg);border-radius:12px;padding:10px 12px}.cu .ks b{font-family:Inter;font-size:17px;display:block}.cu .ks span{font-size:11.5px;color:var(--muted)}
+.cu .nx{margin-top:14px;padding:12px 14px;border-radius:14px;background:var(--brand-50);border:1px solid var(--brand-100);display:flex;gap:12px;align-items:center}
+.cu .nx svg{color:var(--brand)}
+.cu h5{font-size:13px;color:var(--muted);font-weight:500;margin:16px 0 6px}
+.hs{position:relative;padding-right:18px}
+.hs::before{content:'';position:absolute;right:5px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.hs div{position:relative;padding:7px 0;font-size:13.5px;display:flex;justify-content:space-between}
+.hs div::before{content:'';position:absolute;right:-17px;top:13px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--brand)}
+.hs div span{color:var(--muted);font-size:12px}
+</style></head><body><script>
+const c = layout('prov', 'مقدمو الخدمة والخدمات', 'إدارة الأطباء وجداول عملهم، وقائمة الخدمات والأسعار، وملفات العملاء');
+const WD = ['سبت','أحد','إثنين','ثلاثاء','أربعاء','خميس'];
+const P = [['ahmad',[1,1,1,1,1,1],86,124,'4.9',1],['muna',[1,1,1,1,1,1],92,168,'4.9',0],['yousef',[1,1,1,1,0,1],71,58,'4.8',1],['layla',[1,1,0,1,1,1],78,74,'4.7',1],['salman',[1,1,1,0,1,1],64,141,'4.8',1]];
+c.innerHTML = `
+<div class="bar"><div class="tabs"><span class="on"><i data-lucide="stethoscope"></i>مقدمو الخدمة <em>5</em></span><span><i data-lucide="sparkles"></i>الخدمات <em>14</em></span><span><i data-lucide="contact-round"></i>العملاء <em>2,318</em></span></div>
+ <div style="margin-inline-start:auto;display:flex;gap:10px"><div class="btn"><i data-lucide="calendar-clock"></i>إدارة الإجازات</div><div class="btn p"><i data-lucide="user-plus"></i>إضافة مقدم خدمة</div></div></div>
+<div class="pv">${P.map(([k,wd,oc,bk,rt,on])=>`<div class="card pc"><span class="st ${on?'':'off'}"><i></i>${on?'متاح اليوم':'مكتمل اليوم'}</span>
+ <div class="t">${dav(k,50)}<div><b>${DOC[k].n}</b><span>${DOC[k].s}</span></div></div>
+ <div class="wd">${WD.map((d,i)=>`<span class="${wd[i]?'on':''}">${d}</span>`).join('')}</div>
+ <div class="oc">نسبة الإشغال هذا الأسبوع<b>${oc}%</b></div><div class="prog"><i style="width:${oc}%;background:${DOC[k].c}"></i></div>
+ <div class="ms"><div><b>${bk}</b><span>حجز هذا الشهر</span></div><div><b style="display:flex;align-items:center;gap:4px">${rt}<i data-lucide="star" style="width:14px;height:14px;color:#F59E0B;fill:#F59E0B"></i></b><span>متوسط التقييم</span></div></div></div>`).join('')}</div>
+<div class="lay">
+ <div class="card" style="padding:20px 0 0;overflow:hidden"><div class="ch" style="padding:0 22px;margin-bottom:12px"><div><h3>قائمة الخدمات</h3><div class="sub">المدة والسعر ومقدمو كل خدمة</div></div>
+  <div class="r"><div class="search" style="width:240px;height:40px;margin:0;border-radius:11px"><i data-lucide="search"></i>بحث في الخدمات</div><div class="btn" style="height:40px"><i data-lucide="plus"></i>خدمة جديدة</div></div></div>
+  <table class="svc"><thead><tr><th>الخدمة</th><th>المدة</th><th>السعر</th><th>مقدمو الخدمة</th><th>الحجوزات</th><th>الحجز الإلكتروني</th><th></th></tr></thead><tbody>
+  ${[['sparkles','#0D9488','تنظيف وتلميع الأسنان','الوقاية',45,'250',['muna','salman'],212,1],
+     ['sun','#F06548','تبييض الأسنان بالليزر','التجميل',60,'900',['muna'],148,1],
+     ['scan-face','#6366F1','استشارة تقويم الأسنان','التقويم',30,'150',['ahmad'],121,1],
+     ['shield-plus','#D97706','حشوات تجميلية','التجميل',40,'450',['muna','salman'],96,1],
+     ['activity','#0D9488','علاج عصب الأسنان','العلاج',90,'1,200',['layla'],64,1],
+     ['bone','#6366F1','زراعة الأسنان — استشارة','الجراحة',30,'200',['yousef'],52,1],
+     ['smile','#F06548','تركيب تقويم شفاف','التقويم',60,'9,500',['ahmad'],18,0]]
+   .map(([ic,col,n,cat,du,pr,ps,bk,on])=>`<tr><td><div class="nm"><span class="ic" style="background:${col}14;color:${col}"><i data-lucide="${ic}"></i></span><div><b>${n}</b><span>${cat}</span></div></div></td>
+   <td><span class="num">${du}</span> دقيقة</td><td><b class="num" style="font-weight:600">${pr}</b> <span style="font-size:12px;color:var(--muted)">ر.س</span></td><td><span class="avs">${ps.map(p=>dav(p,30,true)).join('')}</span></td><td class="num">${bk}</td><td><span class="sw ${on?'on':''}"></span></td><td><i data-lucide="more-horizontal" style="color:var(--faint)"></i></td></tr>`).join('')}
+  </tbody></table></div>
+ <div class="card cu"><div class="ch" style="margin-bottom:14px"><div><h3>ملف العميل</h3><div class="sub">آخر زيارة: اليوم 09:00 ص</div></div><div class="r"><i data-lucide="external-link" style="color:var(--muted)"></i></div></div>
+  <div class="hd">${cav('هند','#0D9488',56)}<div><b>هند السالم</b><span class="num"><bdi dir="ltr">050 418 2297</bdi></span><br><span class="vip"><i data-lucide="crown"></i>عميلة مميزة — الفئة الذهبية</span></div></div>
+  <div class="ks"><div><b>14</b><span>زيارة</span></div><div><b>6,850</b><span>إجمالي الإنفاق (ر.س)</span></div><div><b>0</b><span>مرات عدم الحضور</span></div></div>
+  <div class="nx"><i data-lucide="calendar-clock"></i><div style="flex:1"><b style="font-size:13.5px;font-weight:500;display:block">الموعد القادم: 12 ديسمبر 2026</b><span style="font-size:12px;color:var(--muted)">تنظيف وتلميع · د. منى الحارثي · 10:00 ص</span></div></div>
+  <h5>سجل الزيارات</h5>
+  <div class="hs">
+   <div><b style="font-weight:500">تنظيف وتلميع الأسنان</b><span>12 نوفمبر 2026</span></div>
+   <div><b style="font-weight:500">حشوات تجميلية</b><span>3 سبتمبر 2026</span></div>
+   <div><b style="font-weight:500">تبييض الأسنان بالليزر</b><span>18 يونيو 2026</span></div>
+  </div>
+  <h5>ملاحظات</h5><div style="font-size:13px;color:var(--ink-2);background:var(--bg);border-radius:12px;padding:10px 12px;line-height:1.8">تفضّل المواعيد الصباحية، ولديها حساسية خفيفة في الأسنان الأمامية.</div>
+ </div>
+</div>`;
+icons();
+</script></body></html>

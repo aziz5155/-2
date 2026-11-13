@@ -1,0 +1,80 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="nabd.css">
+<script src="../_shared/lucide.min.js"></script><script src="../_shared/charts.js"></script><script src="layout.js"></script>
+<style>
+.k4{grid-template-columns:repeat(4,1fr)}
+.r2{grid-template-columns:1fr 470px;margin-top:18px}
+.r3{grid-template-columns:1fr 360px 390px;margin-top:18px}
+.pl td{white-space:nowrap}.pl td:first-child{white-space:normal}
+.pl td{padding:9px 14px}
+.pn{display:flex;align-items:center;gap:12px}.pn .pi{width:36px;height:36px;border-radius:10px;display:grid;place-items:center}.pn .pi svg{width:18px;height:18px}
+.pn b{font-size:14px;font-weight:600;display:block}.pn span{font-size:12px;color:var(--muted)}
+.pc{display:flex;align-items:center;gap:10px}.pc .prog{flex:1;width:130px}.pc b{font-family:Inter;font-size:13px;width:36px}
+.wl{display:flex;flex-direction:column;gap:13px}
+.wl .row{display:flex;align-items:center;gap:12px}.wl .row div{flex:1}.wl .row b{font-size:13.5px;font-weight:600;display:flex;justify-content:space-between}
+.wl .row b span{font-family:Inter;color:var(--muted);font-weight:500;font-size:12.5px}.wl .prog{margin-top:7px;height:7px}
+.dl{display:flex;flex-direction:column;gap:10px}
+.dl .it{display:flex;gap:12px;align-items:center;padding:9px 12px;border:1px solid var(--line);border-radius:12px}
+.dl .d{width:46px;height:46px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.dl .d b{font-family:Inter;font-size:18px;line-height:1}.dl .d span{font-size:11px;margin-top:3px}
+.dl .it div.t{flex:1;min-width:0}.dl .it div.t b{font-size:13.5px;display:block;font-weight:600}.dl .it div.t span{font-size:12px;color:var(--muted)}
+.st{display:flex;flex-direction:column;gap:12px;flex:1}
+.st div{display:flex;align-items:center;gap:10px;font-size:14px}.st i{width:11px;height:11px;border-radius:4px}.st b{margin-inline-start:auto;font-family:Inter;font-size:14px}.st em{font-style:normal;color:var(--muted);font-family:Inter;font-size:12.5px;width:40px;text-align:left}
+.tip{position:absolute;background:#0F172A;color:#fff;border-radius:10px;padding:10px 14px;font-size:12.5px;box-shadow:0 10px 25px rgba(15,23,42,.25)}
+.tip b{display:block;margin-bottom:6px;font-size:13px}.tip div{display:flex;align-items:center;gap:8px;margin-top:3px}.tip i{width:8px;height:8px;border-radius:50%}
+.tip .en{margin-inline-start:14px;font-weight:600}
+</style></head><body><script>
+const c = layout('dash', 'مساحة العمل / <b>لوحة التحكم</b>');
+c.innerHTML = `
+<div class="ph"><div><h1>صباح الخير، سارة 👋</h1><p>إليك ملخص أداء مشاريع الفريق لهذا الأسبوع — الخميس، 12 نوفمبر 2026</p></div>
+<div class="acts"><div class="btn"><i data-lucide="calendar"></i>آخر 30 يومًا<i data-lucide="chevron-down" style="width:15px"></i></div><div class="btn"><i data-lucide="download"></i>تصدير</div><div class="btn p"><i data-lucide="folder-plus"></i>مشروع جديد</div></div></div>
+<div class="grid k4">
+ ${[['folder-kanban','#4F46E5','#EEF2FF','المشاريع النشطة','24','up','12%','مقارنة بالشهر الماضي','#4F46E5',[14,16,15,18,19,21,20,24]],
+    ['circle-check-big','#059669','#ECFDF5','المهام المكتملة','1,284','up','8.4%','186 مهمة هذا الأسبوع','#059669',[60,70,66,80,78,90,96,104]],
+    ['gauge','#0EA5E9','#F0F9FF','متوسط نسبة الإنجاز','78%','up','5.2%','الهدف الربعي 85%','#0EA5E9',[62,64,68,67,71,73,76,78]],
+    ['alarm-clock','#E11D48','#FFF1F2','المهام المتأخرة','17','dn','3','تحتاج إلى متابعة عاجلة','#E11D48',[22,25,21,19,20,18,15,17]]]
+   .map(([ic,col,bg,l,v,dir,d,f,sc,sd],i)=>`<div class="card kpi"><div class="h"><div class="ic" style="background:${bg};color:${col}"><i data-lucide="${ic}"></i></div><div class="l">${l}</div><div style="margin-inline-start:auto" id="sp${i}"></div></div>
+   <div style="display:flex;align-items:baseline;gap:10px"><div class="v">${v}</div><span class="delta ${dir}"><i data-lucide="${dir==='up'?'trending-up':'trending-down'}"></i>${d}</span></div><div class="f">${f}</div></div>`).join('')}
+</div>
+<div class="grid r2">
+ <div class="card" style="position:relative"><div class="ch"><div><h3>معدل إنجاز المهام</h3><div class="sub">المهام المنجزة مقابل المهام الجديدة شهريًا</div></div>
+   <div class="r"><div class="lg"><span><i style="background:#4F46E5"></i>المهام المنجزة</span><span><i style="background:#0EA5E9"></i>المهام الجديدة</span></div><div class="seg"><span>أسبوعي</span><span class="on">شهري</span><span>سنوي</span></div></div></div>
+   <div id="ch1"></div>
+   <div class="tip" style="top:118px;left:395px"><b>أغسطس 2026</b><div><i style="background:#4F46E5"></i>المهام المنجزة<span class="en">168</span></div><div><i style="background:#0EA5E9"></i>المهام الجديدة<span class="en">142</span></div></div>
+ </div>
+ <div class="card"><div class="ch"><div><h3>توزيع حالات المهام</h3><div class="sub">جميع المشاريع النشطة</div></div><div class="r"><i data-lucide="more-horizontal" style="color:var(--faint)"></i></div></div>
+   <div style="display:flex;align-items:center;gap:26px;margin-top:6px"><div id="dn"></div>
+   <div class="st">
+     <div><i style="background:#4F46E5"></i>مكتملة<b>1,284</b><em>62%</em></div>
+     <div><i style="background:#0EA5E9"></i>قيد التنفيذ<b>412</b><em>20%</em></div>
+     <div><i style="background:#F59E0B"></i>قيد المراجعة<b>226</b><em>11%</em></div>
+     <div><i style="background:#E11D48"></i>متأخرة<b>17</b><em>1%</em></div>
+     <div><i style="background:#CBD5E1"></i>لم تبدأ<b>131</b><em>6%</em></div>
+   </div></div>
+   <div style="margin-top:16px;padding:12px 14px;background:var(--brand-50);border-radius:12px;font-size:13px;color:#3730A3;display:flex;gap:10px;align-items:center"><i data-lucide="sparkles" style="flex-shrink:0"></i>ارتفعت نسبة المهام المكتملة 8.4% مقارنة بالشهر الماضي.</div>
+ </div>
+</div>
+<div class="grid r3">
+ <div class="card" style="padding:22px 0 6px"><div class="ch" style="padding:0 22px;margin-bottom:12px"><div><h3>تقدم المشاريع</h3><div class="sub">المشاريع ذات الأولوية هذا الربع</div></div><div class="r"><span style="color:var(--brand);font-size:13.5px;font-weight:600">عرض الكل</span></div></div>
+  <table class="pl"><thead><tr><th>المشروع</th><th>الفريق</th><th>التسليم</th><th>الحالة</th><th>الإنجاز</th></tr></thead><tbody>
+  ${[['smartphone','#4F46E5','#EEF2FF','تطبيق المتجر الإلكتروني','التطوير · 64 مهمة',['khaled','faisal','noura','lama'],'30 نوفمبر','t-blue','قيد التنفيذ',72,'#4F46E5'],
+     ['megaphone','#D97706','#FFFBEB','حملة الربع الرابع','التسويق · 38 مهمة',['majed','haya','noura'],'20 نوفمبر','t-green','في المسار',88,'#059669'],
+     ['users','#BE123C','#FFF1F2','أتمتة الموارد البشرية','الموارد البشرية · 41 مهمة',['reem','abdullah'],'18 نوفمبر','t-rose','متأخر',31,'#E11D48']]
+   .map(([ic,col,bg,n,s,t,d,tc,tl,p,pc])=>`<tr><td><div class="pn"><div class="pi" style="background:${bg};color:${col}"><i data-lucide="${ic}"></i></div><div><b>${n}</b><span>${s}</span></div></div></td><td>${avs(t,30)}</td><td style="color:var(--ink-2)">${d}</td><td><span class="tag ${tc}"><i></i>${tl}</span></td><td><div class="pc"><b>${p}%</b><div class="prog"><i style="width:${p}%;background:${pc}"></i></div></div></td></tr>`).join('')}
+  </tbody></table></div>
+ <div class="card"><div class="ch"><div><h3>عبء العمل على الفريق</h3><div class="sub">المهام المفتوحة لكل عضو</div></div></div>
+  <div class="wl">${[['khaled',14,18,'#4F46E5'],['faisal',17,18,'#F59E0B'],['noura',9,18,'#4F46E5'],['abdullah',12,18,'#4F46E5'],].map(([k,v,m,col])=>`<div class="row">${av(k,36)}<div><b>${PEOPLE[k].n}<span>${v} مهمة</span></b><div class="prog"><i style="width:${v/m*100}%;background:${col}"></i></div></div></div>`).join('')}</div>
+ </div>
+ <div class="card"><div class="ch"><div><h3>المواعيد النهائية القادمة</h3><div class="sub">خلال الأيام السبعة القادمة</div></div></div>
+  <div class="dl">${[['13','نوفمبر','#FFF1F2','#BE123C','مراجعة تصاميم صفحة الدفع','تطبيق المتجر · نورة القحطاني','t-rose','غدًا'],
+     ['15','نوفمبر','#FFFBEB','#B45309','اعتماد خطة المحتوى الإعلاني','حملة الربع الرابع · هيا المطيري','t-amber','3 أيام'],
+     ['17','نوفمبر','#EEF2FF','#4338CA','ربط بوابة الدفع الإلكتروني','الفوترة · عبدالله الحربي','t-violet','5 أيام']]
+   .map(([d,m,bg,col,t,s,tc,tl])=>`<div class="it"><div class="d" style="background:${bg};color:${col}"><b>${d}</b><span>${m}</span></div><div class="t"><b>${t}</b><span>${s}</span></div><span class="tag ${tc}" style="font-size:11.5px">${tl}</span></div>`).join('')}</div>
+ </div>
+</div>`;
+Charts.line(document.getElementById('ch1'), {w: 1040, h: 236, labels: ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر'], max: 200, ticks: 4,
+  series: [{name: 'new', color: '#0EA5E9', data: [88, 96, 110, 104, 122, 118, 130, 142, 136, 150, 158], dash: true, width: 2},
+           {name: 'done', color: '#4F46E5', data: [72, 90, 98, 112, 108, 126, 140, 168, 154, 172, 186], fill: true}], highlight: 7});
+Charts.donut(document.getElementById('dn'), {size: 172, thick: 22, center: '2,070', sub: 'إجمالي المهام', parts: [{v: 1284, color: '#4F46E5'}, {v: 412, color: '#0EA5E9'}, {v: 226, color: '#F59E0B'}, {v: 17, color: '#E11D48'}, {v: 131, color: '#CBD5E1'}]});
+[[14,16,15,18,19,21,20,24],[60,70,66,80,78,90,96,104],[62,64,68,67,71,73,76,78],[22,25,21,19,20,18,15,17]].forEach((d,i)=>Charts.spark(document.getElementById('sp'+i),{w:80,h:30,data:d,color:['#4F46E5','#059669','#0EA5E9','#E11D48'][i]}));
+icons();
+</script></body></html>

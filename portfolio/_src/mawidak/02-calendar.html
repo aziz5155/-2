@@ -1,0 +1,83 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="mawidak.css">
+<script src="../_shared/lucide.min.js"></script><script src="layout.js"></script>
+<style>
+.lay{display:grid;grid-template-columns:1fr 330px;gap:20px;height:100%}
+.cal{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.tb{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.tb h3{font-size:18px;font-weight:600}
+.nb{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-2)}
+.wk{display:grid;grid-template-columns:72px repeat(6,1fr);flex:1}
+.dh{height:66px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-bottom:1px solid var(--line);border-right:1px solid var(--line-2)}
+.dh span{font-size:12.5px;color:var(--muted)}.dh b{font-family:Inter;font-size:20px;font-weight:600;margin-top:2px}
+.dh.today b{background:var(--brand);color:#fff;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;font-size:17px}
+.dh.today span{color:var(--brand-700);font-weight:500}
+.tc{position:relative}.tc div{height:86px;font-family:Inter;font-size:12px;color:var(--faint);text-align:center;padding-top:0;transform:translateY(-8px)}
+.day{position:relative;border-right:1px solid var(--line-2);background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 85px,var(--line-2) 85px,var(--line-2) 86px)}
+.day.today{background-color:#FBFEFD}
+.ev{position:absolute;right:5px;left:5px;border-radius:10px;padding:7px 9px;overflow:hidden;font-size:12px;border-right:3.5px solid}
+.ev b{display:block;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev span{display:block;color:var(--ink-2);opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.ev em{font-style:normal;font-family:Inter;font-size:11px;opacity:.75;direction:ltr;display:block;text-align:right;white-space:nowrap;margin-top:2px}
+.ev.pend{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.55) 0 6px,transparent 6px 12px)}
+.ev.sel{box-shadow:0 10px 24px rgba(16,32,30,.18),0 0 0 2px #fff;z-index:3}
+.now{position:absolute;right:0;left:0;height:2px;background:var(--coral);z-index:4}.now::before{content:'';position:absolute;right:-5px;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--coral)}
+.off{position:absolute;inset:0;background:repeating-linear-gradient(135deg,#F6F8F7 0 8px,#EEF2F1 8px 16px);display:grid;place-items:center;color:var(--muted);font-size:13px}
+.mc{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.mc span{font-size:11.5px;color:var(--faint);padding:4px 0}
+.mc b{font-family:Inter;font-weight:500;font-size:13px;height:34px;display:grid;place-items:center;border-radius:10px;position:relative}
+.mc b.m{color:#CBD5D3}.mc b.w{background:var(--brand-50);color:var(--brand-700)}.mc b.t{background:var(--brand);color:#fff}
+.mc b.d::after{content:'';position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:var(--coral)}
+.pv{display:flex;flex-direction:column;gap:6px}
+.pv div{display:flex;align-items:center;gap:10px;padding:7px 4px;font-size:13.5px}
+.pv .ck{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;color:#fff}.pv .ck svg{width:14px;height:14px;stroke-width:3}
+.pv em{margin-inline-start:auto;font-style:normal;font-family:Inter;font-size:12px;color:var(--muted)}
+.pop{position:absolute;width:300px;background:#fff;border-radius:16px;box-shadow:0 24px 60px rgba(16,32,30,.22);border:1px solid var(--line);padding:18px;z-index:10}
+.pop .r{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2);margin-top:10px}.pop .r svg{width:16px;height:16px;color:var(--muted)}
+</style></head><body><script>
+const c = layout('cal', 'تقويم المواعيد', 'عرض أسبوعي لجميع مقدمي الخدمة — عيادات بسمة');
+const days = [['السبت',7],['الأحد',8],['الإثنين',9],['الثلاثاء',10],['الأربعاء',11],['الخميس',12]];
+const H0 = 9, HH = 86;
+const E = [
+ [0,9,.75,'هند السالم','تنظيف وتلميع','muna'],[0,10,1,'سعود المطيري','زراعة سن','yousef'],[0,11.5,.5,'أروى الجهني','كشف عام','salman'],[0,13,1.5,'فهد العتيبي','علاج العصب','layla'],[0,15,.75,'نوف الزهراني','استشارة تقويم','ahmad'],
+ [1,9.5,1,'خالد البلوي','تبييض الأسنان','muna'],[1,11,.75,'مها الحربي','متابعة تقويم','ahmad'],[1,12.5,1.5,'عمر السهلي','علاج العصب','layla'],[1,14.5,1,'لينا الأحمد','حشوات تجميلية','salman'],[1,16,.75,'تركي الشمري','زراعة — متابعة','yousef'],
+ [2,9,.5,'سلطان القرشي','كشف عام','salman'],[2,10,1.25,'رهف الغامدي','تبييض الأسنان','muna'],[2,12,1,'ياسر العمري','تركيب تقويم','ahmad'],[2,14,1.5,'منيرة الدوسري','زراعة سن','yousef'],[2,16,.75,'زياد الشهري','حشوات','salman'],
+ [3,9.5,.75,'غادة المالكي','تنظيف وتلميع','muna'],[3,11,1.5,'ماجد الحمد','علاج العصب','layla'],[3,13.5,1,'سارة النمر','استشارة تقويم','ahmad'],[3,15,1,'عادل الزهراني','زراعة سن','yousef'],
+ [4,9,1,'شهد القحطاني','تبييض الأسنان','muna'],[4,10.5,.75,'وليد العنزي','كشف عام','salman'],[4,12,1.5,'حصة الرشيد','علاج العصب','layla'],[4,14,.75,'فارس الحربي','متابعة تقويم','ahmad'],[4,15.5,1,'أسماء السبيعي','حشوات تجميلية','salman'],
+ [5,9,.75,'هند السالم','تنظيف وتلميع','muna'],[5,10.5,.5,'عبدالرحمن الفهد','استشارة تقويم','ahmad'],[5,11.25,1,'دانة المالكي','تبييض الأسنان','muna',0,1,'a'],[5,12,1.5,'محمد القحطاني','علاج العصب','layla',0,0,'b'],[5,13,.75,'أمل الشهراني','استشارة زراعة','yousef',1,0,'a'],[5,14.5,.75,'ناصر العسيري','حشوات تجميلية','salman'],[5,16,1,'بدر الرشيد','تركيب تقويم شفاف','ahmad',0,0,'a'],[5,16.75,.75,'ريما العنزي','تبييض الأسنان','muna',1,0,'b'],
+];
+const fmt = h => { const hh = Math.floor(h), mm = Math.round((h - hh) * 60); return `${String(hh > 12 ? hh - 12 : hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`; };
+const evs = d => E.filter(e => e[0] === d).map(([_, s, du, n, sv, doc, pend, sel, half]) => { const col = DOC[doc].c;
+  return `<div class="ev ${pend?'pend':''} ${sel?'sel':''}" style="top:${(s - H0) * HH + 2}px;${half==='a'?'left:50%;':half==='b'?'right:50%;margin-right:2px;':''}height:${du * HH - 4}px;background:${col}1A;border-color:${col}"><b>${n}</b>${du >= .75 ? `<span>${sv}</span>` : ''}${du >= 1 ? `<em>${fmt(s)} – ${fmt(s + du)}</em>` : ''}</div>`; }).join('');
+c.innerHTML = `<div class="lay">
+ <div class="card cal">
+  <div class="tb"><div class="btn" style="height:38px">اليوم</div><div class="nb"><i data-lucide="chevron-right"></i></div><div class="nb"><i data-lucide="chevron-left"></i></div><h3>7 – 12 نوفمبر 2026</h3>
+   <div style="margin-inline-start:auto;display:flex;gap:10px;align-items:center"><div class="seg"><span>يوم</span><span class="on">أسبوع</span><span>شهر</span><span>قائمة</span></div><div class="btn" style="height:40px"><i data-lucide="filter"></i>تصفية</div><div class="btn p" style="height:40px"><i data-lucide="plus"></i>حجز جديد</div></div></div>
+  <div class="wk">
+   <div style="border-bottom:1px solid var(--line);height:66px"></div>${days.map(([n,d],i)=>`<div class="dh ${i===5?'today':''}"><span>${n}</span><b>${d}</b></div>`).join('')}
+   <div class="tc" style="padding-top:8px">${[9,10,11,12,1,2,3,4,5].map((h,i)=>`<div>${String(h).padStart(2,'0')}:00 ${i<3?'ص':'م'}</div>`).join('')}</div>
+   ${days.map((_,i)=>`<div class="day ${i===5?'today':''}" style="height:${9*HH}px">${evs(i)}${i===5?`<div class="now" style="top:${(11.67-H0)*HH}px"></div>`:''}</div>`).join('')}
+  </div>
+ </div>
+ <div style="display:flex;flex-direction:column;gap:20px">
+  <div class="card" style="padding:18px"><div class="ch" style="margin-bottom:12px"><h3 style="font-size:15px">نوفمبر 2026</h3><div class="r"><i data-lucide="chevron-right" style="color:var(--muted)"></i><i data-lucide="chevron-left" style="color:var(--muted)"></i></div></div>
+   <div class="mc">${['س','ح','ن','ث','ر','خ','ج'].map(x=>`<span>${x}</span>`).join('')}
+   ${[31].map(x=>`<b class="m">${x}</b>`).join('')}${Array.from({length:30},(_,i)=>i+1).map(d=>`<b class="${d===12?'t':(d>=7&&d<=11?'w':'')} ${[3,5,9,15,17,18,22,24].includes(d)?'d':''}">${d}</b>`).join('')}${[1,2,3,4].map(x=>`<b class="m">${x}</b>`).join('')}</div></div>
+  <div class="card" style="padding:18px"><div class="ch" style="margin-bottom:8px"><h3 style="font-size:15px">مقدمو الخدمة</h3><div class="r" style="font-size:12.5px;color:var(--brand);font-weight:500">تحديد الكل</div></div>
+   <div class="pv">${Object.keys(DOC).map(k=>`<div><span class="ck" style="background:${DOC[k].c}"><i data-lucide="check"></i></span>${DOC[k].n}<em>${E.filter(e=>e[5]===k).length} مواعيد</em></div>`).join('')}</div></div>
+  <div class="card" style="padding:18px;flex:1"><div class="ch" style="margin-bottom:12px"><h3 style="font-size:15px">بانتظار التأكيد</h3><span class="tag t-wait" style="margin-inline-start:auto">5 طلبات</span></div>
+   ${[['أمل الشهراني','استشارة زراعة · اليوم 01:00 م'],['ريما العنزي','تبييض الأسنان · اليوم 04:45 م'],['طلال الحربي','كشف عام · السبت 10:00 ص'],['جواهر العمري','تبييض الأسنان · الأحد 11:30 ص']].map(([n,s])=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)">${cav(n,'#D97706',34)}<div style="flex:1"><b style="font-size:13.5px;font-weight:500;display:block">${n}</b><span style="font-size:12px;color:var(--muted)">${s}</span></div><span class="nb" style="width:32px;height:32px;background:var(--brand-50);border:0;color:var(--brand)"><i data-lucide="check" style="width:16px"></i></span></div>`).join('')}
+  </div>
+ </div>
+</div>`;
+// popover for selected appointment
+const sel = document.querySelector('.ev.sel'); const r = sel.getBoundingClientRect();
+document.body.insertAdjacentHTML('beforeend', `<div class="pop" style="top:${r.top - 40}px;left:${r.right + 12}px">
+ <div style="display:flex;align-items:center;gap:10px"><span class="tag t-ok">في العيادة</span><i data-lucide="x" style="margin-inline-start:auto;color:var(--muted)"></i></div>
+ <div style="display:flex;align-items:center;gap:12px;margin-top:14px">${cav('دانة','#F06548',44)}<div><b style="font-size:16px;font-weight:600;display:block">دانة المالكي</b><span style="font-size:12.5px;color:var(--muted)" class="num"><bdi dir="ltr">055 123 4876</bdi></span></div></div>
+ <div class="r"><i data-lucide="sparkles"></i>تبييض الأسنان — 60 دقيقة</div>
+ <div class="r"><i data-lucide="clock-3"></i>الخميس 12 نوفمبر — الساعة 11:15 ص</div>
+ <div class="r"><i data-lucide="stethoscope"></i>د. منى الحارثي · غرفة 2</div>
+ <div class="r"><i data-lucide="wallet"></i>900 ر.س · مدفوع مسبقًا</div>
+ <div style="display:flex;gap:8px;margin-top:16px"><div class="btn p" style="flex:1;justify-content:center;height:40px">إنهاء الزيارة</div><div class="btn" style="height:40px">إعادة جدولة</div></div></div>`);
+icons();
+</script></body></html>

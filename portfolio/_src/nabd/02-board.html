@@ -1,0 +1,93 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="nabd.css">
+<script src="../_shared/lucide.min.js"></script><script src="../_shared/charts.js"></script><script src="layout.js"></script>
+<style>
+.phd{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px 24px 0;margin-bottom:18px}
+.phd .t{display:flex;align-items:center;gap:16px}
+.phd .pic{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,#6366F1,#8B5CF6);display:grid;place-items:center;color:#fff}
+.phd .pic svg{width:26px;height:26px}
+.phd h1{font-size:23px;font-weight:700;display:flex;align-items:center;gap:10px}
+.phd .meta{display:flex;gap:18px;color:var(--muted);font-size:13.5px;margin-top:5px}.phd .meta span{display:flex;align-items:center;gap:6px}.phd .meta svg{width:15px;height:15px}
+.phd .stats{margin-inline-start:auto;display:flex;align-items:center;gap:26px}
+.phd .s{text-align:center}.phd .s b{font-family:Inter;font-size:21px;display:block}.phd .s span{font-size:12.5px;color:var(--muted)}
+.vr{width:1px;height:40px;background:var(--line)}
+.tabs{display:flex;gap:28px;margin-top:18px}
+.tabs span{padding:12px 2px;font-size:14.5px;color:var(--muted);font-weight:500;display:flex;gap:7px;align-items:center;border-bottom:2.5px solid transparent}
+.tabs span.on{color:var(--brand);border-color:var(--brand);font-weight:600}
+.tabs em{font-style:normal;font-family:Inter;font-size:11.5px;background:var(--line-2);border-radius:10px;padding:1px 7px;color:var(--muted)}
+.tabs span.on em{background:var(--brand-50);color:var(--brand)}
+.tb{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.chip{height:38px;padding:0 14px;border-radius:9px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--ink-2);font-weight:500}
+.chip svg{width:16px;height:16px}
+.chip.f{border-style:dashed}
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.col{background:#EEF1F7;border-radius:16px;padding:14px;height:722px;overflow:hidden}
+.col .h{display:flex;align-items:center;gap:9px;padding:2px 4px 14px;font-weight:700;font-size:15px}
+.col .h i.d{width:10px;height:10px;border-radius:50%}
+.col .h em{font-style:normal;font-family:Inter;font-size:12px;background:#fff;border-radius:10px;padding:1px 9px;color:var(--muted);font-weight:600}
+.col .h .r{margin-inline-start:auto;display:flex;gap:8px;color:var(--faint)}.col .h .r svg{width:17px;height:17px}
+.tk{background:#fff;border-radius:13px;padding:15px;margin-bottom:12px;box-shadow:0 1px 2px rgba(15,23,42,.06),0 0 0 1px rgba(15,23,42,.04)}
+.tk .tg{display:flex;gap:6px;align-items:center;margin-bottom:10px}
+.tk .tg .tag{font-size:11.5px;padding:3px 9px}
+.tk .pr{margin-inline-start:auto;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600}.tk .pr svg{width:14px;height:14px}
+.tk h4{font-size:14.5px;font-weight:600;line-height:1.6}
+.tk p{font-size:12.5px;color:var(--muted);line-height:1.7;margin-top:4px}
+.tk .sub{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12px;color:var(--muted)}.tk .sub .prog{flex:1;height:6px}.tk .sub b{font-family:Inter;font-weight:600;color:var(--ink-2)}
+.tk .ft{display:flex;align-items:center;gap:12px;margin-top:13px;padding-top:12px;border-top:1px solid var(--line-2);font-size:12.5px;color:var(--muted)}
+.tk .ft span{display:flex;align-items:center;gap:4px;font-family:Inter}.tk .ft svg{width:14px;height:14px}
+.tk .ft .due{margin-inline-start:auto;font-family:'IBM Plex Sans Arabic'}
+.tk .ft .due.late{color:#BE123C;font-weight:600}
+.cover{height:96px;border-radius:9px;margin-bottom:12px;position:relative;overflow:hidden}
+.tk.drag{transform:rotate(-2.5deg);box-shadow:0 18px 40px rgba(15,23,42,.18);border:1.5px solid #A5B4FC}
+.add{border:1.5px dashed #CBD5E1;border-radius:12px;padding:11px;text-align:center;color:var(--muted);font-size:13.5px;display:flex;gap:6px;justify-content:center;align-items:center}
+.done h4{color:var(--muted);text-decoration:line-through;text-decoration-color:#CBD5E1}
+</style></head><body><script>
+const c = layout('projects', 'المشاريع / التطوير / <b>تطبيق المتجر الإلكتروني</b>');
+const P = {h:['#BE123C','flag','عالية'], m:['#B45309','flag','متوسطة'], l:['#64748B','flag','منخفضة']};
+const card = o => `<div class="tk ${o.cls||''}">${o.cover||''}<div class="tg"><span class="tag ${o.tc}">${o.tl}</span>${o.p?`<span class="pr" style="color:${P[o.p][0]}"><i data-lucide="${P[o.p][1]}"></i>${P[o.p][2]}</span>`:''}</div>
+<h4>${o.t}</h4>${o.d?`<p>${o.d}</p>`:''}
+${o.s?`<div class="sub"><i data-lucide="list-checks" style="width:14px;height:14px"></i><b>${o.s[0]}/${o.s[1]}</b><div class="prog"><i style="width:${o.s[0]/o.s[1]*100}%;background:${o.s[0]===o.s[1]?'#059669':'#4F46E5'}"></i></div></div>`:''}
+<div class="ft">${avs(o.a,28)}<span><i data-lucide="message-circle"></i>${o.c||0}</span><span><i data-lucide="paperclip"></i>${o.f||0}</span><span class="due ${o.late?'late':''}"><i data-lucide="${o.done?'circle-check':'calendar'}"></i>${o.due}</span></div></div>`;
+const col = (name, color, n, cards, add = true) => `<div class="col"><div class="h"><i class="d" style="background:${color}"></i>${name}<em>${n}</em><div class="r"><i data-lucide="plus"></i><i data-lucide="more-horizontal"></i></div></div>${cards.map(card).join('')}${add?'<div class="add"><i data-lucide="plus" style="width:16px"></i>إضافة مهمة</div>':''}</div>`;
+const mock = `<div class="cover" style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF)">
+ <div style="position:absolute;inset:14px 60px 0;background:#fff;border-radius:8px 8px 0 0;box-shadow:0 4px 14px rgba(79,70,229,.15);padding:10px">
+  <div style="height:7px;width:40%;background:#E0E7FF;border-radius:4px"></div><div style="display:flex;gap:6px;margin-top:9px"><div style="flex:1;height:34px;border-radius:6px;background:#EEF2FF;border:1.5px solid #6366F1"></div><div style="flex:1;height:34px;border-radius:6px;background:#F8FAFC;border:1px solid #E2E8F0"></div><div style="flex:1;height:34px;border-radius:6px;background:#F8FAFC;border:1px solid #E2E8F0"></div></div>
+  <div style="height:14px;width:100%;margin-top:9px;background:#4F46E5;border-radius:5px"></div></div></div>`;
+c.innerHTML = `
+<div class="phd"><div class="t"><div class="pic"><i data-lucide="smartphone"></i></div>
+ <div><h1>تطبيق المتجر الإلكتروني <span class="tag t-blue"><i></i>قيد التنفيذ</span></h1>
+ <div class="meta"><span><i data-lucide="building-2"></i>قسم التطوير</span><span><i data-lucide="user-round"></i>قائد المشروع: خالد الشمري</span><span><i data-lucide="calendar-range"></i>1 سبتمبر — 30 نوفمبر 2026</span></div></div>
+ <div class="stats">
+  <div style="display:flex;align-items:center;gap:12px"><div id="ring"></div><div><b style="font-size:15px;display:block">نسبة الإنجاز</b><span style="font-size:12.5px;color:var(--muted)">46 من 64 مهمة</span></div></div>
+  <div class="vr"></div><div class="s"><b>18</b><span>يومًا متبقيًا</span></div>
+  <div class="vr"></div><div class="s"><b style="color:#BE123C">2</b><span>مهام متأخرة</span></div>
+  <div class="vr"></div><div style="display:flex">${avs(['khaled','faisal','noura','abdullah','lama'],36)}<span class="av" style="background:#E2E8F0;color:#475569;width:36px;height:36px;font-size:12px;margin-inline-start:-9px;font-family:Inter">+3</span></div>
+  <div class="btn"><i data-lucide="user-plus"></i>دعوة</div>
+ </div></div>
+ <div class="tabs"><span><i data-lucide="layout-grid" style="width:16px"></i>نظرة عامة</span><span class="on"><i data-lucide="square-kanban" style="width:16px"></i>المهام<em>64</em></span><span><i data-lucide="gantt-chart" style="width:16px"></i>الجدول الزمني</span><span><i data-lucide="folder" style="width:16px"></i>الملفات<em>23</em></span><span><i data-lucide="messages-square" style="width:16px"></i>النقاشات<em>9</em></span><span><i data-lucide="history" style="width:16px"></i>سجل النشاط</span></div>
+</div>
+<div class="tb">
+ <div class="seg" style="padding:4px"><span class="on" style="display:flex;gap:6px;align-items:center;padding:6px 12px"><i data-lucide="square-kanban" style="width:15px;height:15px"></i>لوحة</span><span style="display:flex;gap:6px;align-items:center;padding:6px 12px"><i data-lucide="list" style="width:15px;height:15px"></i>قائمة</span><span style="display:flex;gap:6px;align-items:center;padding:6px 12px"><i data-lucide="calendar" style="width:15px;height:15px"></i>تقويم</span></div>
+ <div class="chip"><i data-lucide="search"></i>بحث في المهام</div>
+ <div class="chip f"><i data-lucide="user-round"></i>المسؤول</div><div class="chip f"><i data-lucide="flag"></i>الأولوية</div><div class="chip f"><i data-lucide="tag"></i>التصنيف</div>
+ <div class="chip" style="margin-inline-start:auto"><i data-lucide="arrow-up-down"></i>ترتيب: تاريخ التسليم</div><div class="chip"><i data-lucide="sliders-horizontal"></i>تخصيص العرض</div>
+</div>
+<div class="board">
+${col('قيد الانتظار', '#94A3B8', 9, [
+  {tc:'t-violet', tl:'تصميم', p:'m', t:'تصميم شاشة برنامج الولاء والنقاط', d:'شاشة رصيد النقاط وسجل المكافآت وطرق الاستبدال.', a:['noura'], c:3, f:2, due:'24 نوفمبر'},
+  {tc:'t-blue', tl:'تطوير', p:'m', t:'إعداد صفحة تتبع حالة الطلب', s:[0,4], a:['faisal'], c:1, f:0, due:'22 نوفمبر'},
+  {tc:'t-amber', tl:'محتوى', p:'l', t:'كتابة نصوص الإشعارات الفورية', a:['haya'], c:5, f:1, due:'25 نوفمبر'}])}
+${col('قيد التنفيذ', '#4F46E5', 6, [
+  {cover: mock, tc:'t-violet', tl:'تصميم', p:'h', t:'تصميم صفحة الدفع وإتمام الطلب', s:[4,6], a:['noura','reem'], c:12, f:6, due:'13 نوفمبر', late:false},
+  {tc:'t-blue', tl:'تطوير', p:'h', t:'ربط بوابة الدفع الإلكتروني', d:'التكامل مع مدى وبطاقات الائتمان وتأكيد العمليات وإصدار الإيصالات.', s:[3,5], a:['abdullah','khaled'], c:8, f:3, due:'17 نوفمبر', cls:'drag'}], false)}
+${col('قيد المراجعة', '#F59E0B', 3, [
+  {tc:'t-blue', tl:'تطوير', p:'h', t:'واجهة برمجة سلة المشتريات API', s:[5,5], a:['abdullah'], c:4, f:2, due:'10 نوفمبر', late:true},
+  {tc:'t-sky', tl:'اختبار', p:'m', t:'اختبار تسجيل الدخول برمز التحقق', d:'سيناريوهات الاختبار على أجهزة آيفون وأندرويد.', s:[7,9], a:['lama'], c:6, f:4, due:'14 نوفمبر'},
+  {tc:'t-gray', tl:'أداء', p:'m', t:'تحسين سرعة تحميل صفحة المنتجات', a:['faisal','turki'], c:2, f:1, due:'15 نوفمبر'}])}
+${col('مكتملة', '#059669', 46, [
+  {cls:'done', tc:'t-violet', tl:'تصميم', t:'تصميم الهوية البصرية للتطبيق', a:['noura'], c:15, f:9, due:'تم في 28 أكتوبر', done:true},
+  {cls:'done', tc:'t-green', tl:'تحليل', t:'تحليل متطلبات المستخدمين', a:['reem','khaled'], c:7, f:5, due:'تم في 20 أكتوبر', done:true},
+  {cls:'done', tc:'t-gray', tl:'بنية تحتية', t:'إعداد بيئة التطوير والنشر المستمر', a:['turki'], c:4, f:2, due:'تم في 15 أكتوبر', done:true}], false)}
+</div>`;
+Charts.ring(document.getElementById('ring'), {size: 56, thick: 6, pct: 72, color: '#4F46E5'});
+icons();
+</script></body></html>

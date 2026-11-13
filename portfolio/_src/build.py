@@ -1,0 +1,212 @@
+# -*- coding: utf-8 -*-
+"""Generates thumbnail.html and deck.html for each project from content.py."""
+import os, sys
+sys.path.insert(0, os.path.dirname(__file__))
+from content import NABD, MAWIDAK
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+def head(p, extra=''):
+    c = p['c']
+    return f"""<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../_shared/fonts.css"><script src="../_shared/lucide.min.js"></script>
+<style>
+:root{{--brand:{c['brand']};--brand2:{c['brand2']};--dark:{c['dark']};--dark2:{c['dark2']};--soft:{c['soft']};--accent:{c['accent']};--ink:{c['ink']};--muted:{c['muted']};--line:{c['line']};--bg:{c['bg']}}}
+*{{box-sizing:border-box;margin:0;padding:0}}
+body{{font-family:{p['font']},sans-serif;direction:rtl;color:var(--ink);-webkit-font-smoothing:antialiased}}
+.num{{font-family:Inter,{p['font']},sans-serif}}
+svg.lucide{{stroke-width:1.9}}
+.mark{{display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2))}}
+.frame{{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.28),0 0 0 1px rgba(0,0,0,.05)}}
+.frame .bar{{height:26px;background:#F1F5F9;display:flex;align-items:center;gap:6px;padding:0 12px;direction:ltr}}
+.frame .bar i{{width:9px;height:9px;border-radius:50%;display:inline-block}}
+.frame .bar span{{margin-left:14px;height:15px;flex:1;max-width:260px;background:#fff;border-radius:5px;font:10px Inter;color:#94A3B8;display:flex;align-items:center;padding:0 8px}}
+.frame img{{display:block;width:100%}}
+{extra}
+</style></head><body>"""
+
+def frame(img, url):
+    return f'<div class="frame"><div class="bar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>{url}</span></div><img src="{img}"></div>'
+
+def shots(p):
+    return f"../../{p['out']}/screens"
+
+# ---------------------------------------------------------------- thumbnail
+def thumbnail(p):
+    dark = p['key'] == 'nabd'
+    s = shots(p)
+    url = 'app.nabd.example' if dark else 'mawidak.example/basma'
+    bg = ("radial-gradient(800px 500px at 15% 20%,rgba(124,58,237,.45),transparent 60%),radial-gradient(700px 500px at 0% 100%,rgba(79,70,229,.5),transparent 60%),linear-gradient(135deg,#0B1120,#131B3A)"
+          if dark else
+          "radial-gradient(700px 480px at 10% 10%,rgba(20,184,166,.28),transparent 60%),radial-gradient(500px 400px at 0% 100%,rgba(240,101,72,.22),transparent 60%),linear-gradient(135deg,#F0FDFA,#FFFFFF 60%)")
+    txt = '#fff' if dark else 'var(--ink)'
+    sub = '#A5B4FC' if dark else 'var(--brand2)'
+    chipbg = 'rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#E0E7FF' if dark else '#fff;border:1px solid var(--line);color:var(--ink);box-shadow:0 4px 12px rgba(16,32,30,.05)'
+    grid = "background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:40px 40px;" if dark else "background-image:radial-gradient(rgba(13,148,136,.13) 1.2px,transparent 1.2px);background-size:22px 22px;"
+    second = '02-board' if dark else '01-booking'
+    first = '01-dashboard' if dark else '03-dashboard'
+    css = f"""
+html,body{{width:1280px;height:720px;overflow:hidden}}
+.wrap{{position:relative;width:1280px;height:720px;background:{bg};overflow:hidden}}
+.grid{{position:absolute;inset:0;{grid}mask-image:linear-gradient(90deg,#000,transparent 70%);-webkit-mask-image:linear-gradient(270deg,#000 0%,transparent 75%)}}
+.txt{{position:absolute;right:70px;top:0;bottom:0;width:470px;display:flex;flex-direction:column;justify-content:center;color:{txt}}}
+.logo{{display:flex;align-items:center;gap:16px}}
+.logo .mark{{width:76px;height:76px;border-radius:22px;box-shadow:0 14px 34px rgba(0,0,0,.25)}}
+.logo .mark svg{{width:42px;height:42px;stroke-width:2.2}}
+.logo b{{font-size:78px;font-weight:700;line-height:1;letter-spacing:-1px}}
+.tl{{font-size:30px;font-weight:600;margin-top:22px;line-height:1.45}}
+.ds{{font-size:17px;color:{sub};margin-top:10px;line-height:1.7}}
+.chips{{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}}
+.chips span{{background:{chipbg};padding:9px 15px;border-radius:12px;font-size:15px;display:flex;align-items:center;gap:8px}}
+.chips svg{{width:17px;height:17px;color:{'#A5B4FC' if dark else 'var(--brand)'}}}
+.foot{{margin-top:30px;display:flex;gap:10px;align-items:center;font-size:14px;color:{'#94A3B8' if dark else 'var(--muted)'}}}
+.foot i{{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block}}
+.s1{{position:absolute;left:-40px;top:92px;width:700px;transform:perspective(1600px) rotateY(14deg) rotateX(4deg);transform-origin:left center}}
+.s2{{position:absolute;left:300px;top:395px;width:390px;transform:perspective(1600px) rotateY(14deg) rotateX(4deg)}}
+.glow{{position:absolute;left:120px;top:160px;width:520px;height:420px;border-radius:50%;background:var(--brand);filter:blur(120px);opacity:{.45 if dark else .18}}}
+"""
+    icons = ['layout-dashboard', 'square-kanban', 'users', 'chart-pie'] if dark else ['calendar-plus', 'calendar-days', 'layout-grid', 'contact-round']
+    h = head(p, css) + f"""<div class="wrap"><div class="grid"></div><div class="glow"></div>
+<div class="s1">{frame(f'{s}/{first}.png', url)}</div>
+<div class="s2">{frame(f'{s}/{second}.png', url)}</div>
+<div class="txt"><div class="logo"><div class="mark"><i data-lucide="{p['icon']}"></i></div><b>{p['name']}</b></div>
+<div class="tl">{p['tagline']}</div>
+<div class="ds">{'منصة SaaS عربية لتخطيط المشاريع وتوزيع المهام ومتابعة الإنجاز والتقارير' if dark else 'منصة SaaS عربية لاستقبال الحجوزات وإدارة التقويم ومقدمي الخدمة والعملاء'}</div>
+<div class="chips">{''.join(f'<span><i data-lucide="{ic}"></i>{t}</span>' for ic, t in zip(icons, p['chips']))}</div>
+<div class="foot"><i></i>تصميم واجهات UI/UX<i></i>لوحة تحكم<i></i>نموذج تصميمي</div></div>
+</div><script>lucide.createIcons()</script></body></html>"""
+    open(os.path.join(HERE, p['key'], 'thumbnail.html'), 'w').write(h)
+
+# ---------------------------------------------------------------- deck
+def deck(p):
+    s = shots(p)
+    dark = p['key'] == 'nabd'
+    url = 'app.nabd.example' if dark else 'mawidak.example'
+    css = """
+@page{size:1280px 720px;margin:0}
+html,body{width:1280px}
+.pg{width:1280px;height:720px;position:relative;overflow:hidden;background:#fff;page-break-after:always;padding:56px 64px}
+.pg:last-child{page-break-after:auto}
+.hd{display:flex;align-items:center;gap:12px;margin-bottom:30px}
+.hd .k{font-family:Inter;font-size:13px;font-weight:600;color:var(--brand);background:var(--soft);padding:4px 10px;border-radius:8px}
+.hd h2{font-size:32px;font-weight:700;letter-spacing:-.3px}
+.hd .sm{margin-inline-start:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.hd .sm .mark{width:26px;height:26px;border-radius:8px}.hd .sm .mark svg{width:15px;height:15px}
+.ft{position:absolute;bottom:26px;right:64px;left:64px;display:flex;justify-content:space-between;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.lead{font-size:20px;line-height:1.9;color:#334155}
+.box{border:1px solid var(--line);border-radius:20px;padding:28px}
+.box h4{font-size:20px;font-weight:700;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.box h4 span{width:42px;height:42px;border-radius:10px;display:grid;place-items:center}.box h4 svg{width:18px;height:18px}
+.ul{list-style:none;display:flex;flex-direction:column;gap:14px}
+.ul li{font-size:16.5px;line-height:1.65;display:flex;gap:9px;align-items:flex-start;color:#334155}
+.ul li::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--brand);margin-top:9px;flex-shrink:0}
+.cover{padding:0;color:#fff}
+.fg{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.fc{border:1px solid var(--line);border-radius:20px;padding:30px 28px;min-height:242px;background:linear-gradient(180deg,#fff,var(--bg))}
+.fc .ic{width:58px;height:58px;border-radius:16px;background:var(--soft);color:var(--brand);display:grid;place-items:center;margin-bottom:14px}.fc .ic svg{width:28px;height:28px}
+.fc b{font-size:21px;display:block;margin-bottom:10px}.fc p{font-size:16px;color:var(--muted);line-height:1.75}
+.flow{display:flex;align-items:stretch;gap:0;margin:14px 0 40px}
+.st{flex:1;text-align:center;position:relative}
+.st .c{width:64px;height:64px;border-radius:20px;margin:0 auto 12px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 10px 24px rgba(0,0,0,.12)}.st .c svg{width:28px;height:28px}
+.st .n{position:absolute;top:-8px;right:calc(50% - 44px);width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font:600 12px Inter;display:grid;place-items:center;border:3px solid #fff}
+.st b{font-size:18px;display:block;margin-bottom:3px}.st span{font-size:14px;color:var(--muted)}
+.st+ .st::before{content:'';position:absolute;top:32px;left:calc(50% + 40px);right:auto;width:calc(100% - 80px);border-top:2px dashed var(--line);transform:translateX(0)}
+.rg{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.rc{border-radius:18px;padding:24px;background:var(--bg);min-height:196px}
+.rc .ic{width:40px;height:40px;border-radius:12px;background:#fff;color:var(--brand);display:grid;place-items:center;margin-bottom:10px}.rc .ic svg{width:20px;height:20px}
+.rc b{font-size:19px;display:block;margin-bottom:8px}.rc p{font-size:15px;color:var(--muted);line-height:1.7}
+.scr{display:grid;grid-template-columns:300px 1fr;gap:30px;align-items:center;margin-top:-6px}
+.scr .d p{font-size:16.5px;line-height:1.85;color:#334155;margin-bottom:20px}
+.hl{display:flex;flex-direction:column;gap:12px}
+.hl div{display:flex;gap:12px;align-items:flex-start;background:var(--bg);border-radius:14px;padding:13px 14px;font-size:14.5px;line-height:1.65}
+.hl i{font-style:normal;width:26px;height:26px;border-radius:8px;background:var(--brand);color:#fff;font:600 13px Inter;display:grid;place-items:center;flex-shrink:0}
+.sw{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.sw div{border-radius:14px;overflow:hidden;border:1px solid var(--line)}.sw div i{display:block;height:120px}.sw div span{display:block;padding:12px 14px;font-size:14.5px}.sw div b{font:500 11.5px Inter;color:var(--muted);display:block}
+.tg{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.tc{border:1px solid var(--line);border-radius:18px;padding:22px;min-height:190px}
+.tc .ic{width:42px;height:42px;border-radius:12px;background:var(--soft);color:var(--brand);display:grid;place-items:center;margin-bottom:12px}.tc .ic svg{width:21px;height:21px}
+.tc b{font-size:18px;display:block;margin-bottom:8px}.tc p{font:14.5px/1.75 Inter,sans-serif;color:var(--muted)}
+.tch{display:flex;flex-wrap:wrap;gap:6px}.tch bdi{font:500 13px Inter,'IBM Plex Sans Arabic','Readex Pro';background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:4px 9px;color:#334155}
+.arch{display:flex;align-items:center;gap:14px;margin-top:26px}
+.arch .n{flex:1;border-radius:16px;padding:18px;text-align:center;background:var(--bg);font-size:14px;border:1px solid var(--line)}
+.arch .n b{display:block;font-size:15px;margin-bottom:3px}.arch .n span{font-size:12px;color:var(--muted)}
+.arch .n.p{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border:0}.arch .n.p span{color:rgba(255,255,255,.8)}
+.arch svg.ar{width:22px;height:22px;color:var(--muted);flex-shrink:0}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:14.5px;padding:8px 14px;border-radius:20px;background:var(--bg);border:1px solid var(--line);margin:0 0 8px 6px}
+"""
+    T = len(p['screens']) + 7
+    pn = [0]
+    def foot():
+        pn[0] += 1
+        return f'<div class="ft"><span>{p["name"]} — {p["tagline"]}</span><span>نموذج تصميمي وتصور تقني</span><span>صفحة {pn[0]} من {T}</span></div>'
+    def hd(k, t):
+        return f'<div class="hd"><span class="k">{k}</span><h2>{t}</h2><span class="sm"><span class="mark"><i data-lucide="{p["icon"]}"></i></span>{p["name"]}</span></div>'
+    c = p['c']
+    pages = []
+    # 1 cover
+    cbg = (f"radial-gradient(700px 500px at 10% 30%,{c['brand2']}88,transparent 60%),linear-gradient(135deg,{c['dark']},{c['dark2']})" if dark
+           else f"radial-gradient(700px 500px at 10% 20%,#14B8A6aa,transparent 60%),radial-gradient(400px 300px at 20% 100%,{c['accent']}55,transparent 70%),linear-gradient(135deg,{c['brand2']},{c['dark2']})")
+    pn[0] += 1
+    pages.append(f"""<section class="pg cover" style="background:{cbg}">
+<div style="position:absolute;right:72px;top:0;bottom:0;width:470px;display:flex;flex-direction:column;justify-content:center">
+<div style="display:inline-flex;align-self:flex-start;gap:8px;align-items:center;font-size:13.5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:7px 14px;border-radius:30px;margin-bottom:26px"><i data-lucide="pen-tool" style="width:15px;height:15px"></i>نموذج تصميمي وتصور تقني</div>
+<div style="display:flex;align-items:center;gap:16px"><span class="mark" style="width:72px;height:72px;border-radius:21px;background:rgba(255,255,255,.15)"><i data-lucide="{p['icon']}" style="width:38px;height:38px"></i></span><b style="font-size:76px;line-height:1">{p['name']}</b></div>
+<div style="font-size:30px;font-weight:600;margin-top:22px">{p['tagline']}</div>
+<p style="font-size:16.5px;line-height:1.85;color:rgba(255,255,255,.78);margin-top:14px">{p['idea']}</p>
+<div style="display:flex;gap:26px;margin-top:30px;font-size:13.5px;color:rgba(255,255,255,.75)"><span>تصميم واجهات UI/UX</span><span>·</span><span>تجربة عربية RTL</span><span>·</span><span>نظام SaaS</span></div></div>
+<div style="position:absolute;left:-60px;top:120px;width:690px;transform:perspective(1600px) rotateY(16deg);transform-origin:left">{frame(f"{s}/{p['screens'][0][0] if dark else '03-dashboard'}.png", url)}</div>
+</section>""")
+    # 2 overview
+    pages.append(f"""<section class="pg">{hd('01', 'نظرة عامة على المشروع')}
+<p class="lead" style="margin-bottom:32px;max-width:1100px">{p['idea']}</p>
+<div style="display:grid;grid-template-columns:1fr 1fr 0.8fr;gap:18px">
+<div class="box"><h4><span style="background:#FFF1F2;color:#E11D48"><i data-lucide="circle-alert"></i></span>المشكلة</h4><ul class="ul">{''.join(f'<li>{x}</li>' for x in p['problem'])}</ul></div>
+<div class="box" style="border-color:var(--brand);background:var(--soft)"><h4><span style="background:var(--brand);color:#fff"><i data-lucide="lightbulb"></i></span>الحل المقترح</h4><ul class="ul">{''.join(f'<li>{x}</li>' for x in p['solution'])}</ul></div>
+<div class="box"><h4><span style="background:var(--bg);color:var(--brand)"><i data-lucide="target"></i></span>الفئات المستهدفة</h4><ul class="ul">{''.join(f'<li>{x}</li>' for x in p['audience'])}</ul></div>
+</div>{foot()}</section>""")
+    # 3 features
+    pages.append(f"""<section class="pg">{hd('02', 'وظائف النظام المقترحة')}
+<div class="fg">{''.join(f'<div class="fc"><div class="ic"><i data-lucide="{ic}"></i></div><b>{t}</b><p>{d}</p></div>' for ic, t, d in p['features'])}</div>{foot()}</section>""")
+    # 4 flow + roles
+    pages.append(f"""<section class="pg">{hd('03', 'سير العمل والأدوار')}
+<div class="flow">{''.join(f'<div class="st"><span class="n">{i+1}</span><div class="c"><i data-lucide="{ic}"></i></div><b>{t}</b><span>{d}</span></div>' for i, (ic, t, d) in enumerate(p['flow']))}</div>
+<h3 style="font-size:19px;margin-bottom:14px">أدوار المستخدمين</h3>
+<div class="rg">{''.join(f'<div class="rc"><div class="ic"><i data-lucide="{ic}"></i></div><b>{t}</b><p>{d}</p></div>' for ic, t, d in p['roles'])}</div>{foot()}</section>""")
+    # screens
+    for i, (f, t, d, hl) in enumerate(p['screens']):
+        pages.append(f"""<section class="pg">{hd(f'{i+4:02d}', 'تصميم الواجهات — ' + t)}
+<div class="scr"><div class="d"><p>{d}</p><div class="hl">{''.join(f'<div><i>{j+1}</i>{x}</div>' for j, x in enumerate(hl))}</div></div>
+<div>{frame(f'{s}/{f}.png', url)}</div></div>{foot()}</section>""")
+    n = len(p['screens']) + 4
+    # identity
+    pages.append(f"""<section class="pg">{hd(f'{n:02d}', 'الهوية البصرية ونظام التصميم')}
+<h3 style="font-size:17px;margin-bottom:12px">لوحة الألوان</h3>
+<div class="sw">{''.join(f'<div><i style="background:{h}"></i><span>{nm}<b>{h}</b></span></div>' for h, nm in p['palette'])}</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:26px">
+<div class="box"><h4>الخط: {p['fontname']}</h4><div style="font-size:56px;font-weight:700;line-height:1.3">أ ب ت ث ج ح</div><div style="font-size:15px;color:var(--muted);margin-top:6px">خط عربي حديث واضح على الشاشات بأوزان من 300 إلى 700، مع خط Inter للأرقام والجداول.</div>
+<div style="display:flex;gap:18px;margin-top:12px;align-items:baseline"><span style="font-size:28px;font-weight:700">عنوان رئيسي</span><span style="font-size:18px;font-weight:600">عنوان فرعي</span><span style="font-size:14px">نص أساسي</span></div></div>
+<div class="box"><h4>مبادئ التصميم</h4><ul class="ul"><li>تصميم عربي كامل من اليمين إلى اليسار (RTL) بما فيه الرسوم البيانية والتقويم</li><li>شبكة متناسقة وزوايا دائرية ومساحات بيضاء مريحة</li><li>ألوان حالات ثابتة مع نص وأيقونة، فلا يُعتمد على اللون وحده</li><li>أيقونات خطية موحدة وبطاقات بظلال خفيفة</li></ul></div></div>{foot()}</section>""")
+    # tech
+    pages.append(f"""<section class="pg">{hd(f'{n+1:02d}', 'التصور التقني المقترح')}
+<div class="tg">{''.join(f'<div class="tc"><div class="ic"><i data-lucide="{ic}"></i></div><b>{t}</b><div class="tch">' + ''.join(f'<bdi>{x}</bdi>' for x in d.split(' · ')) + '</div></div>' for ic, t, d in p['stack'])}</div>
+<div class="arch"><div class="n"><b>الواجهات</b><span>{'متصفح الويب' if dark else 'صفحة الحجز والتطبيق'}</span></div><i data-lucide="arrow-left" class="ar"></i>
+<div class="n p"><b>واجهة برمجية API</b><span>مصادقة · صلاحيات · منطق العمل</span></div><i data-lucide="arrow-left" class="ar"></i>
+<div class="n"><b>قاعدة البيانات</b><span>بيانات منظمة ومؤمنة</span></div><i data-lucide="arrow-left" class="ar"></i>
+<div class="n"><b>{'الإشعارات والتكاملات' if dark else 'الدفع والتذكيرات'}</b><span>خدمات خارجية</span></div></div>
+<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:18px;margin-top:22px">
+<div><h3 style="font-size:16px;margin-bottom:10px">الكيانات الرئيسية في قاعدة البيانات</h3>{''.join(f'<span class="pill"><i data-lucide="table-2" style="width:14px;height:14px;color:var(--brand)"></i>{e}</span>' for e in p['entities'])}</div>
+<div><h3 style="font-size:16px;margin-bottom:10px">تكاملات مقترحة</h3>{''.join(f'<span class="pill"><i data-lucide="plug" style="width:14px;height:14px;color:var(--brand)"></i>{e}</span>' for e in p['integrations'])}</div></div>{foot()}</section>""")
+    # closing
+    pn[0] += 1
+    pages.append(f"""<section class="pg cover" style="background:{cbg};display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+<span class="mark" style="width:76px;height:76px;border-radius:22px;background:rgba(255,255,255,.15)"><i data-lucide="{p['icon']}" style="width:40px;height:40px"></i></span>
+<b style="font-size:58px;margin-top:20px">{p['name']}</b><div style="font-size:24px;margin-top:8px;color:rgba(255,255,255,.85)">{p['tagline']}</div>
+<p style="max-width:760px;font-size:16px;line-height:1.9;color:rgba(255,255,255,.75);margin-top:24px">هذا العمل نموذج تصميمي وتصور تقني لواجهات النظام ووظائفه المقترحة، صُمّم بالكامل بواجهات أصلية وبيانات تجريبية، وهو قابل للتطوير إلى منتج متكامل وفق احتياجات العميل.</p>
+<div style="display:flex;gap:12px;margin-top:28px">{''.join(f'<span style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:8px 16px;border-radius:12px;font-size:14px">{x}</span>' for x in p['chips'])}</div>
+</section>""")
+    h = head(p, css) + ''.join(pages) + '<script>lucide.createIcons()</script></body></html>'
+    open(os.path.join(HERE, p['key'], 'deck.html'), 'w').write(h)
+
+for proj in (NABD, MAWIDAK):
+    thumbnail(proj); deck(proj)
+print('ok')

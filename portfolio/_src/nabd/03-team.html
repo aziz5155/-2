@@ -1,0 +1,87 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="nabd.css">
+<script src="../_shared/lucide.min.js"></script><script src="../_shared/charts.js"></script><script src="layout.js"></script>
+<style>
+.mini{grid-template-columns:repeat(4,1fr);margin-bottom:20px}
+.mini .card{display:flex;align-items:center;gap:14px;padding:18px 20px}
+.mini .ic{width:48px;height:48px;border-radius:13px;display:grid;place-items:center}.mini .ic svg{width:22px;height:22px}
+.mini b{font-family:Inter;font-size:26px;display:block;line-height:1.2}.mini span{font-size:13.5px;color:var(--muted)}
+.lay{display:grid;grid-template-columns:1fr 452px;gap:20px}
+.tt{display:flex;align-items:center;gap:10px;padding:0 22px 16px}
+.ft{display:flex;gap:4px;border-bottom:1px solid var(--line);padding:0 22px}
+.ft span{padding:10px 14px;font-size:14px;color:var(--muted);font-weight:500;border-bottom:2.5px solid transparent;display:flex;gap:6px;align-items:center}
+.ft span.on{color:var(--brand);border-color:var(--brand);font-weight:600}.ft em{font-style:normal;font-family:Inter;font-size:11.5px;background:var(--line-2);border-radius:10px;padding:1px 7px}
+.ft span.on em{background:var(--brand-50)}
+.mt td{padding:11px 16px;white-space:nowrap}.mt th{padding:11px 16px}
+.mt .nm{display:flex;align-items:center;gap:12px}.mt .nm b{display:block;font-size:14px;font-weight:600}.mt .nm div span{font-size:12.5px;color:var(--muted)}
+.on-dot{position:relative}.on-dot::after{content:'';position:absolute;bottom:0;left:0;width:10px;height:10px;border-radius:50%;background:#10B981;border:2px solid #fff}
+.wlc{display:flex;align-items:center;gap:10px}.wlc .prog{width:110px;height:7px}.wlc b{font-family:Inter;font-size:12.5px;font-weight:600;width:34px}
+.cb{width:18px;height:18px;border:1.5px solid #CBD5E1;border-radius:5px;display:inline-block;vertical-align:middle}
+.cb.on{background:var(--brand);border-color:var(--brand);position:relative}.cb.on::after{content:'';position:absolute;left:5px;top:1.5px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+tr.sel td{background:#F8F9FF}
+.rl{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.rl div{display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;font-size:14px}
+.rl div.on{border-color:#A5B4FC;background:var(--brand-50);box-shadow:0 0 0 3px rgba(99,102,241,.1)}
+.rl .ri{width:34px;height:34px;border-radius:9px;display:grid;place-items:center}.rl .ri svg{width:17px;height:17px}
+.rl b{font-weight:600;display:block}.rl small{font-size:12px;color:var(--muted)}.rl em{margin-inline-start:auto;font-style:normal;font-family:Inter;font-size:12.5px;color:var(--muted)}
+.pg h5{font-size:13px;color:var(--muted);font-weight:600;margin:14px 0 6px;display:flex;align-items:center;gap:6px}.pg h5 svg{width:15px;height:15px}
+.pr{display:flex;align-items:center;justify-content:space-between;padding:6px 0;font-size:14px;border-bottom:1px dashed var(--line-2)}
+.sw{width:38px;height:22px;border-radius:20px;background:#CBD5E1;position:relative}.sw::after{content:'';position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.sw.on{background:var(--brand)}.sw.on::after{right:auto;left:3px}
+</style></head><body><script>
+const c = layout('team', 'مساحة العمل / <b>الفريق والصلاحيات</b>');
+const ROLE = {admin:['t-violet','مدير النظام'], pm:['t-blue','مدير مشروع'], lead:['t-sky','قائد فريق'], mem:['t-gray','عضو'], view:['t-amber','مشاهد']};
+const rows = [
+ ['sara','الإدارة','admin',8,44,'#4F46E5','الآن',1],
+ ['khaled','التطوير','lead',14,78,'#4F46E5','قبل 5 دقائق',1,1],
+ ['faisal','التطوير','mem',17,94,'#E11D48','قبل 12 دقيقة',1],
+ ['noura','التصميم','mem',9,50,'#4F46E5','قبل ساعة',1],
+ ['abdullah','التطوير','mem',12,67,'#4F46E5','الآن',1],
+ ['reem','تحليل الأعمال','pm',7,39,'#4F46E5','قبل ساعتين',0],
+ ['lama','ضمان الجودة','mem',6,33,'#4F46E5','قبل 3 ساعات',0],
+ ['majed','التسويق','pm',11,61,'#4F46E5','أمس',0],
+ ['turki','البنية التحتية','mem',5,28,'#4F46E5','قبل 20 دقيقة',1],
+];
+c.innerHTML = `
+<div class="ph"><div><h1>الفريق والصلاحيات</h1><p>أدر أعضاء مساحة العمل وأدوارهم، وتحكّم بما يمكن لكل دور الوصول إليه.</p></div>
+<div class="acts"><div class="btn"><i data-lucide="file-up"></i>استيراد من ملف</div><div class="btn p"><i data-lucide="user-plus"></i>دعوة عضو جديد</div></div></div>
+<div class="grid mini">
+ <div class="card"><div class="ic" style="background:#EEF2FF;color:#4F46E5"><i data-lucide="users"></i></div><div><b>32</b><span>إجمالي الأعضاء</span></div></div>
+ <div class="card"><div class="ic" style="background:#ECFDF5;color:#059669"><i data-lucide="wifi"></i></div><div><b>21</b><span>متصل الآن</span></div></div>
+ <div class="card"><div class="ic" style="background:#F0F9FF;color:#0284C7"><i data-lucide="network"></i></div><div><b>6</b><span>أقسام وفرق عمل</span></div></div>
+ <div class="card"><div class="ic" style="background:#FFFBEB;color:#D97706"><i data-lucide="mail"></i></div><div><b>3</b><span>دعوات بانتظار القبول</span></div></div>
+</div>
+<div class="lay">
+ <div class="card" style="padding:20px 0 0;overflow:hidden">
+  <div class="tt"><div><h3 style="font-size:16.5px">أعضاء الفريق</h3></div>
+   <div style="margin-inline-start:auto;display:flex;gap:10px"><div class="search" style="width:280px;height:40px;margin:0"><i data-lucide="search"></i>ابحث بالاسم أو القسم</div><div class="btn" style="height:40px"><i data-lucide="filter"></i>القسم: الكل</div></div></div>
+  <div class="ft"><span class="on">الكل<em>32</em></span><span>مدراء المشاريع<em>4</em></span><span>قادة الفرق<em>5</em></span><span>الأعضاء<em>19</em></span><span>المشاهدون<em>4</em></span></div>
+  <table class="mt"><thead><tr><th style="width:40px"><span class="cb"></span></th><th>العضو</th><th>القسم</th><th>الدور</th><th>المهام النشطة</th><th>عبء العمل</th><th>آخر نشاط</th><th></th></tr></thead><tbody>
+  ${rows.map(([k,d,r,t,w,wc,la,on,sel])=>`<tr class="${sel?'sel':''}"><td><span class="cb ${sel?'on':''}"></span></td><td><div class="nm"><span class="${on?'on-dot':''}">${av(k,38)}</span><div><b>${PEOPLE[k].n}</b><span>${PEOPLE[k].role}</span></div></div></td>
+  <td style="color:var(--ink-2)">${d}</td><td><span class="tag ${ROLE[r][0]}">${ROLE[r][1]}</span></td><td class="num" style="font-weight:600">${t}</td>
+  <td><div class="wlc"><b>${w}%</b><div class="prog"><i style="width:${w}%;background:${w>90?'#E11D48':w>75?'#F59E0B':'#4F46E5'}"></i></div></div></td><td style="color:var(--muted);font-size:13px">${la}</td><td><i data-lucide="more-vertical" style="color:var(--faint)"></i></td></tr>`).join('')}
+  </tbody></table>
+ </div>
+ <div class="card">
+  <div class="ch" style="margin-bottom:14px"><div><h3>الأدوار والصلاحيات</h3><div class="sub">حدّد صلاحيات كل دور في مساحة العمل</div></div></div>
+  <div class="rl">
+   <div><span class="ri" style="background:#F5F3FF;color:#6D28D9"><i data-lucide="shield-check"></i></span><span><b>مدير النظام</b><small>وصول كامل لجميع الإعدادات</small></span><em>2</em></div>
+   <div><span class="ri" style="background:#EFF6FF;color:#1D4ED8"><i data-lucide="briefcase"></i></span><span><b>مدير مشروع</b><small>إدارة المشاريع والميزانيات</small></span><em>4</em></div>
+   <div class="on"><span class="ri" style="background:#4F46E5;color:#fff"><i data-lucide="user-cog"></i></span><span><b>قائد فريق</b><small>توزيع المهام ومتابعة الفريق</small></span><em>5</em></div>
+  </div>
+  <div class="pg">
+   <h5><i data-lucide="folder-kanban"></i>المشاريع</h5>
+   <div class="pr">إنشاء مشروع جديد<span class="sw"></span></div>
+   <div class="pr">تعديل بيانات المشروع<span class="sw on"></span></div>
+   <h5><i data-lucide="list-checks"></i>المهام</h5>
+   <div class="pr">إنشاء المهام وإسنادها<span class="sw on"></span></div>
+   <div class="pr">تغيير حالة المهام وأولوياتها<span class="sw on"></span></div>
+   <div class="pr">حذف المهام<span class="sw"></span></div>
+   <h5><i data-lucide="chart-pie"></i>التقارير</h5>
+   <div class="pr">عرض تقارير الفريق<span class="sw on"></span></div>
+   <div class="pr" style="border:0">تصدير التقارير (PDF / Excel)<span class="sw on"></span></div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:14px"><div class="btn p" style="flex:1;justify-content:center">حفظ التغييرات</div><div class="btn">إلغاء</div></div>
+ </div>
+</div>`;
+icons();
+</script></body></html>

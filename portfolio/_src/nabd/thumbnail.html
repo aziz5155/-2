@@ -1,0 +1,43 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../_shared/fonts.css"><script src="../_shared/lucide.min.js"></script>
+<style>
+:root{--brand:#4F46E5;--brand2:#7C3AED;--dark:#0B1120;--dark2:#1E1B4B;--soft:#EEF2FF;--accent:#F59E0B;--ink:#0F172A;--muted:#64748B;--line:#E2E8F0;--bg:#F5F7FB}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;direction:rtl;color:var(--ink);-webkit-font-smoothing:antialiased}
+.num{font-family:Inter,'IBM Plex Sans Arabic',sans-serif}
+svg.lucide{stroke-width:1.9}
+.mark{display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2))}
+.frame{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.28),0 0 0 1px rgba(0,0,0,.05)}
+.frame .bar{height:26px;background:#F1F5F9;display:flex;align-items:center;gap:6px;padding:0 12px;direction:ltr}
+.frame .bar i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.frame .bar span{margin-left:14px;height:15px;flex:1;max-width:260px;background:#fff;border-radius:5px;font:10px Inter;color:#94A3B8;display:flex;align-items:center;padding:0 8px}
+.frame img{display:block;width:100%}
+
+html,body{width:1280px;height:720px;overflow:hidden}
+.wrap{position:relative;width:1280px;height:720px;background:radial-gradient(800px 500px at 15% 20%,rgba(124,58,237,.45),transparent 60%),radial-gradient(700px 500px at 0% 100%,rgba(79,70,229,.5),transparent 60%),linear-gradient(135deg,#0B1120,#131B3A);overflow:hidden}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:40px 40px;mask-image:linear-gradient(90deg,#000,transparent 70%);-webkit-mask-image:linear-gradient(270deg,#000 0%,transparent 75%)}
+.txt{position:absolute;right:70px;top:0;bottom:0;width:470px;display:flex;flex-direction:column;justify-content:center;color:#fff}
+.logo{display:flex;align-items:center;gap:16px}
+.logo .mark{width:76px;height:76px;border-radius:22px;box-shadow:0 14px 34px rgba(0,0,0,.25)}
+.logo .mark svg{width:42px;height:42px;stroke-width:2.2}
+.logo b{font-size:78px;font-weight:700;line-height:1;letter-spacing:-1px}
+.tl{font-size:30px;font-weight:600;margin-top:22px;line-height:1.45}
+.ds{font-size:17px;color:#A5B4FC;margin-top:10px;line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.chips span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#E0E7FF;padding:9px 15px;border-radius:12px;font-size:15px;display:flex;align-items:center;gap:8px}
+.chips svg{width:17px;height:17px;color:#A5B4FC}
+.foot{margin-top:30px;display:flex;gap:10px;align-items:center;font-size:14px;color:#94A3B8}
+.foot i{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block}
+.s1{position:absolute;left:-40px;top:92px;width:700px;transform:perspective(1600px) rotateY(14deg) rotateX(4deg);transform-origin:left center}
+.s2{position:absolute;left:300px;top:395px;width:390px;transform:perspective(1600px) rotateY(14deg) rotateX(4deg)}
+.glow{position:absolute;left:120px;top:160px;width:520px;height:420px;border-radius:50%;background:var(--brand);filter:blur(120px);opacity:0.45}
+
+</style></head><body><div class="wrap"><div class="grid"></div><div class="glow"></div>
+<div class="s1"><div class="frame"><div class="bar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>app.nabd.example</span></div><img src="../../01-nabd-project-management/screens/01-dashboard.png"></div></div>
+<div class="s2"><div class="frame"><div class="bar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>app.nabd.example</span></div><img src="../../01-nabd-project-management/screens/02-board.png"></div></div>
+<div class="txt"><div class="logo"><div class="mark"><i data-lucide="activity"></i></div><b>نبض</b></div>
+<div class="tl">نظام إدارة المشاريع والمهام</div>
+<div class="ds">منصة SaaS عربية لتخطيط المشاريع وتوزيع المهام ومتابعة الإنجاز والتقارير</div>
+<div class="chips"><span><i data-lucide="layout-dashboard"></i>لوحة مؤشرات الأداء</span><span><i data-lucide="square-kanban"></i>لوحة مهام Kanban</span><span><i data-lucide="users"></i>الفريق والصلاحيات</span><span><i data-lucide="chart-pie"></i>تقارير تفاعلية</span></div>
+<div class="foot"><i></i>تصميم واجهات UI/UX<i></i>لوحة تحكم<i></i>نموذج تصميمي</div></div>
+</div><script>lucide.createIcons()</script></body></html>

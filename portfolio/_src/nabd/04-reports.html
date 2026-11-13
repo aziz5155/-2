@@ -1,0 +1,64 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="nabd.css">
+<script src="../_shared/lucide.min.js"></script><script src="../_shared/charts.js"></script><script src="layout.js"></script>
+<style>
+.fl{display:flex;gap:10px;margin-bottom:18px;align-items:center}
+.chip{height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink-2);font-weight:500}
+.chip svg{width:16px;height:16px;color:var(--muted)}.chip b{font-weight:600;color:var(--ink)}
+.k4{grid-template-columns:repeat(4,1fr);margin-bottom:18px}
+.k4 .card{padding:18px 20px;display:flex;align-items:center;gap:16px}
+.k4 .ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center}.k4 .ic svg{width:21px;height:21px}
+.k4 .l{font-size:13.5px;color:var(--muted)}.k4 .v{font-family:Inter;font-size:24px;font-weight:700;display:flex;align-items:baseline;gap:8px;margin-top:2px}
+.r2{grid-template-columns:1.15fr 1fr;margin-bottom:18px}
+.r3{grid-template-columns:1fr 560px}
+.pt td{padding:10px 14px;white-space:nowrap;font-size:13.5px}.pt th{padding:10px 14px}
+.hm{display:grid;grid-template-columns:62px repeat(10,1fr);gap:5px;align-items:center}
+.hm .c{height:30px;border-radius:6px}
+.hm .lb{font-size:12.5px;color:var(--muted)}.hm .hl{font-size:11.5px;color:var(--faint);text-align:center;font-family:Inter}
+.var{font-family:Inter;font-weight:600;font-size:13px}
+.bdg{display:flex;gap:18px;margin-top:8px}.bdg div{flex:1;background:var(--bg);border-radius:10px;padding:10px 12px}.bdg span{font-size:12px;color:var(--muted);display:block}.bdg b{font-family:Inter;font-size:17px}
+</style></head><body><script>
+const c = layout('reports', 'مساحة العمل / <b>التقارير والتحليلات</b>');
+c.innerHTML = `
+<div class="ph" style="margin-bottom:16px"><div><h1>التقارير والتحليلات</h1><p>تحليل أداء الفرق والمشاريع واتجاهات الإنتاجية</p></div>
+<div class="acts"><div class="btn"><i data-lucide="calendar-clock"></i>جدولة تقرير دوري</div><div class="btn"><i data-lucide="file-spreadsheet"></i>Excel</div><div class="btn p"><i data-lucide="file-down"></i>تصدير PDF</div></div></div>
+<div class="fl"><div class="chip"><i data-lucide="calendar"></i>الفترة: <b>الربع الرابع 2026</b><i data-lucide="chevron-down"></i></div><div class="chip"><i data-lucide="folder"></i>المشروع: <b>جميع المشاريع</b><i data-lucide="chevron-down"></i></div><div class="chip"><i data-lucide="building-2"></i>القسم: <b>جميع الأقسام</b><i data-lucide="chevron-down"></i></div><div class="chip" style="border-style:dashed"><i data-lucide="plus"></i>إضافة عامل تصفية</div><span style="margin-inline-start:auto;font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center"><i data-lucide="refresh-cw" style="width:14px;height:14px"></i>آخر تحديث: منذ 4 دقائق</span></div>
+<div class="grid k4">
+ ${[['timer','#4F46E5','#EEF2FF','متوسط مدة إنجاز المهمة','3.2 يوم','up','−0.6'],['calendar-check','#059669','#ECFDF5','الالتزام بالمواعيد النهائية','91%','up','+4%'],['clock-3','#0284C7','#F0F9FF','ساعات العمل المسجلة','4,860','up','+12%'],['rotate-ccw','#E11D48','#FFF1F2','معدل إعادة فتح المهام','2.4%','up','−0.8%']]
+  .map(([ic,col,bg,l,v,dir,d])=>`<div class="card"><div class="ic" style="background:${bg};color:${col}"><i data-lucide="${ic}"></i></div><div><div class="l">${l}</div><div class="v">${v}<span class="delta ${dir}" style="direction:ltr">${d}</span></div></div></div>`).join('')}
+</div>
+<div class="grid r2">
+ <div class="card"><div class="ch"><div><h3>الإنتاجية حسب القسم</h3><div class="sub">المهام المنجزة مقارنة بالمخطط لها خلال الربع</div></div><div class="r lg"><span><i style="background:#4F46E5"></i>منجزة</span><span><i style="background:#C7D2FE"></i>مخطط لها</span></div></div><div id="bars"></div></div>
+ <div class="card"><div class="ch"><div><h3>مخطط الإنجاز المتبقي (Burndown)</h3><div class="sub">تطبيق المتجر الإلكتروني — المهام المتبقية أسبوعيًا</div></div><div class="r lg"><span><i style="background:#4F46E5"></i>الفعلي</span><span><i style="background:#94A3B8"></i>المثالي</span></div></div><div id="burn"></div></div>
+</div>
+<div class="grid r3">
+ <div class="card" style="padding:20px 0 0;overflow:hidden"><div class="ch" style="padding:0 22px;margin-bottom:14px"><div><h3>أداء المشاريع</h3><div class="sub">مقارنة الجدول الزمني والميزانية لكل مشروع</div></div><div class="r"><span style="color:var(--brand);font-size:13.5px;font-weight:600">التقرير الكامل</span></div></div>
+  <table class="pt"><thead><tr><th>المشروع</th><th>المدير</th><th>المهام</th><th>الإنجاز</th><th>الميزانية المستهلكة</th><th>الانحراف الزمني</th><th>المؤشر</th></tr></thead><tbody>
+  ${[['تطبيق المتجر الإلكتروني','khaled','46/64',72,'420,000 ر.س','68%','تأخير يومين','dn','t-blue','جيد'],
+     ['حملة الربع الرابع','majed','33/38',88,'185,000 ر.س','81%','في الموعد','',  't-green','ممتاز'],
+     ['نظام الفوترة الإلكترونية','abdullah','31/52',60,'310,000 ر.س','64%','3 أيام تأخير','dn','t-amber','يحتاج متابعة'],
+     ['أتمتة الموارد البشرية','reem','13/41',31,'150,000 ر.س','47%','9 أيام تأخير','dn','t-rose','متعثر']]
+   .map(([n,m,t,p,b,bu,v,vd,tc,tl])=>`<tr><td style="font-weight:600">${n}</td><td><div style="display:flex;align-items:center;gap:8px">${av(m,28)}<span style="font-size:13px">${PEOPLE[m].n}</span></div></td><td class="num">${t}</td><td><div style="display:flex;align-items:center;gap:8px"><b class="num" style="font-size:13px;width:34px">${p}%</b><div class="prog" style="width:80px;height:6px"><i style="width:${p}%;background:#4F46E5"></i></div></div></td><td><span class="num" style="font-weight:600">${bu}</span> <span style="color:var(--muted);font-size:12px">من ${b}</span></td><td class="${vd}" style="font-weight:600">${v}</td><td><span class="tag ${tc}"><i></i>${tl}</span></td></tr>`).join('')}
+  </tbody></table></div>
+ <div class="card"><div class="ch" style="margin-bottom:14px"><div><h3>أوقات ذروة النشاط</h3><div class="sub">عدد المهام المحدَّثة حسب اليوم والساعة</div></div></div>
+  <div class="hm" id="hm"></div>
+  <div style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12px;color:var(--muted);justify-content:flex-end">أقل<span style="display:flex;gap:3px">${['#EEF2FF','#C7D2FE','#A5B4FC','#818CF8','#6366F1','#4338CA'].map(x=>`<i style="width:18px;height:10px;border-radius:3px;background:${x};display:inline-block"></i>`).join('')}</span>أكثر</div>
+ </div>
+</div>`;
+Charts.bars(document.getElementById('bars'), {w: 770, h: 252, labels: ['التطوير','التصميم','التسويق','المالية','الموارد البشرية','ضمان الجودة'], max: 400, ticks: 4, bw: 22, gap: 4,
+  series: [{name: 'done', color: '#4F46E5', data: [342, 186, 248, 128, 94, 210]}, {name: 'plan', color: '#C7D2FE', data: [370, 200, 260, 160, 140, 220]}]});
+const wk = Array.from({length: 14}, (_, i) => i);
+const WL = {0:'1 سبتمبر',2:'15 سبتمبر',4:'29 سبتمبر',6:'13 أكتوبر',8:'27 أكتوبر',10:'10 نوفمبر',12:'24 نوفمبر'};
+const r = Charts.line(document.getElementById('burn'), {w: 664, h: 252, labels: wk.map(i => WL[i] || ''), max: 64, ticks: 4,
+  series: [{color: '#94A3B8', data: wk.map(i => 64 - 64 * i / 13), dash: true, width: 2, straight: true},
+           {color: '#4F46E5', data: [64, 63, 61, 58, 53, 48, 43, 37, 31, 25, 19], fill: true}]});
+const svg = document.querySelector('#burn svg'); const x = r.X(10), y = r.Y(19);
+svg.insertAdjacentHTML('beforeend', `<circle cx="${x}" cy="${y}" r="6" fill="#4F46E5" stroke="#fff" stroke-width="3"/><g transform="translate(${x - 62},${y - 48})"><rect width="124" height="32" rx="8" fill="#0F172A"/><text x="62" y="21" fill="#fff" font-size="12.5" text-anchor="middle" font-family="IBM Plex Sans Arabic">هذا الأسبوع: 19 مهمة</text></g>`);
+// heatmap
+const ramp = ['#EEF2FF','#C7D2FE','#A5B4FC','#818CF8','#6366F1','#4338CA'];
+const H = [[1,2,4,5,3,2,4,5,3,1],[1,3,5,5,4,2,4,4,3,1],[2,3,4,5,4,1,3,5,4,2],[1,2,4,4,3,2,3,4,2,1],[0,1,2,3,2,1,2,2,1,0]];
+const dn = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس'];
+let h = ''; H.forEach((row, i) => { h += `<span class="lb">${dn[i]}</span>` + row.map(v => `<span class="c" style="background:${ramp[v]}"></span>`).join(''); });
+h += '<span></span>' + [8,9,10,11,12,13,14,15,16,17].map(x => `<span class="hl">${x}:00</span>`).join('');
+document.getElementById('hm').innerHTML = h;
+icons();
+</script></body></html>
