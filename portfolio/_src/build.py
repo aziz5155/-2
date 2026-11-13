@@ -73,7 +73,7 @@ html,body{{width:1280px;height:720px;overflow:hidden}}
 <div class="tl">{p['tagline']}</div>
 <div class="ds">{'منصة SaaS عربية لتخطيط المشاريع وتوزيع المهام ومتابعة الإنجاز والتقارير' if dark else 'منصة SaaS عربية لاستقبال الحجوزات وإدارة التقويم ومقدمي الخدمة والعملاء'}</div>
 <div class="chips">{''.join(f'<span><i data-lucide="{ic}"></i>{t}</span>' for ic, t in zip(icons, p['chips']))}</div>
-<div class="foot"><i></i>تصميم واجهات UI/UX<i></i>لوحة تحكم<i></i>نموذج تصميمي</div></div>
+<div class="foot"><i></i>تصميم واجهات UI/UX<i></i>لوحة تحكم<i></i>نظام SaaS متكامل</div></div>
 </div><script>lucide.createIcons()</script></body></html>"""
     open(os.path.join(HERE, p['key'], 'thumbnail.html'), 'w').write(h)
 
@@ -138,7 +138,7 @@ html,body{width:1280px}
     pn = [0]
     def foot():
         pn[0] += 1
-        return f'<div class="ft"><span>{p["name"]} — {p["tagline"]}</span><span>نموذج تصميمي وتصور تقني</span><span>صفحة {pn[0]} من {T}</span></div>'
+        return f'<div class="ft"><span>{p["name"]} — {p["tagline"]}</span><span>ملف المشروع</span><span>صفحة {pn[0]} من {T}</span></div>'
     def hd(k, t):
         return f'<div class="hd"><span class="k">{k}</span><h2>{t}</h2><span class="sm"><span class="mark"><i data-lucide="{p["icon"]}"></i></span>{p["name"]}</span></div>'
     c = p['c']
@@ -149,7 +149,7 @@ html,body{width:1280px}
     pn[0] += 1
     pages.append(f"""<section class="pg cover" style="background:{cbg}">
 <div style="position:absolute;right:72px;top:0;bottom:0;width:470px;display:flex;flex-direction:column;justify-content:center">
-<div style="display:inline-flex;align-self:flex-start;gap:8px;align-items:center;font-size:13.5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:7px 14px;border-radius:30px;margin-bottom:26px"><i data-lucide="pen-tool" style="width:15px;height:15px"></i>نموذج تصميمي وتصور تقني</div>
+<div style="display:inline-flex;align-self:flex-start;gap:8px;align-items:center;font-size:13.5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:7px 14px;border-radius:30px;margin-bottom:26px"><i data-lucide="folder-check" style="width:15px;height:15px"></i>ملف المشروع</div>
 <div style="display:flex;align-items:center;gap:16px"><span class="mark" style="width:72px;height:72px;border-radius:21px;background:rgba(255,255,255,.15)"><i data-lucide="{p['icon']}" style="width:38px;height:38px"></i></span><b style="font-size:76px;line-height:1">{p['name']}</b></div>
 <div style="font-size:30px;font-weight:600;margin-top:22px">{p['tagline']}</div>
 <p style="font-size:16.5px;line-height:1.85;color:rgba(255,255,255,.78);margin-top:14px">{p['idea']}</p>
@@ -161,11 +161,11 @@ html,body{width:1280px}
 <p class="lead" style="margin-bottom:32px;max-width:1100px">{p['idea']}</p>
 <div style="display:grid;grid-template-columns:1fr 1fr 0.8fr;gap:18px">
 <div class="box"><h4><span style="background:#FFF1F2;color:#E11D48"><i data-lucide="circle-alert"></i></span>المشكلة</h4><ul class="ul">{''.join(f'<li>{x}</li>' for x in p['problem'])}</ul></div>
-<div class="box" style="border-color:var(--brand);background:var(--soft)"><h4><span style="background:var(--brand);color:#fff"><i data-lucide="lightbulb"></i></span>الحل المقترح</h4><ul class="ul">{''.join(f'<li>{x}</li>' for x in p['solution'])}</ul></div>
+<div class="box" style="border-color:var(--brand);background:var(--soft)"><h4><span style="background:var(--brand);color:#fff"><i data-lucide="lightbulb"></i></span>الحل</h4><ul class="ul">{''.join(f'<li>{x}</li>' for x in p['solution'])}</ul></div>
 <div class="box"><h4><span style="background:var(--bg);color:var(--brand)"><i data-lucide="target"></i></span>الفئات المستهدفة</h4><ul class="ul">{''.join(f'<li>{x}</li>' for x in p['audience'])}</ul></div>
 </div>{foot()}</section>""")
     # 3 features
-    pages.append(f"""<section class="pg">{hd('02', 'وظائف النظام المقترحة')}
+    pages.append(f"""<section class="pg">{hd('02', 'وظائف النظام')}
 <div class="fg">{''.join(f'<div class="fc"><div class="ic"><i data-lucide="{ic}"></i></div><b>{t}</b><p>{d}</p></div>' for ic, t, d in p['features'])}</div>{foot()}</section>""")
     # 4 flow + roles
     pages.append(f"""<section class="pg">{hd('03', 'سير العمل والأدوار')}
@@ -187,7 +187,7 @@ html,body{width:1280px}
 <div style="display:flex;gap:18px;margin-top:12px;align-items:baseline"><span style="font-size:28px;font-weight:700">عنوان رئيسي</span><span style="font-size:18px;font-weight:600">عنوان فرعي</span><span style="font-size:14px">نص أساسي</span></div></div>
 <div class="box"><h4>مبادئ التصميم</h4><ul class="ul"><li>تصميم عربي كامل من اليمين إلى اليسار (RTL) بما فيه الرسوم البيانية والتقويم</li><li>شبكة متناسقة وزوايا دائرية ومساحات بيضاء مريحة</li><li>ألوان حالات ثابتة مع نص وأيقونة، فلا يُعتمد على اللون وحده</li><li>أيقونات خطية موحدة وبطاقات بظلال خفيفة</li></ul></div></div>{foot()}</section>""")
     # tech
-    pages.append(f"""<section class="pg">{hd(f'{n+1:02d}', 'التصور التقني المقترح')}
+    pages.append(f"""<section class="pg">{hd(f'{n+1:02d}', 'البنية التقنية')}
 <div class="tg">{''.join(f'<div class="tc"><div class="ic"><i data-lucide="{ic}"></i></div><b>{t}</b><div class="tch">' + ''.join(f'<bdi>{x}</bdi>' for x in d.split(' · ')) + '</div></div>' for ic, t, d in p['stack'])}</div>
 <div class="arch"><div class="n"><b>الواجهات</b><span>{'متصفح الويب' if dark else 'صفحة الحجز والتطبيق'}</span></div><i data-lucide="arrow-left" class="ar"></i>
 <div class="n p"><b>واجهة برمجية API</b><span>مصادقة · صلاحيات · منطق العمل</span></div><i data-lucide="arrow-left" class="ar"></i>
@@ -195,13 +195,13 @@ html,body{width:1280px}
 <div class="n"><b>{'الإشعارات والتكاملات' if dark else 'الدفع والتذكيرات'}</b><span>خدمات خارجية</span></div></div>
 <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:18px;margin-top:22px">
 <div><h3 style="font-size:16px;margin-bottom:10px">الكيانات الرئيسية في قاعدة البيانات</h3>{''.join(f'<span class="pill"><i data-lucide="table-2" style="width:14px;height:14px;color:var(--brand)"></i>{e}</span>' for e in p['entities'])}</div>
-<div><h3 style="font-size:16px;margin-bottom:10px">تكاملات مقترحة</h3>{''.join(f'<span class="pill"><i data-lucide="plug" style="width:14px;height:14px;color:var(--brand)"></i>{e}</span>' for e in p['integrations'])}</div></div>{foot()}</section>""")
+<div><h3 style="font-size:16px;margin-bottom:10px">التكاملات</h3>{''.join(f'<span class="pill"><i data-lucide="plug" style="width:14px;height:14px;color:var(--brand)"></i>{e}</span>' for e in p['integrations'])}</div></div>{foot()}</section>""")
     # closing
     pn[0] += 1
     pages.append(f"""<section class="pg cover" style="background:{cbg};display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
 <span class="mark" style="width:76px;height:76px;border-radius:22px;background:rgba(255,255,255,.15)"><i data-lucide="{p['icon']}" style="width:40px;height:40px"></i></span>
 <b style="font-size:58px;margin-top:20px">{p['name']}</b><div style="font-size:24px;margin-top:8px;color:rgba(255,255,255,.85)">{p['tagline']}</div>
-<p style="max-width:760px;font-size:16px;line-height:1.9;color:rgba(255,255,255,.75);margin-top:24px">هذا العمل نموذج تصميمي وتصور تقني لواجهات النظام ووظائفه المقترحة، صُمّم بالكامل بواجهات أصلية وبيانات تجريبية، وهو قابل للتطوير إلى منتج متكامل وفق احتياجات العميل.</p>
+<p style="max-width:760px;font-size:16px;line-height:1.9;color:rgba(255,255,255,.75);margin-top:24px">منصة عربية متكاملة بتجربة استخدام واضحة، وواجهات مصممة بعناية لكل دور في النظام، وهوية بصرية موحدة في جميع الشاشات.</p>
 <div style="display:flex;gap:12px;margin-top:28px">{''.join(f'<span style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:8px 16px;border-radius:12px;font-size:14px">{x}</span>' for x in p['chips'])}</div>
 </section>""")
     h = head(p, css) + ''.join(pages) + '<script>lucide.createIcons()</script></body></html>'
