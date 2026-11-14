@@ -8,6 +8,9 @@ from slides import emb, lum, hexrgb, card_front
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DISCLAIMER = 'نماذج تصميمية مفاهيمية أُعدّت لأغراض استعراض المهارات، ولا تمثل شركات أو جهات قائمة.'
+FOOTER = 'نماذج مفاهيمية · للاطلاع والتقييم فقط · جميع الحقوق محفوظة لصاحبها'
+RIGHTS = ('جميع التصاميم المعروضة نماذج مفاهيمية لأغراض استعراض المهارات فقط. لا يُمنح الاطلاع على هذا الملف أي ترخيص '
+          'لاستخدام التصاميم أو إعادة نشرها أو استغلالها تجاريًا دون إذن من صاحب الحقوق.')
 NAMES_NOTE = 'الأسماء مفاهيمية مؤقتة، وغير مخصصة للاستخدام التجاري قبل التحقق من توفرها.'
 
 C = {
@@ -131,7 +134,45 @@ def page_system(b, n, i, T):
 </section>'''
 
 
-def build():
+def watermark(color, hole=None, op=.05):
+    """Light diagonal text tile. `hole` = (cx%, cy%, rx px, ry px) keeps the logo area clear."""
+    row = ' &nbsp;·&nbsp; '.join(['نموذج مفاهيمي · للاطلاع فقط'] * 6)
+    rows = ''.join(f'<div style="white-space:nowrap;margin-bottom:150px;{"margin-right:-260px" if k % 2 else ""}">{row}</div>' for k in range(14))
+    mask = ''
+    if hole:
+        cx, cy, rx, ry = hole
+        m = f'radial-gradient({rx}px {ry}px at {cx}% {cy}%,transparent 82%,#000 100%)'
+        mask = f'-webkit-mask-image:{m};mask-image:{m};'
+    return (f'<div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;{mask}">'
+            f'<div style="position:absolute;inset:-400px;transform:rotate(-24deg);font-size:21px;color:{color};opacity:{op};'
+            f'display:flex;flex-direction:column;justify-content:center;align-items:center">{rows}</div></div>')
+
+
+def finalize(html):
+    """Presentation copy: short footer, rights notice on the cover, light watermark away from logos."""
+    html = html.replace(f'<div class="bot"><span>{DISCLAIMER}</span>', f'<div class="bot"><span>{FOOTER}</span>')
+    # cover: notice block + watermark over the title area only (symbols band stays clear)
+    html = html.replace(f'{DISCLAIMER}<br>{NAMES_NOTE}</div>',
+                        f'{DISCLAIMER} {NAMES_NOTE}<br><span style="color:#9A9EA2">{RIGHTS}</span></div>')
+    cover_wm = watermark('#15191C', op=.045).replace('mask-image:;', '')
+    cover_wm = cover_wm.replace('position:absolute;inset:0;overflow:hidden;pointer-events:none;',
+        'position:absolute;left:0;top:0;width:640px;height:620px;overflow:hidden;pointer-events:none;'
+        '-webkit-mask-image:radial-gradient(640px 560px at 0 40%,#000 55%,transparent 100%);mask-image:radial-gradient(640px 560px at 0 40%,#000 55%,transparent 100%);')
+    html = html.replace('<section class="pg" data-name="01-cover" style="background:#FBFAF7">', '<section class="pg" data-name="01-cover" style="background:#FBFAF7">' + cover_wm)
+    # logo pages: watermark in the logo panel, with an elliptical clear zone around the logo
+    for b in BRANDS:
+        tag = f"background:{b['light']};display:grid;place-items:center\">"
+        html = html.replace(tag, tag + watermark(b['primary'], hole=(50, 50, 390, 470), op=.06), 1)
+    # system pages: watermark on the mockup surface, beneath the cards (cards are opaque)
+    html = html.replace('<div class="grain"></div>\n   <div class="shadow"', '<div class="grain"></div>WM\n   <div class="shadow"')
+    parts = html.split('WM')
+    out = parts[0]
+    for b, rest in zip(BRANDS, parts[1:]):
+        out += watermark('#FFFFFF' if b['key'] == 'mirqab' else '#3A3326', op=.07 if b['key'] == 'mirqab' else .06) + rest
+    return out
+
+
+def build(final=False):
     T = 1 + 2 * len(BRANDS)
     parts = [cover(T)]
     i = 1
@@ -140,10 +181,12 @@ def build():
         i += 1; parts.append(page_system(b, f'{n:02d}', i, T))
     doc = (f'<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="fonts.css">'
            f'<style>{CSS}</style></head><body>{"".join(parts)}</body></html>')
-    p = os.path.join(HERE, 'concepts.html')
+    if final:
+        doc = finalize(doc)
+    p = os.path.join(HERE, 'concepts_final.html' if final else 'concepts.html')
     open(p, 'w').write(doc)
     return p
 
 
 if __name__ == '__main__':
-    print(build())
+    print(build(final=True))
