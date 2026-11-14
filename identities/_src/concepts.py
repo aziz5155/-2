@@ -39,6 +39,20 @@ C = {
    colors=[0, 1, 2, 3]),
 }
 
+WM = False          # set True for the protected preview copy
+WM_TEXT = 'معاينة فقط · غير مرخّص للاستخدام'
+
+
+def mark(inner, lines=2, fs=16, angle=-16, spread=1.25, rep=2):
+    """Overlay a few small diagonal text lines directly across a logo (preview copy only)."""
+    if not WM:
+        return inner
+    ls = ''.join(f'<span style="display:block;white-space:nowrap;transform:rotate({angle}deg);font-size:{fs}px">{' &nbsp;·&nbsp; '.join([WM_TEXT] * rep)}</span>' for _ in range(lines))
+    return (f'<div style="position:relative;display:inline-block">{inner}'
+            f'<div class="wmk" style="position:absolute;top:0;bottom:0;left:{-(spread - 1) * 50}%;right:{-(spread - 1) * 50}%;'
+            f'display:flex;flex-direction:column;justify-content:space-evenly;align-items:center;pointer-events:none;overflow:visible">{ls}</div></div>')
+
+
 CSS = """
 @page{size:1920px 1080px;margin:0}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -54,6 +68,7 @@ body{font-family:'IBM Plex Sans Arabic',sans-serif;color:#15191C;direction:rtl;-
 .lbl::before{content:'';width:32px;height:2px;background:currentColor}
 p.txt{font-size:23px;line-height:2;color:#454C51}
 .shadow{box-shadow:0 1px 1px rgba(0,0,0,.06),0 6px 12px rgba(0,0,0,.08),0 22px 44px rgba(0,0,0,.14),0 50px 90px rgba(0,0,0,.12)}
+.wmk span{font-weight:600;color:rgba(255,255,255,.62);letter-spacing:.3px;text-shadow:0 0 1.2px rgba(0,0,0,.6),0 0 3px rgba(0,0,0,.25)}
 .grain{position:absolute;inset:0;background:url(noise.png);opacity:.5;mix-blend-mode:multiply;pointer-events:none}
 """
 
@@ -63,7 +78,7 @@ def frame(i, T, left=''):
 
 
 def cover(T):
-    syms = ''.join(f'<div style="display:flex;flex-direction:column;align-items:center;gap:24px">{emb(logos.symbol(b, "color"), h=130)}'
+    syms = ''.join(f'<div style="display:flex;flex-direction:column;align-items:center;gap:24px">{mark(emb(logos.symbol(b, "color"), h=130), lines=2, fs=11, spread=1.0, rep=1)}'
                    f'<div style="font-size:19px;color:#6E757A">{C[b["key"]]["theme"]}</div></div>' for b in BRANDS)
     return f'''<section class="pg" data-name="01-cover" style="background:#FBFAF7">
  <div class="top"><span>نماذج شعارات مفاهيمية</span><span class="lat">2026</span></div>
@@ -84,7 +99,7 @@ def page_logo(b, n, i, T):
                       for t, d in b['pillars'])
     return f'''<section class="pg" data-name="{i:02d}-{b['key']}-logo">
  <div class="top"><span><b>النموذج {n}</b> · {c['theme']}</span><span>الشعار والفكرة</span></div>
- <div style="position:absolute;left:0;top:0;bottom:0;width:860px;background:{b['light']};display:grid;place-items:center">{emb(logos.vertical(b, 'color'), h=500)}</div>
+ <div style="position:absolute;left:0;top:0;bottom:0;width:860px;background:{b['light']};display:grid;place-items:center">{mark(emb(logos.vertical(b, 'color'), h=500), lines=3, fs=19, spread=1.3)}</div>
  <div style="position:absolute;right:110px;top:170px;width:820px">
   <div class="lbl" style="color:{b['secondary'] if b['key'] != 'madarij' else b['primary']}">فكرة الشعار</div>
   <h1 style="font-family:{b['css_display']};font-size:56px;font-weight:700;line-height:1.35;margin-top:16px">{b['idea_title']}</h1>
@@ -116,8 +131,8 @@ def page_system(b, n, i, T):
     sizes = ''.join(f'<div style="text-align:center">{emb(logos.symbol(b, "color"), h=s)}<div class="lat" style="font-size:13px;color:#A2A6AA;margin-top:10px">{s}px</div></div>' for s in (64, 32, 16))
     mock = f'''<div style="position:absolute;left:0;top:0;bottom:0;width:980px;background:radial-gradient(1000px 800px at 45% 35%,{tone[0]},{tone[1]} 75%);overflow:hidden">
    <div class="grain"></div>
-   <div class="shadow" style="position:absolute;left:110px;top:190px;transform:rotate(-7deg);border-radius:6px">{card_front(b, 520, 336)}</div>
-   <div class="shadow" style="position:absolute;left:420px;top:560px;transform:rotate(5deg);border-radius:6px">{card_plain(b, 520, 336)}</div>
+   <div class="shadow" style="position:absolute;left:110px;top:190px;transform:rotate(-7deg);border-radius:6px">{mark(card_front(b, 520, 336), lines=3, fs=15, angle=-12, spread=1.0)}</div>
+   <div class="shadow" style="position:absolute;left:420px;top:560px;transform:rotate(5deg);border-radius:6px">{mark(card_plain(b, 520, 336), lines=3, fs=15, angle=-12, spread=1.0)}</div>
    <div style="position:absolute;right:60px;bottom:110px;font-size:17px;color:{'rgba(255,255,255,.6)' if b['key'] == 'mirqab' else '#6E6A60'}">تطبيق بصري: بطاقتان بالرمز والشعار</div>
   </div>'''
     return f'''<section class="pg" data-name="{i:02d}-{b['key']}-system">
@@ -172,6 +187,12 @@ def finalize(html):
     return out
 
 
+def finalize_preview(html):
+    html = html.replace(f'<div class="bot"><span>{DISCLAIMER}</span>', f'<div class="bot"><span>{FOOTER}</span>')
+    return html.replace(f'{DISCLAIMER}<br>{NAMES_NOTE}</div>',
+                        f'{DISCLAIMER} {NAMES_NOTE}<br><span style="color:#9A9EA2">{RIGHTS}</span></div>')
+
+
 def build(final=False):
     T = 1 + 2 * len(BRANDS)
     parts = [cover(T)]
@@ -181,12 +202,19 @@ def build(final=False):
         i += 1; parts.append(page_system(b, f'{n:02d}', i, T))
     doc = (f'<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><link rel="stylesheet" href="fonts.css">'
            f'<style>{CSS}</style></head><body>{"".join(parts)}</body></html>')
-    if final:
+    if final == 'preview':
+        doc = finalize_preview(doc)
+    elif final:
         doc = finalize(doc)
-    p = os.path.join(HERE, 'concepts_final.html' if final else 'concepts.html')
+    p = os.path.join(HERE, {'preview': 'concepts_preview.html', True: 'concepts_final.html'}.get(final, 'concepts.html'))
     open(p, 'w').write(doc)
     return p
 
 
 if __name__ == '__main__':
-    print(build(final=True))
+    import sys
+    if 'preview' in sys.argv:
+        WM = True
+        print(build(final='preview'))
+    else:
+        print(build(final=True))
